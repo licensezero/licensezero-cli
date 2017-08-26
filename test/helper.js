@@ -1,4 +1,5 @@
 var ecb = require('ecb')
+var formatError = require('../bin/format-error')
 var fs = require('fs')
 var mkdirp = require('mkdirp')
 var path = require('path')
@@ -19,11 +20,7 @@ module.exports = function (callback) {
             function (error) {
               var status
               if (error) {
-                stderr.write(
-                  typeof error === 'string'
-                    ? error + '\n'
-                    : error.userMessage || error.message
-                )
+                stderr.write(formatError(error))
                 status = 1
               } else {
                 status = 0
