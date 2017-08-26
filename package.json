@@ -5,7 +5,9 @@
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
   "private": true,
   "devDependencies": {
+    "husky": "^0.14.3",
     "istanbul": "^0.4.5",
+    "lint-staged": "^4.0.4",
     "standard": "^10.0.3",
     "standard-markdown": "^4.0.2",
     "tape": "^4.8.0"
@@ -28,6 +30,11 @@
     "coverage": "NODE_ENV=test istanbul cover -- tape test/*.test.js",
     "postcoverage": "istanbul check --statements 100 --functions 100 --branches 100 --lines 100",
     "test": "NODE_ENV=test tape test/*.test.js",
-    "lint": "standard && standard-markdown"
+    "lint": "standard && standard-markdown",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": "standard",
+    "*.md": "standard-markdown"
   }
 }
