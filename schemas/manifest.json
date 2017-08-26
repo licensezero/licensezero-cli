@@ -1,0 +1,72 @@
+{
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tier": {
+      "enum": [
+        "solo",
+        "team",
+        "company",
+        "enterprise"
+      ]
+    },
+    "product": {
+      "type": "object",
+      "properties": {
+        "productID": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "productID",
+        "repository",
+        "description"
+      ]
+    },
+    "licensee": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "jurisdiction": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "jurisdiction"
+      ]
+    },
+    "licensor": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "jurisdiction": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "jurisdiction"
+      ]
+    }
+  },
+  "required": [
+    "date",
+    "tier",
+    "product",
+    "licensee",
+    "licensor"
+  ]
+}

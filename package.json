@@ -42,6 +42,7 @@
   },
   "bin": {
     "l0-bom": "./bin/l0-bom",
+    "l0-import": "./bin/l0-import",
     "l0-create-identity": "./bin/l0-create-identity",
     "l0-remove-identity": "./bin/l0-remove-identity",
     "l0-list-identities": "./bin/l0-list-identities"
