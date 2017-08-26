@@ -6,6 +6,4 @@ var validate = ajv.compile(licenseSchema)
 
 module.exports = function (argument) {
   return validate(argument)
-    ? []
-    : ['invalid license']
 }

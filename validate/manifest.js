@@ -5,5 +5,5 @@ var ajv = new AJV()
 var validate = ajv.compile(manifestSchema)
 
 module.exports = function (argument) {
-  return validate(argument) ? [] : ['invalid manfiest']
+  return validate(argument)
 }

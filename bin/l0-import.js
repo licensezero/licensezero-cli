@@ -20,9 +20,8 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   var ecb = require('ecb')
   var readJSONFile = require('../read-json-file')
   readJSONFile(file, ecb(fail, function (license) {
-    var validateLicense = require('../validate/license')
-    var errors = validateLicense(license)
-    if (errors.length !== 0) return fail('invalid license')
+    var validLicense = require('../validate/license')
+    if (!validLicense(license)) return fail('invalid license')
     var lamos = require('lamos')
     try {
       var manifest = lamos.parse(license.manifest)

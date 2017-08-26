@@ -24,8 +24,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   for (var index = 0; index < keys.length; index++) {
     var key = keys[index]
     var value = newIdentity[key] = options['<' + key + '>']
-    var errors = validations[key](value)
-    if (errors.length) return fail('invalid ' + key)
+    if (!validations[key](value)) return fail('invalid ' + key)
   }
 
   var ecb = require('ecb')
