@@ -17,13 +17,13 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
 
   var ecb = require('ecb')
   var readIdentity = require('../read/identity')
-  readIdentity(config, nickname, ecb(fail, function (identity) {
+  readIdentity(config, nickname, ecb(done, function (identity) {
     var readLicenses = require('../read/licenses')
-    readLicenses(config, nickname, ecb(fail, function (licenses) {
+    readLicenses(config, nickname, ecb(done, function (licenses) {
       var readPackageTree = require('read-package-tree')
       readPackageTree(cwd, function (error, tree) {
         /* istanbul ignore if */
-        if (error) return fail(error)
+        if (error) return done(error)
         var licensable = tree.children
           .map(function (node) {
             return node.package
@@ -60,7 +60,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
           products: unlicensed.map(function (dependency) {
             return dependencyProductID(dependency)
           })
-        }, ecb(fail, function (response) {
+        }, ecb(done, function (response) {
           var lamos = require('lamos')
           var products = response.products
           stdout.write(
@@ -93,11 +93,6 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
       })
     }))
   }))
-
-  function fail (error) {
-    stderr.write(error + '\n')
-    done(1)
-  }
 }
 
 function hasProductID (dependency) {

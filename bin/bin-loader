@@ -12,7 +12,15 @@ require('./' + script + '.js')(
   ),
   process.stdout,
   process.stderr,
-  function (status) {
-    process.exit(status)
+  function (error) {
+    if (error) {
+      process.stderr.write(
+        typeof error === 'string'
+          ? error
+          : error.userMessage || error.message
+      )
+      process.exit(1)
+    }
+    process.exit(0)
   }
 )

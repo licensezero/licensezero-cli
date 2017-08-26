@@ -8,20 +8,19 @@ module.exports = function (usage) {
         help: false
       })
     } catch (error) {
-      stderr.write(error.message + '\n')
-      done(1)
+      done(error.message + '\n')
       return false
     }
 
     if (options['--help']) {
       stdout.write(usage)
-      done(0)
+      done()
       return false
     }
 
     if (options['--version']) {
       stdout.write(require('../package.json').version + '\n')
-      done(0)
+      done()
       return false
     }
 

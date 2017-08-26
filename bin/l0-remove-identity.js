@@ -19,8 +19,8 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
     /* istanbul ignore if */
     if (error) {
       stderr.write(error.message + '\n')
-      return done(1)
+      return done()
     }
-    return done(0)
+    return done()
   })
 }

@@ -19,20 +19,20 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
 
   var ecb = require('ecb')
   var readJSONFile = require('../read/json-file')
-  readJSONFile(file, ecb(fail, function (license) {
+  readJSONFile(file, ecb(done, function (license) {
     var validLicense = require('../validate/license')
-    if (!validLicense(license)) return fail('invalid license')
+    if (!validLicense(license)) return done('invalid license')
     var lamos = require('lamos')
     try {
       var manifest = lamos.parse(license.manifest)
     } catch (error) {
-      return fail('invalid license')
+      return done('invalid license')
     }
     var licensee = manifest.licensee
     var name = licensee.name
     var jurisdiction = licensee.jurisdiction
     var readIdentities = require('../read/identities')
-    readIdentities(config, ecb(fail, function (identities) {
+    readIdentities(config, ecb(done, function (identities) {
       var matchingIdentity = identities.find(function (identity) {
         return (
           identity.name === name &&
@@ -40,7 +40,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
         )
       })
       if (!matchingIdentity) {
-        return fail(
+        return done(
           'license for ' + name + ' [' + jurisdiction + '] ' +
           'does not match any existing identity'
         )
@@ -55,27 +55,22 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
       }
       var validSignature = require('../validate/signature')
       if (!validSignature(license)) {
-        return fail('invalid cryptographic signature')
+        return done('invalid cryptographic signature')
       }
       var request = require('../request')
       request({
         action: 'product',
         productID: license.productID
-      }, ecb(fail, function (response) {
+      }, ecb(done, function (response) {
         if (license.publicKey !== response.licensor.publicKey) {
-          return fail('public key does not match')
+          return done('public key does not match')
         }
         var writeLicense = require('../write/license')
-        writeLicense(config, nickname, license, ecb(fail, function () {
-          stdout.write('imported')
-          done(0)
+        writeLicense(config, nickname, license, ecb(done, function () {
+          stdout.write('Imported license.')
+          done()
         }))
       }))
     }))
   }))
-
-  function fail (error) {
-    stderr.write(error + '\n')
-    done(1)
-  }
 }

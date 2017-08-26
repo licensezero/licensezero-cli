@@ -24,36 +24,24 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   for (var index = 0; index < keys.length; index++) {
     var key = keys[index]
     var value = newIdentity[key] = options['<' + key + '>']
-    if (!validations[key](value)) return fail('invalid ' + key)
+    if (!validations[key](value)) return done('invalid ' + key)
   }
 
   var ecb = require('ecb')
   var readIdentities = require('../read/identities')
-  readIdentities(config, ecb(fail, function (identities) {
+  readIdentities(config, ecb(done, function (identities) {
     var existing = identities.some(function (identity) {
       return identity.nickname === newIdentity.nickname
     })
-    if (existing) return fail('nickname taken')
+    if (existing) return done('nickname taken')
     var colliding = identities.find(function (existingIdentity) {
       return (
         existingIdentity.name === newIdentity.name &&
         existingIdentity.jurisdiction === newIdentity.jurisdiction
       )
     })
-    if (colliding) return fail('identical to ' + colliding.nickname)
+    if (colliding) return done('identical to ' + colliding.nickname)
     var writeIdentity = require('../write/identity')
-    writeIdentity(config, newIdentity, ecb(fail, function () {
-      done(0)
-    }))
+    writeIdentity(config, newIdentity, done)
   }))
-
-  function fail (error) {
-    /* istanbul ignore else */
-    if (typeof error === 'string') {
-      stderr.write(error + '\n')
-    } else {
-      stderr.write((error.userMessage || error.message) + '\n')
-    }
-    done(1)
-  }
 }

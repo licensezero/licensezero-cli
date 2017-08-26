@@ -19,9 +19,9 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
 
   var ecb = require('ecb')
   var readIdentity = require('../read/identity')
-  readIdentity(config, nickname, ecb(fail, function (identity) {
+  readIdentity(config, nickname, ecb(done, function (identity) {
     var readLicenses = require('../read/licenses')
-    readLicenses(config, nickname, ecb(fail, function (licenses) {
+    readLicenses(config, nickname, ecb(done, function (licenses) {
       var lamos = require('lamos')
       stdout.write(
         lamos.stringify({
@@ -36,13 +36,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
             })
         }) + '\n'
       )
-      return done(0)
+      return done()
     }))
   }))
-
-  /* istanbul ignore next */
-  function fail (error) {
-    stderr.write(error.message + '\n')
-    done(1)
-  }
 }
