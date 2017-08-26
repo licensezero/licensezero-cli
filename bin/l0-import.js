@@ -23,9 +23,8 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   readJSONFile(file, ecb(done, function (license) {
     var validLicense = require('../validate/license')
     if (!validLicense(license)) return done('invalid license')
-    var lamos = require('lamos')
     try {
-      var manifest = lamos.parse(license.manifest)
+      var manifest = JSON.parse(license.manifest)
     } catch (error) {
       return done('invalid license')
     }
