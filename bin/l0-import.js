@@ -11,7 +11,8 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
     '',
     'Options:',
     '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.'
+    '  -v, --version  Print version to standard output.',
+    '  -q, --quiet    Suppress output.'
   ]).apply(null, arguments)
   if (!options) return
 
@@ -28,9 +29,13 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
     } catch (error) {
       return done('invalid license')
     }
+    var productID = license.productID
+    log('Product ID: ' + productID)
     var licensee = manifest.licensee
+    log('Licensee: ' + licensee)
     var name = licensee.name
     var jurisdiction = licensee.jurisdiction
+    log('Jurisdiction: ' + licensee)
     var readIdentities = require('../read/identities')
     readIdentities(config, ecb(done, function (identities) {
       var matchingIdentity = identities.find(function (identity) {
@@ -46,25 +51,31 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
         )
       }
       var nickname = matchingIdentity.nickname
-      if (matchingIdentity.tier !== manifest.tier) {
+      log('Matches Identity: ' + nickname)
+      var tier = manifest.tier
+      if (matchingIdentity.tier !== tier) {
         stderr.write(
           'Warning: ' + nickname + ' is configured for ' +
           matchingIdentity.tier + '-tier licenses.\n' +
           '         This is a ' + license.tier + '-tier license.'
         )
       }
+      log('Tier: ' + tier)
       var validSignature = require('../validate/signature')
       if (!validSignature(license)) {
         return done('invalid cryptographic signature')
       }
+      log('Signature: valid')
+      log('Public Key: ' + license.publicKey.slice(0, 32) + '...')
       var request = require('../request')
       request({
         action: 'product',
-        productID: license.productID
+        productID: productID
       }, ecb(done, function (response) {
         if (license.publicKey !== response.licensor.publicKey) {
           return done('public key does not match')
         }
+        log('licensezero.com Public Key: matches')
         var writeLicense = require('../write/license')
         writeLicense(config, nickname, license, ecb(done, function () {
           stdout.write('Imported license.')
@@ -73,4 +84,8 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
       }))
     }))
   }))
+
+  function log (message) {
+    if (!options['--quiet']) stdout.write(message + '\n')
+  }
 }
