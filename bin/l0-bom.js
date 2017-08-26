@@ -18,20 +18,24 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   var ecb = require('ecb')
   var readIdentity = require('../read-identity')
   readIdentity(config, nickname, ecb(fail, function (identity) {
-    var readLicenses = require('../read-identity')
+    var readLicenses = require('../read-licenses')
     readLicenses(config, nickname, ecb(fail, function (licenses) {
       var readPackageTree = require('read-package-tree')
       readPackageTree(cwd, function (error, tree) {
         /* istanbul ignore if */
         if (error) return fail(error)
-        var licensable = tree.children.filter(function (dependency) {
-          return hasLicenseZeroMetadata(dependency)
-        })
+        var licensable = tree.children
+          .map(function (node) {
+            return node.package
+          })
+          .filter(function (dependency) {
+            return hasProductID(dependency)
+          })
         if (licensable.length === 0) {
           stdout.write('No License Zero dependencies found.')
           return done(0)
         }
-        stdout.write('License Zero Packages: ' + licensable.length)
+        stdout.write('License Zero Products: ' + licensable.length + '\n')
         var unlicensed = []
         var licensed = []
         licensable.forEach(function (dependency) {
@@ -48,8 +52,8 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
           stdout.write('No unlicensed License Zero dependencies found.')
           return done(0)
         }
-        stdout.write('Licensed: ' + licensed.length)
-        stdout.write('Unlicensed: ' + unlicensed.length)
+        stdout.write('Licensed: ' + licensed.length + '\n')
+        stdout.write('Unlicensed: ' + unlicensed.length + '\n')
         var request = require('../request')
         request({
           action: 'quote',
@@ -61,7 +65,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
           var products = response.products
           stdout.write(
             lamos.stringify({
-              products: products.map(function (product) {
+              Products: products.map(function (product) {
                 var licensor = product.licensor
                 return {
                   Product: product.productID,
@@ -71,7 +75,10 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
                   Licensor: (
                     licensor.name + ' [' + licensor.jurisdiction + ']'
                   ),
-                  Price: currency(product.pricing[identity.tier])
+                  Price: (
+                    currency(product.pricing[identity.tier]) +
+                    ' (' + capitalize(identity.tier) + ' License)'
+                  )
                 }
               }),
               Total: currency(
@@ -81,6 +88,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
               )
             })
           )
+          done(0)
         }))
       })
     }))
@@ -92,11 +100,11 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   }
 }
 
-function hasLicenseZeroMetadata (dependency) {
+function hasProductID (dependency) {
   return (
     isObject(dependency.licensezero) &&
     isObject(dependency.licensezero.metadata) &&
-    isObject(dependency.licensezero.metadata.productID)
+    typeof dependency.licensezero.metadata.productID === 'string'
   )
 }
 
@@ -114,4 +122,8 @@ function currency (cents) {
       ? '0.' + (cents < 10 ? '0' + cents : cents)
       : cents.toString().replace(/(\d\d)$/, '.$1')
   )
+}
+
+function capitalize (string) {
+  return string[0].toUpperCase() + string.slice(1)
 }

@@ -1,7 +1,26 @@
 var https = require('https')
 var simpleConcat = require('simple-concat')
 
-module.exports = function (payload, callback) {
+/* istanbul ignore else */
+if (process.env.NODE_ENV === 'test') {
+  var mocks
+  module.exports = function (payload, callback) {
+    var action = payload.action
+    /* istanbul ignore else */
+    if (mocks[0].action === action) {
+      var mock = mocks.shift()
+      mock.handler(payload, callback)
+    } else {
+      request(payload, callback)
+    }
+  }
+  mocks = module.exports.mocks = []
+} else {
+  module.exports = request
+}
+
+/* istanbul ignore next */
+function request (payload, callback) {
   https.request({
     method: 'POST',
     host: 'licensezero.com',
