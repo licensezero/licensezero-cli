@@ -19,7 +19,12 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   var readIdentity = require('../read/identity')
   readIdentity(config, nickname, ecb(done, function (identity) {
     var readLicenses = require('../read/licenses')
-    readLicenses(config, nickname, ecb(done, function (licenses) {
+    var readWaivers = require('../read/waivers')
+    var runParallel = require('run-parallel')
+    runParallel({
+      licenses: readLicenses.bind(null, config, nickname),
+      waivers: readWaivers.bind(null, config, nickname)
+    }, ecb(done, function (existing) {
       var readPackageTree = require('read-package-tree')
       readPackageTree(cwd, ecb(done, function (tree) {
         var licensable = tree.children
@@ -33,24 +38,32 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
           stdout.write('No License Zero dependencies found.')
           return done(0)
         }
-        stdout.write('License Zero Products: ' + licensable.length + '\n')
+        stdout.write(
+          'License Zero Products: ' + licensable.length + '\n'
+        )
         var unlicensed = []
         var licensed = []
+        var waived = []
         licensable.forEach(function (dependency) {
-          var haveLicense = licenses.some(function (license) {
-            return license.productID === dependencyProductID(dependency)
+          var productID = dependencyProductID(dependency)
+          var haveLicense = existing.licenses.some(function (license) {
+            return license.productID === productID
           })
           // TODO: Check whether existing license matches current tier
           // TODO: Price upgrades
-          // TODO: Differentiate licensed from waived products
-          var list = haveLicense ? licensed : unlicensed
-          list.push(dependency)
+          if (haveLicense) return licensed.push(dependency)
+          var haveWaiver = existing.waivers.some(function (waiver) {
+            return waiver.productID === productID
+          })
+          if (haveWaiver) return waived.push(dependency)
+          unlicensed.push(dependency)
         })
         if (unlicensed.length === 0) {
           stdout.write('No unlicensed License Zero dependencies found.')
           return done(0)
         }
         stdout.write('Licensed: ' + licensed.length + '\n')
+        stdout.write('Waived: ' + waived.length + '\n')
         stdout.write('Unlicensed: ' + unlicensed.length + '\n')
         var request = require('../request')
         request({
@@ -61,29 +74,30 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
         }, ecb(done, function (response) {
           var lamos = require('lamos')
           var products = response.products
+          var formattedProducts = []
+          var total = 0
+          products.forEach(function (product) {
+            var licensor = product.licensor
+            var price = product.pricing[identity.tier]
+            total += price
+            formattedProducts.push({
+              Product: product.productID,
+              Description: product.description,
+              Repository: product.repository,
+              'Grace Period': product.grace + ' calendar days',
+              Licensor: (
+                licensor.name + ' [' + licensor.jurisdiction + ']'
+              ),
+              Price: (
+                currency(price) +
+                ' (' + capitalize(identity.tier) + ' License)'
+              )
+            })
+          })
           stdout.write(
             lamos.stringify({
-              Products: products.map(function (product) {
-                var licensor = product.licensor
-                return {
-                  Product: product.productID,
-                  Description: product.description,
-                  Repository: product.repository,
-                  'Grace Period': product.grace + ' calendar days',
-                  Licensor: (
-                    licensor.name + ' [' + licensor.jurisdiction + ']'
-                  ),
-                  Price: (
-                    currency(product.pricing[identity.tier]) +
-                    ' (' + capitalize(identity.tier) + ' License)'
-                  )
-                }
-              }),
-              Total: currency(
-                products.reduce(function (total, product) {
-                  return total + product.pricing[identity.tier]
-                }, 0)
-              )
+              Products: formattedProducts,
+              Total: currency(total)
             })
           )
           done(0)

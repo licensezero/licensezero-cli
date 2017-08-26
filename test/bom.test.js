@@ -147,6 +147,7 @@ tape('bom one l0 dep', function (test) {
             [
               'License Zero Products: 1',
               'Licensed: 0',
+              'Waived: 0',
               'Unlicensed: 1',
               'Products:',
               '  - Product: ' + PRODUCT_ID,
