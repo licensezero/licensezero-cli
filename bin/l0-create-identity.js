@@ -34,13 +34,13 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
       return identity.nickname === newIdentity.nickname
     })
     if (existing) return done('nickname taken')
-    var colliding = identities.find(function (existingIdentity) {
+    var identical = identities.find(function (existingIdentity) {
       return (
         existingIdentity.name === newIdentity.name &&
         existingIdentity.jurisdiction === newIdentity.jurisdiction
       )
     })
-    if (colliding) return done('identical to ' + colliding.nickname)
+    if (identical) return done('identical to ' + identical.nickname)
     var writeIdentity = require('../write/identity')
     writeIdentity(config, newIdentity, done)
   }))
