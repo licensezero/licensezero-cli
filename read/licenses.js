@@ -1,21 +1,14 @@
+var eea = require('./enoent-empty-array')
 var fs = require('fs')
-var readLicense = require('./license')
 var path = require('path')
+var readLicense = require('./license')
 var runParallel = require('run-parallel')
 
 module.exports = function (config, nickname, callback) {
   var directory = path.join(config, 'identities', nickname, 'licenses')
-  fs.readdir(directory, function (error, entries) {
-    if (error) {
-      /* istanbul ignore else */
-      if (error.code === 'ENOENT') {
-        return callback(null, [])
-      } else {
-        return callback(error)
-      }
-    }
+  fs.readdir(directory, eea(callback, function (entries) {
     runParallel(entries.map(function (productID) {
       return readLicense.bind(null, config, nickname, productID)
     }), callback)
-  })
+  }))
 }

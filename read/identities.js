@@ -1,23 +1,16 @@
+var eea = require('./enoent-empty-array')
 var fs = require('fs')
 var path = require('path')
-var runParallel = require('run-parallel')
 var readIdentity = require('./identity')
+var runParallel = require('run-parallel')
 
 module.exports = function (config, callback) {
   fs.readdir(
     path.join(config, 'identities'),
-    function (error, entries) {
-      if (error) {
-        /* istanbul ignore else */
-        if (error.code === 'ENOENT') {
-          return callback(null, [])
-        } else {
-          return callback(error)
-        }
-      }
+    eea(callback, function (entries) {
       runParallel(entries.map(function (entry) {
         return readIdentity.bind(null, config, entry)
       }), callback)
-    }
+    })
   )
 }
