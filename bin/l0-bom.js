@@ -79,20 +79,25 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
           products.forEach(function (product) {
             var licensor = product.licensor
             var price = product.pricing[identity.tier]
-            total += price
-            formattedProducts.push({
+            var formatted = {
               Product: product.productID,
               Description: product.description,
               Repository: product.repository,
               'Grace Period': product.grace + ' calendar days',
               Licensor: (
                 licensor.name + ' [' + licensor.jurisdiction + ']'
-              ),
-              Price: (
+              )
+            }
+            if (product.retracted) {
+              formatted.Retracted = product.retracted
+            } else {
+              total += price
+              formatted.Price = (
                 currency(price) +
                 ' (' + capitalize(identity.tier) + ' License)'
               )
-            })
+            }
+            formattedProducts.push(formatted)
           })
           stdout.write(
             lamos.stringify({
