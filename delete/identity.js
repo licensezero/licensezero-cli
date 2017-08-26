@@ -1,4 +1,4 @@
-var identityPath = require('./paths/identity')
+var identityPath = require('../paths/identity')
 var path = require('path')
 var rimraf = require('rimraf')
 
