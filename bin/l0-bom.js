@@ -21,9 +21,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
     var readLicenses = require('../read/licenses')
     readLicenses(config, nickname, ecb(done, function (licenses) {
       var readPackageTree = require('read-package-tree')
-      readPackageTree(cwd, function (error, tree) {
-        /* istanbul ignore if */
-        if (error) return done(error)
+      readPackageTree(cwd, ecb(done, function (tree) {
         var licensable = tree.children
           .map(function (node) {
             return node.package
@@ -90,7 +88,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
           )
           done(0)
         }))
-      })
+      }))
     }))
   }))
 }

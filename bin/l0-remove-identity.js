@@ -15,12 +15,5 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
 
   var deleteIdentity = require('../delete/identity')
   var nickname = options['<nickname>']
-  deleteIdentity(config, nickname, function (error, identities) {
-    /* istanbul ignore if */
-    if (error) {
-      stderr.write(error.message + '\n')
-      return done()
-    }
-    return done()
-  })
+  deleteIdentity(config, nickname, done)
 }

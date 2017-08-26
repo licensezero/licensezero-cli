@@ -13,16 +13,12 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   ]).apply(null, arguments)
   if (!options) return
 
+  var ecb = require('ecb')
   var readIdentities = require('../read/identities')
-  readIdentities(config, function (error, identities) {
-    /* istanbul ignore if */
-    if (error) {
-      stderr.write(error.message + '\n')
-      return done()
-    }
+  readIdentities(config, ecb(done, function (identities) {
     identities.forEach(function (identity) {
       stdout.write(identity.nickname + '\n')
     })
     return done()
-  })
+  }))
 }
