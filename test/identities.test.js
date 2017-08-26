@@ -40,7 +40,7 @@ tape('create w/ invalid nickname', function (test) {
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
-      test.equal(stderr, 'invalid nickname\n', 'no stderr')
+      test.equal(stderr, 'Error: invalid nickname\n', 'no stderr')
       rm(test)
     })
   })
@@ -63,7 +63,7 @@ tape('create w/ taken nickname', function (test) {
         ], function (status, stdout, stderr) {
           test.equal(status, 1, 'exit 1')
           test.equal(stdout, '', 'no stdout')
-          test.equal(stderr, 'nickname taken\n', 'no stderr')
+          test.equal(stderr, 'Error: nickname taken\n', 'no stderr')
           done()
         })
       }
@@ -92,7 +92,7 @@ tape('create w/ identical details', function (test) {
         ], function (status, stdout, stderr) {
           test.equal(status, 1, 'exit 1')
           test.equal(stdout, '', 'no stdout')
-          test.equal(stderr, 'identical to apple\n', 'identical')
+          test.equal(stderr, 'Error: identical to apple\n', 'identical')
           done()
         })
       }
@@ -109,7 +109,7 @@ tape('create w/ invalid name', function (test) {
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
-      test.equal(stderr, 'invalid name\n', 'invalid')
+      test.equal(stderr, 'Error: invalid name\n', 'invalid')
       rm(test)
     })
   })
@@ -122,7 +122,7 @@ tape('create w/ invalid jurisdiction', function (test) {
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
-      test.equal(stderr, 'invalid jurisdiction\n', 'invalid')
+      test.equal(stderr, 'Error: invalid jurisdiction\n', 'invalid')
       rm(test)
     })
   })
@@ -135,7 +135,7 @@ tape('create w/ invalid tier', function (test) {
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
-      test.equal(stderr, 'invalid tier\n', 'invalid')
+      test.equal(stderr, 'Error: invalid tier\n', 'invalid')
       rm(test)
     })
   })
