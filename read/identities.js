@@ -1,7 +1,7 @@
 var fs = require('fs')
 var path = require('path')
 var runParallel = require('run-parallel')
-var readIdentity = require('./read-identity')
+var readIdentity = require('./identity')
 
 module.exports = function (config, callback) {
   fs.readdir(

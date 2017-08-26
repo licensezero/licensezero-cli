@@ -18,7 +18,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   var file = options['<file>']
 
   var ecb = require('ecb')
-  var readJSONFile = require('../read-json-file')
+  var readJSONFile = require('../read/json-file')
   readJSONFile(file, ecb(fail, function (license) {
     var validLicense = require('../validate/license')
     if (!validLicense(license)) return fail('invalid license')
@@ -31,7 +31,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
     var licensee = manifest.licensee
     var name = licensee.name
     var jurisdiction = licensee.jurisdiction
-    var readIdentities = require('../read-identities')
+    var readIdentities = require('../read/identities')
     readIdentities(config, ecb(fail, function (identities) {
       var matchingIdentity = identities.find(function (identity) {
         return (
@@ -65,7 +65,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
         if (license.publicKey !== response.licensor.publicKey) {
           return fail('public key does not match')
         }
-        var writeLicense = require('../write-license')
+        var writeLicense = require('../write/license')
         writeLicense(config, nickname, license, ecb(fail, function () {
           stdout.write('imported')
           done(0)

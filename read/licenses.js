@@ -1,5 +1,5 @@
 var fs = require('fs')
-var readLicense = require('./read-license')
+var readLicense = require('./license')
 var path = require('path')
 var runParallel = require('run-parallel')
 

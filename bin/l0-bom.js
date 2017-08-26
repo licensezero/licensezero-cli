@@ -16,9 +16,9 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   var nickname = options['<nickname>']
 
   var ecb = require('ecb')
-  var readIdentity = require('../read-identity')
+  var readIdentity = require('../read/identity')
   readIdentity(config, nickname, ecb(fail, function (identity) {
-    var readLicenses = require('../read-licenses')
+    var readLicenses = require('../read/licenses')
     readLicenses(config, nickname, ecb(fail, function (licenses) {
       var readPackageTree = require('read-package-tree')
       readPackageTree(cwd, function (error, tree) {

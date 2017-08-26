@@ -13,7 +13,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   ]).apply(null, arguments)
   if (!options) return
 
-  var readIdentities = require('../read-identities')
+  var readIdentities = require('../read/identities')
   readIdentities(config, function (error, identities) {
     /* istanbul ignore if */
     if (error) {

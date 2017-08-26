@@ -1,8 +1,8 @@
-var identityPath = require('./paths/identity')
+var identityPath = require('../paths/identity')
 var mkdirp = require('mkdirp')
 var path = require('path')
 var runSeries = require('run-series')
-var writeJSONFile = require('./write-json-file')
+var writeJSONFile = require('./json-file')
 
 module.exports = function (config, identity, callback) {
   var file = identityPath(config, identity.nickname)

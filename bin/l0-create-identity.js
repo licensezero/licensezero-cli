@@ -28,7 +28,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   }
 
   var ecb = require('ecb')
-  var readIdentities = require('../read-identities')
+  var readIdentities = require('../read/identities')
   readIdentities(config, ecb(fail, function (identities) {
     var existing = identities.some(function (identity) {
       return identity.nickname === newIdentity.nickname
@@ -41,7 +41,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
       )
     })
     if (colliding) return fail('identical to ' + colliding.nickname)
-    var writeIdentity = require('../write-identity')
+    var writeIdentity = require('../write/identity')
     writeIdentity(config, newIdentity, ecb(fail, function () {
       done(0)
     }))
