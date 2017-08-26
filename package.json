@@ -36,5 +36,10 @@
   "lint-staged": {
     "*.js": "standard",
     "*.md": "standard-markdown"
+  },
+  "bin": {
+    "l0-create-identity": "./bin/l0-create-identity",
+    "l0-remove-identity": "./bin/l0-remove-identity",
+    "l0-list-identities": "./bin/l0-list-identities"
   }
 }
