@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+var path = require('path')
+
+var script = path.basename(process.argv[1])
+
+require('./' + script + '.js')(
+  process.argv.slice(2),
+  process.cwd(),
+  path.join(
+    require('xdg-basedir').config,
+    require('../package.json').name
+  ),
+  process.stdout,
+  process.stderr,
+  function (status) {
+    process.exit(status)
+  }
+)

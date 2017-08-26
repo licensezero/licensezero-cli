@@ -1,0 +1,30 @@
+{
+  "name": "licensezero-cli",
+  "version": "0.0.0",
+  "description": "License Zero command-line interface",
+  "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
+  "private": true,
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "tape": "^4.8.0"
+  },
+  "dependencies": {
+    "ajv": "^5.2.2",
+    "docopt": "^0.6.2",
+    "ecb": "^1.0.0",
+    "ed25519": "0.0.4",
+    "json-parse-errback": "^2.0.1",
+    "lamos": "^3.0.3",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.1",
+    "run-parallel": "^1.1.6",
+    "run-series": "^1.1.4",
+    "stream-buffers": "^3.0.1",
+    "xdg-basedir": "^3.0.0"
+  },
+  "scripts": {
+    "coverage": "NODE_ENV=test istanbul cover -- tape test/*.test.js",
+    "postcoverage": "istanbul check --statements 100 --functions 100 --branches 100 --lines 100",
+    "test": "NODE_ENV=test tape test/*.test.js"
+  }
+}
