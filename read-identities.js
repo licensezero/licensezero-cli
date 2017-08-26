@@ -1,8 +1,7 @@
 var fs = require('fs')
-var identityPath = require('./paths/identity')
 var path = require('path')
-var readJSONFile = require('./read-json-file')
 var runParallel = require('run-parallel')
+var readIdentity = require('./read-identity')
 
 module.exports = function (config, callback) {
   fs.readdir(
@@ -17,7 +16,7 @@ module.exports = function (config, callback) {
         }
       }
       runParallel(entries.map(function (entry) {
-        return readJSONFile.bind(null, identityPath(config, entry))
+        return readIdentity.bind(null, config, entry)
       }), callback)
     }
   )

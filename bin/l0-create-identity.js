@@ -3,7 +3,7 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
     'Create a new licensee identity.',
     '',
     'Usage:',
-    '  l0-create-identity <nickname> <name> <jurisdiction>',
+    '  l0-create-identity <nickname> <name> <jurisdiction> <tier>',
     '  l0-create-identity -h | --help',
     '  l0-create-identity -v | --version',
     '',
@@ -16,7 +16,8 @@ module.exports = function (argv, cwd, config, stdout, stderr, done) {
   var validations = {
     nickname: require('../validate/nickname'),
     name: require('../validate/name'),
-    jurisdiction: require('../validate/jurisdiction')
+    jurisdiction: require('../validate/jurisdiction'),
+    tier: require('../validate/tier')
   }
   var keys = Object.keys(validations)
   var newIdentity = {}

@@ -1,6 +1,9 @@
+var helpFlags = require('./help-flags')
 var helper = require('./helper')
+var noArgumentsUsage = require('./no-arguments-usage')
 var runSeries = require('run-series')
 var tape = require('tape')
+var versionFlags = require('./version-flags')
 
 var createIdentity = require('../bin/l0-create-identity.js')
 var listIdentities = require('../bin/l0-list-identities.js')
@@ -9,24 +12,10 @@ var removeIdentity = require('../bin/l0-remove-identity.js')
 noArgumentsUsage('create', createIdentity)
 noArgumentsUsage('remove', removeIdentity)
 
-function noArgumentsUsage (name, cli) {
-  tape(name + ' usage', function (test) {
-    helper(function (tmp, run, rm) {
-      run(cli, [
-      ], function (status, stdout, stderr) {
-        test.equal(status, 1, 'exit 1')
-        test.equal(stdout, '', 'no stdout')
-        test.assert(stderr.includes('Usage:'), 'usage')
-        rm(test)
-      })
-    })
-  })
-}
-
 tape('create identity', function (test) {
   helper(function (tmp, run, rm) {
     run(createIdentity, [
-      'test', 'Test Licensee', 'US-CA'
+      'test', 'Test Licensee', 'US-CA', 'team'
     ], function (status, stdout, stderr) {
       test.equal(status, 0, 'exit 0')
       test.equal(stdout, '', 'no stdout')
@@ -36,52 +25,18 @@ tape('create identity', function (test) {
   })
 })
 
-showsHelp('create', createIdentity)
-showsHelp('list', listIdentities)
-showsHelp('remove', removeIdentity)
+helpFlags('create', createIdentity)
+helpFlags('list', listIdentities)
+helpFlags('remove', removeIdentity)
 
-function showsHelp (name, cli) {
-  tape(name + ' help', function (test) {
-    helper(function (tmp, run, rm) {
-      run(cli, [
-        '--help'
-      ], function (status, stdout, stderr) {
-        test.equal(status, 0, 'exit 0')
-        test.assert(stdout.includes('Usage:'), 'usage')
-        test.assert(stdout.includes('Options:'), 'options')
-        test.equal(stderr, '', 'no stderr')
-        rm(test)
-      })
-    })
-  })
-}
-
-showsVersion('create', createIdentity)
-showsVersion('list', listIdentities)
-showsVersion('remove', removeIdentity)
-
-function showsVersion (name, cli) {
-  tape(name + ' version', function (test) {
-    helper(function (tmp, run, rm) {
-      run(cli, [
-        '--version'
-      ], function (status, stdout, stderr) {
-        test.equal(status, 0, 'exit 0')
-        test.assert(
-          stdout.includes(require('../package.json').version),
-          'version'
-        )
-        test.equal(stderr, '', 'no stderr')
-        rm(test)
-      })
-    })
-  })
-}
+versionFlags('create', createIdentity)
+versionFlags('list', listIdentities)
+versionFlags('remove', removeIdentity)
 
 tape('create w/ invalid nickname', function (test) {
   helper(function (tmp, run, rm) {
     run(createIdentity, [
-      'has space', 'Test Licensee', 'US-CA'
+      'has space', 'Test Licensee', 'US-CA', 'team'
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
@@ -96,7 +51,7 @@ tape('create w/ taken nickname', function (test) {
     runSeries([
       function (done) {
         run(createIdentity, [
-          'test', 'First Licensee', 'US-CA'
+          'test', 'First Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -104,7 +59,7 @@ tape('create w/ taken nickname', function (test) {
       },
       function (done) {
         run(createIdentity, [
-          'test', 'Second Licensee', 'US-CA'
+          'test', 'Second Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 1, 'exit 1')
           test.equal(stdout, '', 'no stdout')
@@ -125,7 +80,7 @@ tape('create w/ identical details', function (test) {
     runSeries([
       function (done) {
         run(createIdentity, [
-          'apple', NAME, JURISDICTION
+          'apple', NAME, JURISDICTION, 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -133,7 +88,7 @@ tape('create w/ identical details', function (test) {
       },
       function (done) {
         run(createIdentity, [
-          'orange', NAME, JURISDICTION
+          'orange', NAME, JURISDICTION, 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 1, 'exit 1')
           test.equal(stdout, '', 'no stdout')
@@ -150,7 +105,7 @@ tape('create w/ identical details', function (test) {
 tape('create w/ invalid name', function (test) {
   helper(function (tmp, run, rm) {
     run(createIdentity, [
-      'test', '', 'US-CA'
+      'test', '', 'US-CA', 'team'
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
@@ -163,11 +118,24 @@ tape('create w/ invalid name', function (test) {
 tape('create w/ invalid jurisdiction', function (test) {
   helper(function (tmp, run, rm) {
     run(createIdentity, [
-      'test', 'Test Licensee', 'US-XX'
+      'test', 'Test Licensee', 'US-XX', 'team'
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
       test.equal(stderr, 'invalid jurisdiction\n', 'invalid')
+      rm(test)
+    })
+  })
+})
+
+tape('create w/ invalid tier', function (test) {
+  helper(function (tmp, run, rm) {
+    run(createIdentity, [
+      'test', 'Test Licensee', 'US-CA', 'invalid'
+    ], function (status, stdout, stderr) {
+      test.equal(status, 1, 'exit 1')
+      test.equal(stdout, '', 'no stdout')
+      test.equal(stderr, 'invalid tier\n', 'invalid')
       rm(test)
     })
   })
@@ -188,7 +156,7 @@ tape('create, list', function (test) {
     runSeries([
       function (done) {
         run(createIdentity, [
-          'test', 'Test Licensee', 'US-CA'
+          'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -213,7 +181,7 @@ tape('create, remove, list', function (test) {
     runSeries([
       function (done) {
         run(createIdentity, [
-          'test', 'Test Licensee', 'US-CA'
+          'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()

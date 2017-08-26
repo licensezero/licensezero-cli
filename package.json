@@ -20,9 +20,12 @@
     "json-parse-errback": "^2.0.1",
     "lamos": "^3.0.3",
     "mkdirp": "^0.5.1",
+    "read-package-tree": "^5.1.6",
     "rimraf": "^2.6.1",
     "run-parallel": "^1.1.6",
+    "run-parallel-limit": "^1.0.3",
     "run-series": "^1.1.4",
+    "simple-concat": "^1.0.0",
     "stream-buffers": "^3.0.1",
     "xdg-basedir": "^3.0.0"
   },
@@ -38,6 +41,7 @@
     "*.md": "standard-markdown"
   },
   "bin": {
+    "l0-bom": "./bin/l0-bom",
     "l0-create-identity": "./bin/l0-create-identity",
     "l0-remove-identity": "./bin/l0-remove-identity",
     "l0-list-identities": "./bin/l0-list-identities"
