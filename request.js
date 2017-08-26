@@ -3,7 +3,7 @@ var simpleConcat = require('simple-concat')
 
 /* istanbul ignore else */
 if (process.env.NODE_ENV === 'test') {
-  var mocks
+  var mocks = []
   module.exports = function (payload, callback) {
     var action = payload.action
     /* istanbul ignore else */
@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'test') {
       request(payload, callback)
     }
   }
-  mocks = module.exports.mocks = []
+  module.exports.mocks = mocks
 } else {
   module.exports = request
 }
