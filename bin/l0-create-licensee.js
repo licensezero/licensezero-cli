@@ -3,9 +3,9 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     'Create a new licensee identity.',
     '',
     'Usage:',
-    '  l0-create-identity <nickname> <name> <jurisdiction> <tier>',
-    '  l0-create-identity -h | --help',
-    '  l0-create-identity -v | --version',
+    '  l0-create-licensee <nickname> <name> <jurisdiction> <tier>',
+    '  l0-create-licensee -h | --help',
+    '  l0-create-licensee -v | --version',
     '',
     'Options:',
     '  -h, --help     Print this screen to standard output.',
@@ -20,28 +20,28 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     tier: require('../validate/tier')
   }
   var keys = Object.keys(validations)
-  var newIdentity = {}
+  var newLicensee = {}
   for (var index = 0; index < keys.length; index++) {
     var key = keys[index]
-    var value = newIdentity[key] = options['<' + key + '>']
+    var value = newLicensee[key] = options['<' + key + '>']
     if (!validations[key](value)) return done('invalid ' + key)
   }
 
   var ecb = require('ecb')
-  var readIdentities = require('../read/identities')
-  readIdentities(config, ecb(done, function (identities) {
-    var existing = identities.some(function (identity) {
-      return identity.nickname === newIdentity.nickname
+  var readLicensees = require('../read/licensees')
+  readLicensees(config, ecb(done, function (licensees) {
+    var existing = licensees.some(function (licensee) {
+      return licensee.nickname === newLicensee.nickname
     })
     if (existing) return done('nickname taken')
-    var identical = identities.find(function (existingIdentity) {
+    var identical = licensees.find(function (existingLicensee) {
       return (
-        existingIdentity.name === newIdentity.name &&
-        existingIdentity.jurisdiction === newIdentity.jurisdiction
+        existingLicensee.name === newLicensee.name &&
+        existingLicensee.jurisdiction === newLicensee.jurisdiction
       )
     })
     if (identical) return done('identical to ' + identical.nickname)
-    var writeIdentity = require('../write/identity')
-    writeIdentity(config, newIdentity, done)
+    var writeLicensee = require('../write/licensee')
+    writeLicensee(config, newLicensee, done)
   }))
 }

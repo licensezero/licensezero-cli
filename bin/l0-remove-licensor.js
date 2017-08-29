@@ -13,7 +13,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   ]).apply(null, arguments)
   if (!options) return
 
-  var deleteLicensor = require('../delete/identity')
+  var deleteLicensor = require('../delete/licensee')
   var nickname = options['<nickname>']
   deleteLicensor(config, nickname, done)
 }

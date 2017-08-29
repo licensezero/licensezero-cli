@@ -8,7 +8,7 @@ var runSeries = require('run-series')
 var tape = require('tape')
 var versionFlags = require('./version-flags')
 
-var createIdentity = require('../bin/l0-create-identity.js')
+var createLicensee = require('../bin/l0-create-licensee.js')
 var bom = require('../bin/l0-bom.js')
 
 helpFlags('bom', bom)
@@ -19,7 +19,7 @@ tape('bom no deps', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createIdentity, [
+        run(createLicensee, [
           'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
@@ -49,7 +49,7 @@ tape('bom non-l0 dep', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createIdentity, [
+        run(createLicensee, [
           'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
@@ -115,7 +115,7 @@ tape('bom one l0 dep', function (test) {
     })
     runSeries([
       function (done) {
-        run(createIdentity, [
+        run(createLicensee, [
           'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
@@ -202,7 +202,7 @@ tape('bom one retracted l0 dep', function (test) {
     })
     runSeries([
       function (done) {
-        run(createIdentity, [
+        run(createLicensee, [
           'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')

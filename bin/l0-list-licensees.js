@@ -1,11 +1,11 @@
 module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   var options = require('./usage')([
-    'List licensee identities.',
+    'List licensee licensees.',
     '',
     'Usage:',
-    '  l0-list-identities',
-    '  l0-list-identities -h | --help',
-    '  l0-list-identities -v | --version',
+    '  l0-list-licensees',
+    '  l0-list-licensees -h | --help',
+    '  l0-list-licensees -v | --version',
     '',
     'Options:',
     '  -h, --help     Print this screen to standard output.',
@@ -14,10 +14,10 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   if (!options) return
 
   var ecb = require('ecb')
-  var readIdentities = require('../read/identities')
-  readIdentities(config, ecb(done, function (identities) {
-    identities.forEach(function (identity) {
-      stdout.write(identity.nickname + '\n')
+  var readLicensees = require('../read/licensees')
+  readLicensees(config, ecb(done, function (licensees) {
+    licensees.forEach(function (licensee) {
+      stdout.write(licensee.nickname + '\n')
     })
     return done()
   }))

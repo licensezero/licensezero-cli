@@ -1,8 +1,8 @@
-var identityPath = require('../paths/identity')
+var licenseePath = require('../paths/licensee')
 var path = require('path')
 var rimraf = require('rimraf')
 
 module.exports = function (config, nickname, callback) {
-  var directory = path.dirname(identityPath(config, nickname))
+  var directory = path.dirname(licenseePath(config, nickname))
   rimraf(directory, callback)
 }

@@ -16,8 +16,8 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   var nickname = options['<nickname>']
 
   var ecb = require('ecb')
-  var readIdentity = require('../read/identity')
-  readIdentity(config, nickname, ecb(done, function (identity) {
+  var readLicensee = require('../read/licensee')
+  readLicensee(config, nickname, ecb(done, function (licensee) {
     var readLicenses = require('../read/licenses')
     var readWaivers = require('../read/waivers')
     var runParallel = require('run-parallel')
@@ -78,7 +78,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           var total = 0
           products.forEach(function (product) {
             var licensor = product.licensor
-            var price = product.pricing[identity.tier]
+            var price = product.pricing[licensee.tier]
             var formatted = {
               Product: product.productID,
               Description: product.description,
@@ -94,7 +94,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
               total += price
               formatted.Price = (
                 currency(price) +
-                ' (' + capitalize(identity.tier) + ' License)'
+                ' (' + capitalize(licensee.tier) + ' License)'
               )
             }
             formattedProducts.push(formatted)

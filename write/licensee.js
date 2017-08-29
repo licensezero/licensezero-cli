@@ -1,13 +1,13 @@
-var identityPath = require('../paths/identity')
+var licenseePath = require('../paths/licensee')
 var mkdirp = require('mkdirp')
 var path = require('path')
 var runSeries = require('run-series')
 var writeJSONFile = require('./json-file')
 
-module.exports = function (config, identity, callback) {
-  var file = identityPath(config, identity.nickname)
+module.exports = function (config, licensee, callback) {
+  var file = licenseePath(config, licensee.nickname)
   runSeries([
     mkdirp.bind(null, path.dirname(file)),
-    writeJSONFile.bind(null, file, identity)
+    writeJSONFile.bind(null, file, licensee)
   ], callback)
 }

@@ -1,11 +1,11 @@
 module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   var options = require('./usage')([
-    'Remove a licensee identity and related licenses.',
+    'Remove a licensee licensee and related licenses.',
     '',
     'Usage:',
-    '  l0-remove-identity <nickname>',
-    '  l0-remove-identity -h | --help',
-    '  l0-remove-identity -v | --version',
+    '  l0-remove-licensee <nickname>',
+    '  l0-remove-licensee -h | --help',
+    '  l0-remove-licensee -v | --version',
     '',
     'Options:',
     '  -h, --help     Print this screen to standard output.',
@@ -13,7 +13,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   ]).apply(null, arguments)
   if (!options) return
 
-  var deleteIdentity = require('../delete/identity')
+  var deleteLicensee = require('../delete/licensee')
   var nickname = options['<nickname>']
-  deleteIdentity(config, nickname, done)
+  deleteLicensee(config, nickname, done)
 }

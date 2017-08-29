@@ -5,7 +5,7 @@ var readWaiver = require('./waiver')
 var runParallel = require('run-parallel')
 
 module.exports = function (config, nickname, callback) {
-  var directory = path.join(config, 'identities', nickname, 'waivers')
+  var directory = path.join(config, 'licensees', nickname, 'waivers')
   fs.readdir(directory, eea(callback, function (entries) {
     runParallel(entries.map(function (productID) {
       return readWaiver.bind(null, config, nickname, productID)

@@ -35,27 +35,27 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     var name = licensee.name
     var jurisdiction = licensee.jurisdiction
     log('Jurisdiction: ' + licensee)
-    var readIdentities = require('../read/identities')
-    readIdentities(config, ecb(done, function (identities) {
-      var matchingIdentity = identities.find(function (identity) {
+    var readLicensees = require('../read/licensees')
+    readLicensees(config, ecb(done, function (licensees) {
+      var matchingLicensee = licensees.find(function (licensee) {
         return (
-          identity.name === name &&
-          identity.jurisdiction === jurisdiction
+          licensee.name === name &&
+          licensee.jurisdiction === jurisdiction
         )
       })
-      if (!matchingIdentity) {
+      if (!matchingLicensee) {
         return done(
           'license for ' + name + ' [' + jurisdiction + '] ' +
-          'does not match any existing identity'
+          'does not match any existing licensee'
         )
       }
-      var nickname = matchingIdentity.nickname
-      log('Matches Identity: ' + nickname)
+      var nickname = matchingLicensee.nickname
+      log('Matches Licensee: ' + nickname)
       var tier = manifest.tier
-      if (matchingIdentity.tier !== tier) {
+      if (matchingLicensee.tier !== tier) {
         stderr.write(
           'Warning: ' + nickname + ' is configured for ' +
-          matchingIdentity.tier + '-tier licenses.\n' +
+          matchingLicensee.tier + '-tier licenses.\n' +
           '         This is a ' + license.tier + '-tier license.'
         )
       }
