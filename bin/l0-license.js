@@ -22,8 +22,9 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     productID: productID
   }, function (error, product) {
     if (error) return done(error)
-    var readLicensor = require('../read-licensor')
+    var readLicensor = require('../read/licensor')
     readLicensor(config, product.licensorID, function (error, licensor) {
+      /* istanbul ignore next */
       if (error) return done(error)
       request({
         action: 'public',
@@ -45,6 +46,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
                 data.set(key, metadata[key])
               })
             }, function (error) {
+              /* istanbul ignore next */
               if (error) return done(error)
               log('Modified ' + packageJSON + '.')
               done()
@@ -62,6 +64,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
               signatureLines(license.agentSignature) + '\n'
             )
             fs.writeFile(licenseFile, content, function (error) {
+              /* istanbul ignore next */
               if (error) return done(error)
               log('Wrote ' + licenseFile + '.')
               done()
@@ -76,7 +79,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   })
 
   function log (message) {
-    if (!options['--quiet']) process.stdout.write(message + '\n')
+    if (!options['--quiet']) stdout.write(message + '\n')
   }
 }
 

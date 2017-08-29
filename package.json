@@ -23,6 +23,7 @@
     "json-preserve-indent": "^1.1.3",
     "lamos": "^3.0.3",
     "mkdirp": "^0.5.1",
+    "normalize-package-data": "^2.4.0",
     "read": "^1.0.7",
     "read-package-tree": "^5.1.6",
     "rimraf": "^2.6.1",
@@ -54,6 +55,7 @@
     "l0-license": "./bin/l0-license",
     "l0-create-licensor": "./bin/l0-create-licensor",
     "l0-list-licensors": "./bin/l0-list-licensors",
-    "l0-remove-licensor": "./bin/l0-remove-licensor"
+    "l0-remove-licensor": "./bin/l0-remove-licensor",
+    "l0-offer": "./bin/l0-offer"
   }
 }
