@@ -22,6 +22,7 @@
     "json-preserve-indent": "^1.1.3",
     "lamos": "^3.0.3",
     "mkdirp": "^0.5.1",
+    "read": "^1.0.7",
     "read-package-tree": "^5.1.6",
     "rimraf": "^2.6.1",
     "run-parallel": "^1.1.6",
@@ -49,6 +50,7 @@
     "l0-remove-identity": "./bin/l0-remove-identity",
     "l0-show-identity": "./bin/l0-show-identity",
     "l0-list-identities": "./bin/l0-list-identities",
-    "l0-license": "./bin/l0-license"
+    "l0-license": "./bin/l0-license",
+    "l0-login": "./bin/l0-login"
   }
 }

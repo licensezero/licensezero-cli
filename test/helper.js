@@ -13,10 +13,11 @@ module.exports = function (callback) {
       callback(
         directory,
         function run (cli, args, next) {
+          var stdin = new streamBuffers.ReadableStreamBuffer()
           var stdout = new streamBuffers.WritableStreamBuffer()
           var stderr = new streamBuffers.WritableStreamBuffer()
           cli(
-            args, directory, config, stdout, stderr,
+            args, directory, config, stdin, stdout, stderr,
             function (error) {
               if (error) stderr.write(formatError(error))
               next(

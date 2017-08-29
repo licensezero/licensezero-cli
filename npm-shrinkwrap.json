@@ -1774,8 +1774,7 @@
     "mute-stream": {
       "version": "0.0.5",
       "resolved": "https://registry.npmjs.org/mute-stream/-/mute-stream-0.0.5.tgz",
-      "integrity": "sha1-j7+rsKmKJT0xhDMfno3rc3L6xsA=",
-      "dev": true
+      "integrity": "sha1-j7+rsKmKJT0xhDMfno3rc3L6xsA="
     },
     "nan": {
       "version": "2.6.2",
@@ -2169,6 +2168,14 @@
         "duplexify": "3.5.1",
         "inherits": "2.0.3",
         "pump": "1.0.2"
+      }
+    },
+    "read": {
+      "version": "1.0.7",
+      "resolved": "https://registry.npmjs.org/read/-/read-1.0.7.tgz",
+      "integrity": "sha1-s9oZvQUkMal2cdRKQmNK33ELQMQ=",
+      "requires": {
+        "mute-stream": "0.0.5"
       }
     },
     "read-package-json": {

@@ -1,4 +1,4 @@
-module.exports = function (argv, cwd, config, stdout, stderr, done) {
+module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   var options = require('./usage')([
     'Apply the License Zero Public License to an npm package. ',
     '',

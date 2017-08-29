@@ -1,4 +1,4 @@
-module.exports = function (argv, cwd, config, stdout, stderr, done) {
+module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   var options = require('./usage')([
     'Identify and price unlicensed License Zero JavaScript packages.',
     '',

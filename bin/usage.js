@@ -1,6 +1,6 @@
 module.exports = function (usage) {
   usage = usage.join('\n') + '\n'
-  return function (argv, cwd, config, stdout, stderr, done) {
+  return function (argv, cwd, config, stdin, stdout, stderr, done) {
     try {
       var options = require('docopt').docopt(usage, {
         argv: argv,
