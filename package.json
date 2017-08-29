@@ -51,6 +51,7 @@
     "l0-show-identity": "./bin/l0-show-identity",
     "l0-list-identities": "./bin/l0-list-identities",
     "l0-license": "./bin/l0-license",
-    "l0-login": "./bin/l0-login"
+    "l0-login": "./bin/l0-login",
+    "l0-list-licensors": "./bin/l0-list-licensors"
   }
 }
