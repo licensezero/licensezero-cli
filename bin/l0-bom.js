@@ -15,117 +15,67 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
 
   var nickname = options['<nickname>']
 
-  var ecb = require('ecb')
-  var readLicensee = require('../read/licensee')
-  readLicensee(config, nickname, ecb(done, function (licensee) {
-    var readLicenses = require('../read/licenses')
-    var readWaivers = require('../read/waivers')
-    var runParallel = require('run-parallel')
-    runParallel({
-      licenses: readLicenses.bind(null, config, nickname),
-      waivers: readWaivers.bind(null, config, nickname)
-    }, ecb(done, function (existing) {
-      var readPackageTree = require('read-package-tree')
-      readPackageTree(cwd, ecb(done, function (tree) {
-        var licensable = tree.children
-          .map(function (node) {
-            return node.package
-          })
-          .filter(function (dependency) {
-            return hasProductID(dependency)
-          })
-        if (licensable.length === 0) {
-          stdout.write('No License Zero dependencies found.')
-          return done(0)
-        }
-        stdout.write(
-          'License Zero Products: ' + licensable.length + '\n'
-        )
-        var unlicensed = []
-        var licensed = []
-        var waived = []
-        licensable.forEach(function (dependency) {
-          var productID = dependencyProductID(dependency)
-          var haveLicense = existing.licenses.some(function (license) {
-            return license.productID === productID
-          })
-          // TODO: Check whether existing license matches current tier
-          // TODO: Price upgrades
-          if (haveLicense) return licensed.push(dependency)
-          var haveWaiver = existing.waivers.some(function (waiver) {
-            return waiver.productID === productID
-          })
-          if (haveWaiver) return waived.push(dependency)
-          unlicensed.push(dependency)
-        })
-        if (unlicensed.length === 0) {
-          stdout.write('No unlicensed License Zero dependencies found.')
-          return done(0)
-        }
-        stdout.write('Licensed: ' + licensed.length + '\n')
-        stdout.write('Waived: ' + waived.length + '\n')
-        stdout.write('Unlicensed: ' + unlicensed.length + '\n')
-        var request = require('../request')
-        request({
-          action: 'quote',
-          products: unlicensed.map(function (dependency) {
-            return dependencyProductID(dependency)
-          })
-        }, ecb(done, function (response) {
-          var lamos = require('lamos')
-          var products = response.products
-          var formattedProducts = []
-          var total = 0
-          products.forEach(function (product) {
-            var licensor = product.licensor
-            var price = product.pricing[licensee.tier]
-            var formatted = {
-              Product: product.productID,
-              Description: product.description,
-              Repository: product.repository,
-              'Grace Period': product.grace + ' calendar days',
-              Licensor: (
-                licensor.name + ' [' + licensor.jurisdiction + ']'
-              )
-            }
-            if (product.retracted) {
-              formatted.Retracted = product.retracted
-            } else {
-              total += price
-              formatted.Price = (
-                currency(price) +
-                ' (' + capitalize(licensee.tier) + ' License)'
-              )
-            }
-            formattedProducts.push(formatted)
-          })
-          stdout.write(
-            lamos.stringify({
-              Products: formattedProducts,
-              Total: currency(total)
-            })
+  var inventory = require('../inventory')
+  inventory(nickname, cwd, config, function (error, result) {
+    if (error) return done(error)
+    var licensee = result.licensee
+    var licensable = result.licensable
+    var licensed = result.licensed
+    var waived = result.waived
+    var unlicensed = result.unlicensed
+    if (licensable.length === 0) {
+      stdout.write('No License Zero dependencies found.')
+      return done(0)
+    }
+    stdout.write('License Zero Products: ' + licensable.length + '\n')
+    stdout.write('Licensed: ' + licensed.length + '\n')
+    stdout.write('Waived: ' + waived.length + '\n')
+    stdout.write('Unlicensed: ' + unlicensed.length + '\n')
+    if (unlicensed.length === 0) return done(0)
+    var request = require('../request')
+    request({
+      action: 'quote',
+      products: unlicensed.map(function (dependency) {
+        return dependency.licensezero.metadata.productID
+      })
+    }, function (error, response) {
+      if (error) return done(error)
+      var lamos = require('lamos')
+      var products = response.products
+      var formattedProducts = []
+      var total = 0
+      products.forEach(function (product) {
+        var licensor = product.licensor
+        var price = product.pricing[licensee.tier]
+        var formatted = {
+          Product: product.productID,
+          Description: product.description,
+          Repository: product.repository,
+          'Grace Period': product.grace + ' calendar days',
+          Licensor: (
+            licensor.name + ' [' + licensor.jurisdiction + ']'
           )
-          done(0)
-        }))
-      }))
-    }))
-  }))
-}
-
-function hasProductID (dependency) {
-  return (
-    isObject(dependency.licensezero) &&
-    isObject(dependency.licensezero.metadata) &&
-    typeof dependency.licensezero.metadata.productID === 'string'
-  )
-}
-
-function dependencyProductID (dependency) {
-  return dependency.licensezero.metadata.productID
-}
-
-function isObject (argument) {
-  return typeof argument === 'object' && argument !== null
+        }
+        if (product.retracted) {
+          formatted.Retracted = product.retracted
+        } else {
+          total += price
+          formatted.Price = (
+            currency(price) +
+            ' (' + capitalize(licensee.tier) + ' License)'
+          )
+        }
+        formattedProducts.push(formatted)
+      })
+      stdout.write(
+        lamos.stringify({
+          Products: formattedProducts,
+          Total: currency(total)
+        })
+      )
+      done(0)
+    })
+  })
 }
 
 function currency (cents) {
