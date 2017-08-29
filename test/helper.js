@@ -1,3 +1,4 @@
+var PassThrough = require('stream').PassThrough
 var ecb = require('ecb')
 var formatError = require('../bin/format-error')
 var fs = require('fs')
@@ -13,7 +14,7 @@ module.exports = function (callback) {
       callback(
         directory,
         function run (cli, args, next) {
-          var stdin = new streamBuffers.ReadableStreamBuffer()
+          var stdin = new PassThrough()
           var stdout = new streamBuffers.WritableStreamBuffer()
           var stderr = new streamBuffers.WritableStreamBuffer()
           cli(
@@ -27,6 +28,7 @@ module.exports = function (callback) {
               )
             }
           )
+          return stdin
         },
         function rm (test) {
           rimraf(directory, ecb(fail, function () {

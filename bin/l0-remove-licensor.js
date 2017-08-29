@@ -3,7 +3,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     'Remove licensor credentials.',
     '',
     'Usage:',
-    '  l0-remove-licensor <licensor>',
+    '  l0-remove-licensor <UUID>',
     '  l0-remove-licensor -h | --help',
     '  l0-remove-licensor -v | --version',
     '',
@@ -13,7 +13,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   ]).apply(null, arguments)
   if (!options) return
 
-  var deleteLicensor = require('../delete/licensee')
-  var nickname = options['<nickname>']
-  deleteLicensor(config, nickname, done)
+  var deleteLicensor = require('../delete/licensor')
+  var licensorID = options['<UUID>']
+  deleteLicensor(config, licensorID, done)
 }
