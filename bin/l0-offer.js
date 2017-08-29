@@ -3,7 +3,7 @@ var USAGE = [
   'Offer paid licenses through licensezero.com.',
   '',
   'Usage:',
-  '  l0-offer -l ID -s CENTS -t CENTS -c CENTS -e CENTS -g DAYS',
+  '  l0-offer -s CENTS -t CENTS -c CENTS -e CENTS -g DAYS [-l ID]',
   '  l0-offer -h | --help',
   '  l0-offer -v | --version',
   '',
@@ -32,7 +32,11 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     normalizePackageData(data)
     var licensorID = options['--licensor']
     var readLicensor = require('../read/licensor')
-    readLicensor(config, licensorID, function (error, licensor) {
+    var readOnlyLicensor = require('../read/only-licensor')
+    var licensorFunction = options['--licensor']
+      ? readLicensor.bind(null, config, licensorID)
+      : readOnlyLicensor.bind(null, config)
+    licensorFunction(function (error, licensor) {
       /* istanbul ignore next */
       if (error) return done(error)
       var read = require('read')
