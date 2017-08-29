@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+var fs = require('fs')
+var path = require('path')
+
+var bin = path.join(process.cwd(), 'bin')
+
+fs.readdirSync(bin).forEach(function (entry) {
+  if (
+    entry.indexOf('l0-') === 0 &&
+    entry.indexOf('.js') === entry.length - 3
+  ) {
+    try {
+      fs.symlinkSync(
+        'bin-loader',
+        path.join(bin, path.basename(entry, '.js'))
+      )
+    } catch (error) {
+      if (error.code !== 'EEXIST') throw error
+    }
+  }
+})

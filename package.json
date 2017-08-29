@@ -39,7 +39,8 @@
     "test": "NODE_ENV=test tape test/*.test.js",
     "lint": "standard && standard-markdown",
     "precommit": "lint-staged",
-    "licenses": "licensee --errors-only"
+    "licenses": "licensee --errors-only",
+    "prepublish": "./create-bin-scripts"
   },
   "lint-staged": {
     "*.js": "standard",
