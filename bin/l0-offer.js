@@ -39,23 +39,10 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     licensorFunction(function (error, licensor) {
       /* istanbul ignore next */
       if (error) return done(error)
-      var read = require('read')
-      read({
-        prompt: (
-          'Do you agree to the latest published ' +
-          'terms of service? [Y/N]'
-        ),
-        default: 'N',
-        input: stdin,
-        output: stdout
-      }, function (error, accepted) {
-        /* istanbul ignore next */
+      var agreeToTerms = require('../agree-to-terms')
+      agreeToTerms(stdin, stdout, function (error, accepted) {
         if (error) return done(error)
-        accepted = (
-          accepted.toLowerCase() === 'yes' ||
-          accepted.toLowerCase() === 'y'
-        )
-        if (!accepted) return done(1)
+        if (!accepted) return done('must accept terms')
         var request = require('../request')
         request({
           action: 'offer',
@@ -74,7 +61,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         }, function (error, response) {
           if (error) return done(error)
           stdout.write('Product ID: ' + response.productID + '\n')
-          done(0)
+          done()
         })
       })
     })

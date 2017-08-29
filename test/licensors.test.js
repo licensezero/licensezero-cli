@@ -12,10 +12,29 @@ var createLicensor = require('../bin/l0-create-licensor.js')
 var license = require('../bin/l0-license.js')
 var listLicensors = require('../bin/l0-list-licensors.js')
 var offer = require('../bin/l0-offer.js')
+var registerLicensor = require('../bin/l0-register-licensor.js')
 var removeLicensor = require('../bin/l0-remove-licensor.js')
 
 noArgumentsUsage('create', createLicensor)
 noArgumentsUsage('remove', removeLicensor)
+
+tape('register licensor', function (test) {
+  require('../request').mocks.push({
+    action: 'register',
+    handler: function (payload, callback) {
+      callback(null, {})
+    }
+  })
+  helper(function (tmp, run, rm) {
+    var stdin = run(registerLicensor, [
+      'test@example.com', 'Test Licensor', 'US-CA'
+    ], function (status, stdout, stderr) {
+      test.equal(status, 0, 'exit 0')
+      rm(test)
+    })
+    stdin.write('yes\n')
+  })
+})
 
 tape('create licensor', function (test) {
   var licensorID = uuid()
