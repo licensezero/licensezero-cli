@@ -29,8 +29,8 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     if (unlicensed.length === 0) return done(0)
     request({
       action: 'buy',
-      products: unlicensed.map(function (dependency) {
-        return dependency.licensezero.metadata.productID
+      products: unlicensed.map(function (metadata) {
+        return metadata.productID
       }),
       licensee: licensee.name,
       jurisdiction: licensee.jurisdiction,

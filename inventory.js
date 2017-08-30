@@ -14,29 +14,29 @@ module.exports = function (nickname, cwd, config, callback) {
       if (error) return callback(error)
       readPackageTree(cwd, function (error, tree) {
         if (error) return callback(error)
-        var licensable = tree.children
-          .map(function (node) {
-            return node.package
+        var licensable = []
+        recurseTree(tree, function (node) {
+          metadataRecords(node.package).forEach(function (metadata) {
+            licensable.push(metadata)
           })
-          .filter(function (dependency) {
-            return hasProductID(dependency)
-          })
+        })
+        // TODO: check for duplicate productIDs
         var unlicensed = []
         var licensed = []
         var waived = []
-        licensable.forEach(function (dependency) {
-          var productID = dependencyProductID(dependency)
+        licensable.forEach(function (metadata) {
+          var productID = metadata.productID
           var haveLicense = existing.licenses.some(function (license) {
             return license.productID === productID
           })
           // TODO: Check whether existing license matches current tier
           // TODO: Price upgrades
-          if (haveLicense) return licensed.push(dependency)
+          if (haveLicense) return licensed.push(metadata)
           var haveWaiver = existing.waivers.some(function (waiver) {
             return waiver.productID === productID
           })
-          if (haveWaiver) return waived.push(dependency)
-          unlicensed.push(dependency)
+          if (haveWaiver) return waived.push(metadata)
+          unlicensed.push(metadata)
         })
         return callback(null, {
           licensee: licensee,
@@ -50,16 +50,27 @@ module.exports = function (nickname, cwd, config, callback) {
   })
 }
 
-function hasProductID (dependency) {
-  return (
-    isObject(dependency.licensezero) &&
-    isObject(dependency.licensezero.metadata) &&
-    typeof dependency.licensezero.metadata.productID === 'string'
-  )
+function recurseTree (tree, handler) {
+  if (tree.children) {
+    tree.children.forEach(function (child) {
+      handler(child)
+      if (child.children) recurseTree(child)
+    })
+  }
 }
 
-function dependencyProductID (dependency) {
-  return dependency.licensezero.metadata.productID
+function metadataRecords (packageData) {
+  if (!Array.isArray(packageData.licensezero)) return []
+  var returned = []
+  packageData.licensezero.forEach(function (element) {
+    if (
+      isObject(element.metadata) &&
+      typeof element.metadata.productID === 'string'
+    ) {
+      returned.push(element.metadata)
+    }
+  })
+  return returned
 }
 
 function isObject (argument) {

@@ -220,6 +220,10 @@ tape('license', function (test) {
             data.hasOwnProperty('licensezero'),
             'package.json .licensezero'
           )
+          test.assert(
+            Array.isArray(data.licensezero),
+            'package.json .licensezero Array'
+          )
           done()
         })
       },

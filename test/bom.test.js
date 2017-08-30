@@ -129,11 +129,13 @@ tape('bom one l0 dep', function (test) {
           fs.writeFile.bind(null, file, JSON.stringify({
             name: 'x',
             version: '1.0.0',
-            licensezero: {
-              metadata: {
-                productID: PRODUCT_ID
+            licensezero: [
+              {
+                metadata: {
+                  productID: PRODUCT_ID
+                }
               }
-            }
+            ]
           }))
         ], done)
       },
@@ -216,11 +218,13 @@ tape('bom one retracted l0 dep', function (test) {
           fs.writeFile.bind(null, file, JSON.stringify({
             name: 'x',
             version: '1.0.0',
-            licensezero: {
-              metadata: {
-                productID: PRODUCT_ID
+            licensezero: [
+              {
+                metadata: {
+                  productID: PRODUCT_ID
+                }
               }
-            }
+            ]
           }))
         ], done)
       },

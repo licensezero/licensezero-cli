@@ -35,8 +35,8 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     var request = require('../request')
     request({
       action: 'quote',
-      products: unlicensed.map(function (dependency) {
-        return dependency.licensezero.metadata.productID
+      products: unlicensed.map(function (metadata) {
+        return metadata.productID
       })
     }, function (error, response) {
       if (error) return done(error)

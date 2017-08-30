@@ -42,9 +42,14 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
             var packageJSON = path.join(cwd, 'package.json')
             var modifyJSONFile = require('../modify/json-file')
             modifyJSONFile(packageJSON, function (data) {
-              Object.keys(metadata).forEach(function (key) {
-                data.set(key, metadata[key])
-              })
+              data.set('license', metadata.license)
+              var existing = data.get('licensezero')
+              if (Array.isArray(existing)) {
+                existing.push(metadata.licensezero)
+              } else {
+                existing = [metadata.licensezero]
+              }
+              data.set('licensezero', existing)
             }, function (error) {
               /* istanbul ignore next */
               if (error) return done(error)
