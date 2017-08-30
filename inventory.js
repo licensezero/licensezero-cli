@@ -54,7 +54,7 @@ function recurseTree (tree, handler) {
   if (tree.children) {
     tree.children.forEach(function (child) {
       handler(child)
-      if (child.children) recurseTree(child)
+      if (child.children) recurseTree(child, handler)
     })
   }
 }
