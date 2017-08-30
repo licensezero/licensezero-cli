@@ -17,10 +17,13 @@ module.exports = function (nickname, cwd, config, callback) {
         var licensable = []
         recurseTree(tree, function (node) {
           metadataRecords(node.package).forEach(function (metadata) {
-            licensable.push(metadata)
+            if (!licensable.some(function (existing) {
+              return existing.productID === metadata.productID
+            })) {
+              licensable.push(metadata)
+            }
           })
         })
-        // TODO: check for duplicate productIDs
         var unlicensed = []
         var licensed = []
         var waived = []
