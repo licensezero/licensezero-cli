@@ -24,6 +24,7 @@
     "lamos": "^3.0.3",
     "mkdirp": "^0.5.1",
     "normalize-package-data": "^2.4.0",
+    "opener": "^1.4.3",
     "read": "^1.0.7",
     "read-package-tree": "^5.1.6",
     "rimraf": "^2.6.1",

@@ -3,13 +3,14 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     'Buy missing License Zero dependency licenses.',
     '',
     'Usage:',
-    '  l0-buy <nickname>',
+    '  l0-buy <nickname> [--no-open]',
     '  l0-buy -h | --help',
     '  l0-buy -v | --version',
     '',
     'Options:',
     '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.'
+    '  -v, --version  Print version to standard output.',
+    '  -n, --no-open  Do not open the buy page in a browser.'
   ]).apply(null, arguments)
   if (!options) return
 
@@ -38,6 +39,10 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     }, function (error, response) {
       if (error) return done(error)
       stdout.write(response.location + '\n')
+      if (!options['--no-open']) {
+        var openWebpage = require('../open-webpage')
+        openWebpage(response.location)
+      }
       done(0)
     })
   })

@@ -44,6 +44,13 @@ tape('buy one l0 dep', function (test) {
         ], done)
       },
       function (done) {
+        require('../open-webpage').events.once('open', function (url) {
+          test.equal(
+            url, 'https://licensezero.com/buy/TEST',
+            'opens location'
+          )
+          done()
+        })
         run(buy, [
           'test'
         ], function (status, stdout, stderr) {
@@ -53,7 +60,6 @@ tape('buy one l0 dep', function (test) {
             'location'
           )
           test.equal(stderr, '', 'no stderr')
-          done()
         })
       }
     ], function () {
