@@ -1,3 +1,4 @@
+var TIERS = require('./tiers')
 var readLicensee = require('./read/licensee')
 var readLicenses = require('./read/licenses')
 var readPackageTree = require('read-package-tree')
@@ -30,10 +31,11 @@ module.exports = function (nickname, cwd, config, callback) {
         licensable.forEach(function (metadata) {
           var productID = metadata.productID
           var haveLicense = existing.licenses.some(function (license) {
-            return license.productID === productID
+            return (
+              license.productID === productID &&
+              sufficientTier(license.tier, licensee.tier)
+            )
           })
-          // TODO: Check whether existing license matches current tier
-          // TODO: Price upgrades
           if (haveLicense) return licensed.push(metadata)
           var haveWaiver = existing.waivers.some(function (waiver) {
             return waiver.productID === productID
@@ -78,4 +80,11 @@ function metadataRecords (packageData) {
 
 function isObject (argument) {
   return typeof argument === 'object' && argument !== null
+}
+
+function sufficientTier (have, need) {
+  if (have === need) return true
+  var haveIndex = TIERS.indexOf(have)
+  var needIndex = TIERS.indexOf(need)
+  return haveIndex > needIndex
 }
