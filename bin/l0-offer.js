@@ -40,7 +40,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       /* istanbul ignore next */
       if (error) return done(error)
       var agreeToTerms = require('../agree-to-terms')
-      agreeToTerms(stdin, stdout, function (error, accepted) {
+      agreeToTerms(stdin, stdout, true, function (error, accepted) {
         if (error) return done(error)
         if (!accepted) return done('must accept terms')
         var request = require('../request')
@@ -57,7 +57,10 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           },
           description: data.description,
           grace: parseInt(data.grace),
-          terms: 'I agree to the latest published terms of service.'
+          terms: (
+            'I agree to the agency agreement at ' +
+            'https://licensezero.com/terms/agency.'
+          )
         }, function (error, response) {
           if (error) return done(error)
           stdout.write('Product ID: ' + response.productID + '\n')

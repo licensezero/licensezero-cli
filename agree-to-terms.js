@@ -1,11 +1,16 @@
 var read = require('read')
 
-module.exports = function (stdin, stdout, callback) {
+module.exports = function (stdin, stdout, agency, callback) {
   read({
-    prompt: (
-      'Do you agree to the latest published ' +
-      'terms of service? [Y/N]'
-    ),
+    prompt: agency
+      ? (
+        'Do you agree to the agency agreement at ' +
+        'https://licensezero.com/terms/agency? [Y/N]'
+      )
+      : (
+        'Do you agree to the terms of service at ' +
+        'https://licensezero.com/terms/service? [Y/N]'
+      ),
     default: 'N',
     input: stdin,
     output: stdout

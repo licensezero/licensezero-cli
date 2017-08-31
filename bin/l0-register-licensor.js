@@ -27,7 +27,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   }
 
   var agreeToTerms = require('../agree-to-terms')
-  agreeToTerms(stdin, stdout, function (error, accepted) {
+  agreeToTerms(stdin, stdout, false, function (error, accepted) {
     if (error) return done(error)
     if (!accepted) return done('must accept terms')
     var request = require('../request')
@@ -36,7 +36,10 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       name: newLicensor.name,
       email: newLicensor.email,
       jurisdiction: newLicensor.jurisdiction,
-      terms: 'I agree to the latest published terms of service.'
+      terms: (
+        'I agree to the terms of service at' +
+        'https://licensezero.com/terms/service.'
+      )
     }, function (error, response) {
       if (error) return done(error)
       stdout.write('Follow Stripe authorization sent by e-mail.\n')
