@@ -13,12 +13,12 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   ]).apply(null, arguments)
   if (!options) return
 
-  var ecb = require('ecb')
   var readLicensors = require('../read/licensors')
-  readLicensors(config, ecb(done, function (licensors) {
+  readLicensors(config, function (error, licensors) {
+    if (error) return done(error)
     licensors.forEach(function (licensor) {
       stdout.write(licensor.licensorID + '\n')
     })
     return done()
-  }))
+  })
 }

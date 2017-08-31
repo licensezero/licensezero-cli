@@ -18,9 +18,9 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
 
   var file = options['<file>']
 
-  var ecb = require('ecb')
   var readJSONFile = require('../read/json-file')
-  readJSONFile(file, ecb(done, function (license) {
+  readJSONFile(file, function (error, license) {
+    if (error) return done(error)
     var validLicense = require('../validate/license')
     if (!validLicense(license)) return done('invalid license')
     try {
@@ -36,7 +36,8 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     var jurisdiction = licensee.jurisdiction
     log('Jurisdiction: ' + licensee)
     var readLicensees = require('../read/licensees')
-    readLicensees(config, ecb(done, function (licensees) {
+    readLicensees(config, function (error, licensees) {
+      if (error) return done(error)
       var matchingLicensee = licensees.find(function (licensee) {
         return (
           licensee.name === name &&
@@ -70,19 +71,21 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       request({
         action: 'product',
         productID: productID
-      }, ecb(done, function (response) {
+      }, function (error, response) {
+        if (error) return done(error)
         if (license.publicKey !== response.licensor.publicKey) {
           return done('public key does not match')
         }
         log('licensezero.com Public Key: matches')
         var writeLicense = require('../write/license')
-        writeLicense(config, nickname, license, ecb(done, function () {
+        writeLicense(config, nickname, license, function (error) {
+          if (error) return done(error)
           stdout.write('Imported license.')
           done()
-        }))
-      }))
-    }))
-  }))
+        })
+      })
+    })
+  })
 
   function log (message) {
     if (!options['--quiet']) stdout.write(message + '\n')

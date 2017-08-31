@@ -17,7 +17,6 @@
   "dependencies": {
     "ajv": "^5.2.2",
     "docopt": "^0.6.2",
-    "ecb": "^1.0.0",
     "ed25519": "0.0.4",
     "json-parse-errback": "^2.0.1",
     "json-preserve-indent": "^1.1.3",

@@ -17,11 +17,12 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
 
   // TODO: list waivers
 
-  var ecb = require('ecb')
   var readLicensee = require('../read/licensee')
-  readLicensee(config, nickname, ecb(done, function (licensee) {
+  readLicensee(config, nickname, function (error, licensee) {
+    if (error) return done(error)
     var readLicenses = require('../read/licenses')
-    readLicenses(config, nickname, ecb(done, function (licenses) {
+    readLicenses(config, nickname, function (error, licenses) {
+      if (error) return done(error)
       var lamos = require('lamos')
       stdout.write(
         lamos.stringify({
@@ -37,6 +38,6 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         }) + '\n'
       )
       return done()
-    }))
-  }))
+    })
+  })
 }

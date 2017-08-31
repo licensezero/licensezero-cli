@@ -27,9 +27,9 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     if (!validations[key](value)) return done('invalid ' + key)
   }
 
-  var ecb = require('ecb')
   var readLicensees = require('../read/licensees')
-  readLicensees(config, ecb(done, function (licensees) {
+  readLicensees(config, function (error, licensees) {
+    if (error) return done(error)
     var existing = licensees.some(function (licensee) {
       return licensee.nickname === newLicensee.nickname
     })
@@ -43,5 +43,5 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     if (identical) return done('identical to ' + identical.nickname)
     var writeLicensee = require('../write/licensee')
     writeLicensee(config, newLicensee, done)
-  }))
+  })
 }

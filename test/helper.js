@@ -1,5 +1,4 @@
 var PassThrough = require('stream').PassThrough
-var ecb = require('ecb')
 var formatError = require('../bin/format-error')
 var fs = require('fs')
 var mkdirp = require('mkdirp')
@@ -8,9 +7,11 @@ var rimraf = require('rimraf')
 var streamBuffers = require('stream-buffers')
 
 module.exports = function (callback) {
-  fs.mkdtemp('/tmp/', ecb(fail, function (directory) {
+  fs.mkdtemp('/tmp/', function (error, directory) {
+    if (error) return fail(error)
     var config = path.join(directory, 'config')
-    mkdirp(config, ecb(fail, function () {
+    mkdirp(config, function (error) {
+      if (error) return fail(error)
       callback(
         directory,
         function run (cli, args, next) {
@@ -33,13 +34,14 @@ module.exports = function (callback) {
           return stdin
         },
         function rm (test) {
-          rimraf(directory, ecb(fail, function () {
+          rimraf(directory, function (error) {
+            if (error) return fail(error)
             test.end()
-          }))
+          })
         }
       )
-    }))
-  }))
+    })
+  })
 }
 
 function fail (error) {
