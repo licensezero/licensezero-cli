@@ -57,6 +57,7 @@
     "l0-create-licensor": "./bin/l0-create-licensor",
     "l0-list-licensors": "./bin/l0-list-licensors",
     "l0-remove-licensor": "./bin/l0-remove-licensor",
-    "l0-offer": "./bin/l0-offer"
+    "l0-offer": "./bin/l0-offer",
+    "l0-purchased": "./bin/l0-purchased"
   }
 }

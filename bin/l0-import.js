@@ -17,77 +17,16 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   if (!options) return
 
   var file = options['<file>']
+  var quiet = options['--quiet']
 
   var readJSONFile = require('../read/json-file')
   readJSONFile(file, function (error, license) {
     if (error) return done(error)
-    var validLicense = require('../validate/license')
-    if (!validLicense(license)) return done('invalid license')
-    try {
-      var manifest = JSON.parse(license.manifest)
-    } catch (error) {
-      return done('invalid license')
-    }
-    var productID = license.productID
-    log('Product ID: ' + productID)
-    var licensee = manifest.licensee
-    log('Licensee: ' + licensee)
-    var name = licensee.name
-    var jurisdiction = licensee.jurisdiction
-    log('Jurisdiction: ' + licensee)
-    var readLicensees = require('../read/licensees')
-    readLicensees(config, function (error, licensees) {
+    var importLicense = require('../import-license')
+    importLicense(config, license, function (error, summary) {
       if (error) return done(error)
-      var matchingLicensee = licensees.find(function (licensee) {
-        return (
-          licensee.name === name &&
-          licensee.jurisdiction === jurisdiction
-        )
-      })
-      if (!matchingLicensee) {
-        return done(
-          'license for ' + name + ' [' + jurisdiction + '] ' +
-          'does not match any existing licensee'
-        )
-      }
-      var nickname = matchingLicensee.nickname
-      log('Matches Licensee: ' + nickname)
-      var tier = manifest.tier
-      if (matchingLicensee.tier !== tier) {
-        stderr.write(
-          'Warning: ' + nickname + ' is configured for ' +
-          matchingLicensee.tier + '-tier licenses.\n' +
-          '         This is a ' + license.tier + '-tier license.'
-        )
-      }
-      log('Tier: ' + tier)
-      var validSignature = require('../validate/signature')
-      if (!validSignature(license)) {
-        return done('invalid cryptographic signature')
-      }
-      log('Signature: valid')
-      log('Public Key: ' + license.publicKey.slice(0, 32) + '...')
-      var request = require('../request')
-      request({
-        action: 'product',
-        productID: productID
-      }, function (error, response) {
-        if (error) return done(error)
-        if (license.publicKey !== response.licensor.publicKey) {
-          return done('public key does not match')
-        }
-        log('licensezero.com Public Key: matches')
-        var writeLicense = require('../write/license')
-        writeLicense(config, nickname, license, function (error) {
-          if (error) return done(error)
-          stdout.write('Imported license.')
-          done()
-        })
-      })
+      stdout.write(quiet ? '' : (summary + '\n'))
+      done()
     })
   })
-
-  function log (message) {
-    if (!options['--quiet']) stdout.write(message + '\n')
-  }
 }
