@@ -59,7 +59,7 @@ function mockLicensorResponse () {
         name: 'Test Licensor',
         jurisdiction: 'US-CA',
         publicKey: '',
-        products: []
+        projects: []
       })
     }
   })
@@ -167,7 +167,7 @@ tape('license', function (test) {
   mockOfferAcceptance()
   helper(function (tmp, run, rm) {
     var packageJSON = path.join(tmp, 'package.json')
-    var productID
+    var projectID
     runSeries([
       function runCreatePackage (done) {
         fs.writeFile(packageJSON, JSON.stringify({
@@ -196,9 +196,9 @@ tape('license', function (test) {
           '-g', '180'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'offer exit 0')
-          var match = /Product ID: (\S+)/.exec(stdout)
-          productID = match[1]
-          mockLicenseRequest(licensorID, productID)
+          var match = /Project ID: (\S+)/.exec(stdout)
+          projectID = match[1]
+          mockLicenseRequest(licensorID, projectID)
           done()
         })
         // Accept terms of service.
@@ -206,7 +206,7 @@ tape('license', function (test) {
       },
       function runLicense (done) {
         run(license, [
-          productID
+          projectID
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'license exit 0')
           done()
@@ -248,18 +248,18 @@ function mockOfferAcceptance () {
   require('../request').mocks.push({
     action: 'offer',
     handler: function (payload, callback) {
-      callback(null, {productID: uuid()})
+      callback(null, {projectID: uuid()})
     }
   })
 }
 
-function mockLicenseRequest (licensorID, productID) {
+function mockLicenseRequest (licensorID, projectID) {
   require('../request').mocks.push({
-    action: 'product',
+    action: 'project',
     handler: function (payload, callback) {
       callback(null, {
         licensorID: licensorID,
-        productID: productID
+        projectID: projectID
       })
     }
   })
@@ -276,7 +276,7 @@ function mockLicenseRequest (licensorID, productID) {
           license: 'SEE LICENSE IN LICENSE',
           licensezero: {
             metadata: {
-              productID: productID,
+              projectID: projectID,
               licensorID: licensorID
             },
             licensorSignature: 'LICENSOR SIG',

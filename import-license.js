@@ -11,12 +11,12 @@ module.exports = function (config, license, done) {
   } catch (error) {
     return done('invalid license')
   }
-  var productID = license.productID
+  var projectID = license.projectID
   var summary = []
   function log (argument) {
     summary.push(argument)
   }
-  log('Product ID: ' + productID)
+  log('Project ID: ' + projectID)
   var licensee = manifest.licensee
   log('Licensee: ' + licensee)
   var name = licensee.name
@@ -53,8 +53,8 @@ module.exports = function (config, license, done) {
     log('Signature: valid')
     log('Public Key: ' + license.publicKey.slice(0, 32) + '...')
     request({
-      action: 'product',
-      productID: productID
+      action: 'project',
+      projectID: projectID
     }, function (error, response) {
       if (error) return done(error)
       if (license.publicKey !== response.licensor.publicKey) {

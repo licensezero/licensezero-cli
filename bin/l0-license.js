@@ -3,7 +3,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     'Apply the License Zero Public License to an npm package. ',
     '',
     'Usage:',
-    '  l0-license <product> [--quiet]',
+    '  l0-license <project> [--quiet]',
     '  l0-license -h | --help',
     '  l0-license -v | --version',
     '',
@@ -14,23 +14,23 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   ]).apply(null, arguments)
   if (!options) return
 
-  var productID = options['<product>']
+  var projectID = options['<project>']
 
   var request = require('../request')
   request({
-    action: 'product',
-    productID: productID
-  }, function (error, product) {
+    action: 'project',
+    projectID: projectID
+  }, function (error, project) {
     if (error) return done(error)
     var readLicensor = require('../read/licensor')
-    readLicensor(config, product.licensorID, function (error, licensor) {
+    readLicensor(config, project.licensorID, function (error, licensor) {
       /* istanbul ignore next */
       if (error) return done(error)
       request({
         action: 'public',
         licensorID: licensor.licensorID,
         password: licensor.password,
-        productID: productID
+        projectID: projectID
       }, function (error, response) {
         if (error) return done(error)
         var fs = require('fs')

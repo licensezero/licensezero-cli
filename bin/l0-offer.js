@@ -63,7 +63,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           )
         }, function (error, response) {
           if (error) return done(error)
-          stdout.write('Product ID: ' + response.productID + '\n')
+          stdout.write('Project ID: ' + response.projectID + '\n')
           done()
         })
       })

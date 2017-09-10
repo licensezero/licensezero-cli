@@ -33,7 +33,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           'Licenses': licenses.length === 0
             ? 'None'
             : licenses.map(function (license) {
-              return license.productID
+              return license.projectID
             })
         }) + '\n'
       )

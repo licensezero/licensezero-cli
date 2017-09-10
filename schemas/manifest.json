@@ -13,10 +13,10 @@
         "enterprise"
       ]
     },
-    "product": {
+    "project": {
       "type": "object",
       "properties": {
-        "productID": {
+        "projectID": {
           "type": "string"
         },
         "repository": {
@@ -28,7 +28,7 @@
         }
       },
       "required": [
-        "productID",
+        "projectID",
         "repository",
         "description"
       ]
@@ -65,7 +65,7 @@
   "required": [
     "date",
     "tier",
-    "product",
+    "project",
     "licensee",
     "licensor"
   ]

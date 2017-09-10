@@ -1,7 +1,7 @@
 var path = require('path')
 
-module.exports = function (config, nickname, productID) {
+module.exports = function (config, nickname, projectID) {
   return path.join(
-    config, 'licensees', nickname, 'licenses', productID
+    config, 'licensees', nickname, 'licenses', projectID
   )
 }

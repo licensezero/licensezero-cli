@@ -9,7 +9,7 @@ var createLicensee = require('../bin/l0-create-licensee.js')
 var buy = require('../bin/l0-buy.js')
 
 tape('buy one l0 dep', function (test) {
-  var PRODUCT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
+  var PROJECT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
   helper(function (tmp, run, rm) {
     require('../request').mocks.push({
       action: 'buy',
@@ -36,7 +36,7 @@ tape('buy one l0 dep', function (test) {
             licensezero: [
               {
                 metadata: {
-                  productID: PRODUCT_ID
+                  projectID: PROJECT_ID
                 }
               }
             ]

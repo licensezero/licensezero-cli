@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "productID": {
+    "projectID": {
       "type": "string"
     },
     "manifest": {
@@ -20,7 +20,7 @@
     }
   },
   "required": [
-    "productID",
+    "projectID",
     "manifest",
     "document",
     "publicKey",

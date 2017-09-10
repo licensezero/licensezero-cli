@@ -19,7 +19,7 @@ module.exports = function (nickname, cwd, config, callback) {
         recurseTree(tree, function (node) {
           metadataRecords(node.package).forEach(function (metadata) {
             if (!licensable.some(function (existing) {
-              return existing.productID === metadata.productID
+              return existing.projectID === metadata.projectID
             })) {
               licensable.push(metadata)
             }
@@ -29,16 +29,16 @@ module.exports = function (nickname, cwd, config, callback) {
         var licensed = []
         var waived = []
         licensable.forEach(function (metadata) {
-          var productID = metadata.productID
+          var projectID = metadata.projectID
           var haveLicense = existing.licenses.some(function (license) {
             return (
-              license.productID === productID &&
+              license.projectID === projectID &&
               sufficientTier(license.tier, licensee.tier)
             )
           })
           if (haveLicense) return licensed.push(metadata)
           var haveWaiver = existing.waivers.some(function (waiver) {
-            return waiver.productID === productID
+            return waiver.projectID === projectID
           })
           if (haveWaiver) return waived.push(metadata)
           unlicensed.push(metadata)
@@ -70,7 +70,7 @@ function metadataRecords (packageData) {
   packageData.licensezero.forEach(function (element) {
     if (
       isObject(element.metadata) &&
-      typeof element.metadata.productID === 'string'
+      typeof element.metadata.projectID === 'string'
     ) {
       returned.push(element.metadata)
     }

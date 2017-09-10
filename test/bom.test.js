@@ -86,16 +86,16 @@ tape('bom non-l0 dep', function (test) {
 })
 
 tape('bom one l0 dep', function (test) {
-  var PRODUCT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
+  var PROJECT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
   helper(function (tmp, run, rm) {
     require('../request').mocks.push({
       action: 'quote',
       handler: function (payload, callback) {
         callback(null, {
-          products: [
+          projects: [
             {
-              productID: PRODUCT_ID,
-              description: 'test product',
+              projectID: PROJECT_ID,
+              description: 'test project',
               repository: 'https://example.com',
               grace: 180,
               licensor: {
@@ -132,7 +132,7 @@ tape('bom one l0 dep', function (test) {
             licensezero: [
               {
                 metadata: {
-                  productID: PRODUCT_ID
+                  projectID: PROJECT_ID
                 }
               }
             ]
@@ -147,13 +147,13 @@ tape('bom one l0 dep', function (test) {
           test.equal(
             stdout,
             [
-              'License Zero Products: 1',
+              'License Zero Projects: 1',
               'Licensed: 0',
               'Waived: 0',
               'Unlicensed: 1',
-              'Products:',
-              '  - Product: ' + PRODUCT_ID,
-              '    Description: test product',
+              'Projects:',
+              '  - Project: ' + PROJECT_ID,
+              '    Description: test project',
               '    Repository: https://example.com',
               '    Grace Period: 180 calendar days',
               '    Licensor: Test Licensor [US-CA]',
@@ -173,21 +173,21 @@ tape('bom one l0 dep', function (test) {
 })
 
 tape('bom one duplicate l0 dep', function (test) {
-  var PRODUCT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
+  var PROJECT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
   var xPackageData = {
     name: 'x',
     version: '1.0.0',
-    licensezero: [{metadata: {productID: PRODUCT_ID}}]
+    licensezero: [{metadata: {projectID: PROJECT_ID}}]
   }
   helper(function (tmp, run, rm) {
     require('../request').mocks.push({
       action: 'quote',
       handler: function (payload, callback) {
         callback(null, {
-          products: [
+          projects: [
             {
-              productID: PRODUCT_ID,
-              description: 'test product',
+              projectID: PROJECT_ID,
+              description: 'test project',
               repository: 'https://example.com',
               grace: 180,
               licensor: {
@@ -228,7 +228,7 @@ tape('bom one duplicate l0 dep', function (test) {
           fs.writeFile.bind(null, file, JSON.stringify({
             name: 'y',
             version: '1.0.0',
-            licensezero: [{metadata: {productID: PRODUCT_ID}}]
+            licensezero: [{metadata: {projectID: PROJECT_ID}}]
           }))
         ], done)
       },
@@ -249,13 +249,13 @@ tape('bom one duplicate l0 dep', function (test) {
           test.equal(
             stdout,
             [
-              'License Zero Products: 1',
+              'License Zero Projects: 1',
               'Licensed: 0',
               'Waived: 0',
               'Unlicensed: 1',
-              'Products:',
-              '  - Product: ' + PRODUCT_ID,
-              '    Description: test product',
+              'Projects:',
+              '  - Project: ' + PROJECT_ID,
+              '    Description: test project',
               '    Repository: https://example.com',
               '    Grace Period: 180 calendar days',
               '    Licensor: Test Licensor [US-CA]',
@@ -275,18 +275,18 @@ tape('bom one duplicate l0 dep', function (test) {
 })
 
 tape('bom one retracted l0 dep', function (test) {
-  var PRODUCT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
+  var PROJECT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
   var RETRACTED = new Date().toISOString()
   helper(function (tmp, run, rm) {
     require('../request').mocks.push({
       action: 'quote',
       handler: function (payload, callback) {
         callback(null, {
-          products: [
+          projects: [
             {
-              productID: PRODUCT_ID,
+              projectID: PROJECT_ID,
               retracted: RETRACTED,
-              description: 'test product',
+              description: 'test project',
               repository: 'https://example.com',
               grace: 180,
               licensor: {
@@ -323,7 +323,7 @@ tape('bom one retracted l0 dep', function (test) {
             licensezero: [
               {
                 metadata: {
-                  productID: PRODUCT_ID
+                  projectID: PROJECT_ID
                 }
               }
             ]
@@ -338,13 +338,13 @@ tape('bom one retracted l0 dep', function (test) {
           test.equal(
             stdout,
             [
-              'License Zero Products: 1',
+              'License Zero Projects: 1',
               'Licensed: 0',
               'Waived: 0',
               'Unlicensed: 1',
-              'Products:',
-              '  - Product: ' + PRODUCT_ID,
-              '    Description: test product',
+              'Projects:',
+              '  - Project: ' + PROJECT_ID,
+              '    Description: test project',
               '    Repository: https://example.com',
               '    Grace Period: 180 calendar days',
               '    Licensor: Test Licensor [US-CA]',

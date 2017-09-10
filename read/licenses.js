@@ -7,8 +7,8 @@ var runParallel = require('run-parallel')
 module.exports = function (config, nickname, callback) {
   var directory = path.join(config, 'licensees', nickname, 'licenses')
   fs.readdir(directory, eea(callback, function (entries) {
-    runParallel(entries.map(function (productID) {
-      return readLicense.bind(null, config, nickname, productID)
+    runParallel(entries.map(function (projectID) {
+      return readLicense.bind(null, config, nickname, projectID)
     }), callback)
   }))
 }

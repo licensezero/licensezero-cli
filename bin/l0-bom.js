@@ -27,7 +27,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       stdout.write('No License Zero dependencies found.')
       return done(0)
     }
-    stdout.write('License Zero Products: ' + licensable.length + '\n')
+    stdout.write('License Zero Projects: ' + licensable.length + '\n')
     stdout.write('Licensed: ' + licensed.length + '\n')
     stdout.write('Waived: ' + waived.length + '\n')
     stdout.write('Unlicensed: ' + unlicensed.length + '\n')
@@ -35,29 +35,29 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     var request = require('../request')
     request({
       action: 'quote',
-      products: unlicensed.map(function (metadata) {
-        return metadata.productID
+      projects: unlicensed.map(function (metadata) {
+        return metadata.projectID
       })
     }, function (error, response) {
       if (error) return done(error)
       var lamos = require('lamos')
-      var products = response.products
-      var formattedProducts = []
+      var projects = response.projects
+      var formattedProjects = []
       var total = 0
-      products.forEach(function (product) {
-        var licensor = product.licensor
-        var price = product.pricing[licensee.tier]
+      projects.forEach(function (project) {
+        var licensor = project.licensor
+        var price = project.pricing[licensee.tier]
         var formatted = {
-          Product: product.productID,
-          Description: product.description,
-          Repository: product.repository,
-          'Grace Period': product.grace + ' calendar days',
+          Project: project.projectID,
+          Description: project.description,
+          Repository: project.repository,
+          'Grace Period': project.grace + ' calendar days',
           Licensor: (
             licensor.name + ' [' + licensor.jurisdiction + ']'
           )
         }
-        if (product.retracted) {
-          formatted.Retracted = product.retracted
+        if (project.retracted) {
+          formatted.Retracted = project.retracted
         } else {
           total += price
           formatted.Price = (
@@ -65,11 +65,11 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
             ' (' + capitalize(licensee.tier) + ' License)'
           )
         }
-        formattedProducts.push(formatted)
+        formattedProjects.push(formatted)
       })
       stdout.write(
         lamos.stringify({
-          Products: formattedProducts,
+          Projects: formattedProjects,
           Total: currency(total)
         })
       )
