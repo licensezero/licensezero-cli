@@ -8,7 +8,7 @@ module.exports = process.env.NODE_ENV === 'test'
     returned.events = emitter
     return returned
   })()
-  : (function () {
+  : /* istanbul ignore next */ (function () {
     var opener = require('opener')
     return function (url) {
       var child = opener(url)
