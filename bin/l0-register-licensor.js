@@ -37,7 +37,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       email: newLicensor.email,
       jurisdiction: newLicensor.jurisdiction,
       terms: (
-        'I agree to the terms of service at' +
+        'I agree to the terms of service at ' +
         'https://licensezero.com/terms/service.'
       )
     }, function (error, response) {
