@@ -58,7 +58,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           description: data.description,
           grace: parseInt(data.grace),
           terms: (
-            'I agree to the agency agreement at ' +
+            'I agree to the agency terms at ' +
             'https://licensezero.com/terms/agency.'
           )
         }, function (error, response) {

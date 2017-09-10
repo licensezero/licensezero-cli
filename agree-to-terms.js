@@ -4,7 +4,7 @@ module.exports = function (stdin, stdout, agency, callback) {
   read({
     prompt: agency
       ? (
-        'Do you agree to the agency agreement at ' +
+        'Do you agree to the agency terms at ' +
         'https://licensezero.com/terms/agency? [Y/N]'
       )
       : (
