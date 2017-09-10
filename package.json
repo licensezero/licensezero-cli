@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "License Zero command-line interface",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
-  "private": true,
+  "license": "BSD-2-Clause",
   "devDependencies": {
     "husky": "^0.14.3",
     "istanbul": "^0.4.5",
