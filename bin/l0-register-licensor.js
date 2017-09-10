@@ -42,7 +42,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       )
     }, function (error, response) {
       if (error) return done(error)
-      stdout.write('Follow Stripe authorization sent by e-mail.\n')
+      stdout.write('Follow the Stripe authorization link sent by e-mail.\n')
       done()
     })
   })
