@@ -9,13 +9,13 @@ var tape = require('tape')
 var versionFlags = require('./version-flags')
 
 var createLicensee = require('../bin/l0-create-licensee.js')
-var bom = require('../bin/l0-bom.js')
+var quote = require('../bin/l0-quote.js')
 
-helpFlags('bom', bom)
-noArgumentsUsage('bom', bom)
-versionFlags('bom', bom)
+helpFlags('quote', quote)
+noArgumentsUsage('quote', quote)
+versionFlags('quote', quote)
 
-tape('bom no deps', function (test) {
+tape('quote no deps', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
@@ -27,7 +27,7 @@ tape('bom no deps', function (test) {
         })
       },
       function (done) {
-        run(bom, [
+        run(quote, [
           'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
@@ -45,7 +45,7 @@ tape('bom no deps', function (test) {
   })
 })
 
-tape('bom non-l0 dep', function (test) {
+tape('quote non-l0 dep', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
@@ -67,7 +67,7 @@ tape('bom non-l0 dep', function (test) {
         )
       },
       function (done) {
-        run(bom, [
+        run(quote, [
           'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
@@ -85,7 +85,7 @@ tape('bom non-l0 dep', function (test) {
   })
 })
 
-tape('bom one l0 dep', function (test) {
+tape('quote one l0 dep', function (test) {
   var PROJECT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
   helper(function (tmp, run, rm) {
     require('../request').mocks.push({
@@ -140,7 +140,7 @@ tape('bom one l0 dep', function (test) {
         ], done)
       },
       function (done) {
-        run(bom, [
+        run(quote, [
           'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
@@ -172,7 +172,7 @@ tape('bom one l0 dep', function (test) {
   })
 })
 
-tape('bom one duplicate l0 dep', function (test) {
+tape('quote one duplicate l0 dep', function (test) {
   var PROJECT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
   var xPackageData = {
     name: 'x',
@@ -242,7 +242,7 @@ tape('bom one duplicate l0 dep', function (test) {
         ], done)
       },
       function (done) {
-        run(bom, [
+        run(quote, [
           'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
@@ -274,7 +274,7 @@ tape('bom one duplicate l0 dep', function (test) {
   })
 })
 
-tape('bom one retracted l0 dep', function (test) {
+tape('quote one retracted l0 dep', function (test) {
   var PROJECT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
   var RETRACTED = new Date().toISOString()
   helper(function (tmp, run, rm) {
@@ -331,7 +331,7 @@ tape('bom one retracted l0 dep', function (test) {
         ], done)
       },
       function (done) {
-        run(bom, [
+        run(quote, [
           'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')

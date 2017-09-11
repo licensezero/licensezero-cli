@@ -47,7 +47,7 @@
     "*.md": "standard-markdown"
   },
   "bin": {
-    "l0-bom": "./bin/l0-bom",
+    "l0-quote": "./bin/l0-quote",
     "l0-import": "./bin/l0-import",
     "l0-create-licensee": "./bin/l0-create-licensee",
     "l0-remove-licensee": "./bin/l0-remove-licensee",
