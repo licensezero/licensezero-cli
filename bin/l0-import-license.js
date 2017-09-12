@@ -2,12 +2,12 @@
 
 module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   var options = require('./usage')([
-    'Import a License Zero waiver or license file.',
+    'Import a License Zero license file.',
     '',
     'Usage:',
-    '  l0-import <file>',
-    '  l0-import -h | --help',
-    '  l0-import -v | --version',
+    '  l0-import-license <file>',
+    '  l0-import-license -h | --help',
+    '  l0-import-license -v | --version',
     '',
     'Options:',
     '  -h, --help     Print this screen to standard output.',
