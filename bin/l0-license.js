@@ -62,10 +62,13 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
             var licenseFile = path.join(cwd, 'LICENSE')
             var content = (
               license.document +
-              '---\n' +
-              'Licensor:\n' +
+              '\n' +
+              '---\n\n' +
+              'Licensor Signature (Ed25519):\n\n' +
               signatureLines(license.licensorSignature) + '\n' +
-              'Agent:\n' +
+              '\n' +
+              '---\n\n' +
+              'Agent Signature (Ed25519):\n\n' +
               signatureLines(license.agentSignature) + '\n'
             )
             fs.writeFile(licenseFile, content, function (error) {
