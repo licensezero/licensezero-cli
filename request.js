@@ -33,15 +33,17 @@ function request (payload, callback) {
       if (status !== 200) {
         return callback(new Error('server responded ' + status))
       }
-      simpleConcat(response, function (error, parsed) {
+      simpleConcat(response, function (error, buffer) {
         if (error) {
           return callback(new Error('invalid server response'))
         }
-        if (parsed.error) {
-          return callback(new Error(parsed.error))
-        }
-        delete parsed.error
-        callback(null, parsed)
+        var parseJSON = require('json-parse-errback')
+        parseJSON(buffer, function (error, parsed) {
+          if (error) return callback(new Error('invalid server response'))
+          if (buffer.error) return callback(new Error(parsed.error))
+          delete parsed.error
+          callback(null, parsed)
+        })
       })
     })
     .end(JSON.stringify(payload))
