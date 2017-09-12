@@ -40,7 +40,7 @@ function request (payload, callback) {
         var parseJSON = require('json-parse-errback')
         parseJSON(buffer, function (error, parsed) {
           if (error) return callback(new Error('invalid server response'))
-          if (buffer.error) return callback(new Error(parsed.error))
+          if (parsed.error) return callback(new Error(parsed.error))
           delete parsed.error
           callback(null, parsed)
         })
