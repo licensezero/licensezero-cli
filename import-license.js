@@ -18,10 +18,10 @@ module.exports = function (config, license, done) {
   }
   log('Project ID: ' + projectID)
   var licensee = manifest.licensee
-  log('Licensee: ' + licensee)
+  log('Licensee: ' + licensee.name)
   var name = licensee.name
   var jurisdiction = licensee.jurisdiction
-  log('Jurisdiction: ' + licensee)
+  log('Jurisdiction: ' + licensee.jurisdiction)
   readLicensees(config, function (error, licensees) {
     if (error) return done(error)
     var matchingLicensee = licensees.find(function (licensee) {
