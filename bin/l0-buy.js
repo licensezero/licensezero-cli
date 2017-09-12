@@ -38,10 +38,11 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       tier: licensee.tier
     }, function (error, response) {
       if (error) return done(error)
-      stdout.write(response.location + '\n')
+      var url = 'https://licensezero.com' + response.location
+      stdout.write(url + '\n')
       if (!options['--no-open']) {
         var openWebpage = require('../open-webpage')
-        openWebpage('https://licensezero.com' + response.location)
+        openWebpage(url)
       }
       done(0)
     })

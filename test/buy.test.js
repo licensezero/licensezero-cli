@@ -14,7 +14,7 @@ tape('buy one l0 dep', function (test) {
     require('../request').mocks.push({
       action: 'order',
       handler: function (payload, callback) {
-        callback(null, {location: 'https://licensezero.com/buy/TEST'})
+        callback(null, {location: '/buy/TEST'})
       }
     })
     runSeries([
