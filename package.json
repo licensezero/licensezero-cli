@@ -4,6 +4,7 @@
   "description": "License Zero command-line interface",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
   "license": "BSD-2-Clause",
+  "repository": "licensezero/licensezero-cli",
   "devDependencies": {
     "husky": "^0.14.3",
     "istanbul": "^0.4.5",
