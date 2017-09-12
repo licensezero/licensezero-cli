@@ -41,7 +41,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       stdout.write(response.location + '\n')
       if (!options['--no-open']) {
         var openWebpage = require('../open-webpage')
-        openWebpage(response.location)
+        openWebpage('https://licensezero.com' + response.location)
       }
       done(0)
     })
