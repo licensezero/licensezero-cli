@@ -6,6 +6,8 @@ var readWaivers = require('./read/waivers')
 var runParallel = require('run-parallel')
 
 // TODO: omit projects for which user is licensor
+// TODO: validate agent signature
+// TODO: validate licensor signature
 
 module.exports = function (nickname, cwd, config, callback) {
   readLicensee(config, nickname, function (error, licensee) {
