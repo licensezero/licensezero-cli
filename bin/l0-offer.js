@@ -3,19 +3,18 @@ var USAGE = [
   'Offer paid licenses through licensezero.com.',
   '',
   'Usage:',
-  '  l0-offer -s CENTS -t CENTS -c CENTS -e CENTS -g DAYS [-l ID]',
+  '  l0-offer -s CENTS -t CENTS -c CENTS -e CENTS [-l UUID]',
   '  l0-offer -h | --help',
   '  l0-offer -v | --version',
   '',
   'Options:',
   '  -h, --help                    Print this screen to standard output.',
   '  -v, --version                 Print version to standard output.',
-  '  -l ID, --licensor ID          Licensor offering licenses.',
+  '  -l UUID, --licensor UUID      Licensor offering licenses.',
   '  -s CENTS, --solo CENTS        Price for solo licenses, in cents.',
   '  -t CENTS, --team CENTS        Price for team licenses, in cents.',
   '  -c CENTS, --company CENTS     Price for company licenses, in cents.',
-  '  -e CENTS, --enterprise CENTS  Price for enterprise licenses, in cents.',
-  '  -g DAYS, --grace DAYS         Grace period, in calendar days.'
+  '  -e CENTS, --enterprise CENTS  Price for enterprise licenses, in cents.'
 ]
 /* eslint-enable max-len */
 
@@ -44,11 +43,11 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         if (error) return done(error)
         if (!accepted) return done('must accept terms')
         var request = require('../request')
-        request({
+        var payload = {
           action: 'offer',
-          licensorID: licensorID,
+          licensorID: licensor.licensorID,
           token: licensor.token,
-          repository: data.repository,
+          repository: data.repository.url.replace('git+https', 'https'),
           pricing: {
             solo: parseInt(options['--solo']),
             team: parseInt(options['--team']),
@@ -56,12 +55,12 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
             enterprise: parseInt(options['--enterprise'])
           },
           description: data.description,
-          grace: parseInt(data.grace),
           terms: (
             'I agree to the agency terms at ' +
             'https://licensezero.com/terms/agency.'
           )
-        }, function (error, response) {
+        }
+        request(payload, function (error, response) {
           if (error) return done(error)
           stdout.write('Project ID: ' + response.projectID + '\n')
           done()
