@@ -3,5 +3,5 @@ var writeJSONFile = require('./json-file')
 
 module.exports = function (config, nickname, license, callback) {
   var file = licensePath(config, nickname, license.projectID)
-  writeJSONFile(file, JSON.stringify(license), callback)
+  writeJSONFile(file, license, callback)
 }
