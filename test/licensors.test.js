@@ -274,7 +274,7 @@ function mockLicenseRequest (licensorID, projectID) {
         metadata: {
           license: 'SEE LICENSE IN LICENSE',
           licensezero: {
-            metadata: {
+            license: {
               projectID: projectID,
               licensorID: licensorID
             },

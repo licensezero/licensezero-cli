@@ -17,31 +17,31 @@ module.exports = function (nickname, cwd, config, callback) {
         if (error) return callback(error)
         var licensable = []
         recurseTree(tree, function (node) {
-          metadataRecords(node.package).forEach(function (metadata) {
+          licenseRecords(node.package).forEach(function (license) {
             if (!licensable.some(function (existing) {
-              return existing.projectID === metadata.projectID
+              return existing.projectID === license.projectID
             })) {
-              licensable.push(metadata)
+              licensable.push(license)
             }
           })
         })
         var unlicensed = []
         var licensed = []
         var waived = []
-        licensable.forEach(function (metadata) {
-          var projectID = metadata.projectID
+        licensable.forEach(function (license) {
+          var projectID = license.projectID
           var haveLicense = existing.licenses.some(function (license) {
             return (
               license.projectID === projectID &&
               sufficientTier(license.tier, licensee.tier)
             )
           })
-          if (haveLicense) return licensed.push(metadata)
+          if (haveLicense) return licensed.push(license)
           var haveWaiver = existing.waivers.some(function (waiver) {
             return waiver.projectID === projectID
           })
-          if (haveWaiver) return waived.push(metadata)
-          unlicensed.push(metadata)
+          if (haveWaiver) return waived.push(license)
+          unlicensed.push(license)
         })
         return callback(null, {
           licensee: licensee,
@@ -64,15 +64,15 @@ function recurseTree (tree, handler) {
   }
 }
 
-function metadataRecords (packageData) {
+function licenseRecords (packageData) {
   if (!Array.isArray(packageData.licensezero)) return []
   var returned = []
   packageData.licensezero.forEach(function (element) {
     if (
-      isObject(element.metadata) &&
-      typeof element.metadata.projectID === 'string'
+      isObject(element.license) &&
+      typeof element.license.projectID === 'string'
     ) {
-      returned.push(element.metadata)
+      returned.push(element.license)
     }
   })
   return returned

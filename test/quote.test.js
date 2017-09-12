@@ -97,7 +97,6 @@ tape('quote one l0 dep', function (test) {
               projectID: PROJECT_ID,
               description: 'test project',
               repository: 'https://example.com',
-              grace: 180,
               licensor: {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'
@@ -131,7 +130,7 @@ tape('quote one l0 dep', function (test) {
             version: '1.0.0',
             licensezero: [
               {
-                metadata: {
+                license: {
                   projectID: PROJECT_ID
                 }
               }
@@ -155,11 +154,10 @@ tape('quote one l0 dep', function (test) {
               '  - Project: ' + PROJECT_ID,
               '    Description: test project',
               '    Repository: https://example.com',
-              '    Grace Period: 180 calendar days',
               '    Licensor: Test Licensor [US-CA]',
               '    Price: $15.00 (Team License)',
               'Total: $15.00'
-            ].join('\n'),
+            ].join('\n') + '\n',
             'none found'
           )
           test.equal(stderr, '', 'no stderr')
@@ -177,7 +175,7 @@ tape('quote one duplicate l0 dep', function (test) {
   var xPackageData = {
     name: 'x',
     version: '1.0.0',
-    licensezero: [{metadata: {projectID: PROJECT_ID}}]
+    licensezero: [{license: {projectID: PROJECT_ID}}]
   }
   helper(function (tmp, run, rm) {
     require('../request').mocks.push({
@@ -189,7 +187,6 @@ tape('quote one duplicate l0 dep', function (test) {
               projectID: PROJECT_ID,
               description: 'test project',
               repository: 'https://example.com',
-              grace: 180,
               licensor: {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'
@@ -228,7 +225,7 @@ tape('quote one duplicate l0 dep', function (test) {
           fs.writeFile.bind(null, file, JSON.stringify({
             name: 'y',
             version: '1.0.0',
-            licensezero: [{metadata: {projectID: PROJECT_ID}}]
+            licensezero: [{license: {projectID: PROJECT_ID}}]
           }))
         ], done)
       },
@@ -257,12 +254,11 @@ tape('quote one duplicate l0 dep', function (test) {
               '  - Project: ' + PROJECT_ID,
               '    Description: test project',
               '    Repository: https://example.com',
-              '    Grace Period: 180 calendar days',
               '    Licensor: Test Licensor [US-CA]',
               '    Price: $15.00 (Team License)',
               'Total: $15.00'
-            ].join('\n'),
-            'none found'
+            ].join('\n') + '\n',
+            'one found'
           )
           test.equal(stderr, '', 'no stderr')
           done()
@@ -288,7 +284,6 @@ tape('quote one retracted l0 dep', function (test) {
               retracted: RETRACTED,
               description: 'test project',
               repository: 'https://example.com',
-              grace: 180,
               licensor: {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'
@@ -320,13 +315,7 @@ tape('quote one retracted l0 dep', function (test) {
           fs.writeFile.bind(null, file, JSON.stringify({
             name: 'x',
             version: '1.0.0',
-            licensezero: [
-              {
-                metadata: {
-                  projectID: PROJECT_ID
-                }
-              }
-            ]
+            licensezero: [{license: {projectID: PROJECT_ID}}]
           }))
         ], done)
       },
@@ -346,11 +335,10 @@ tape('quote one retracted l0 dep', function (test) {
               '  - Project: ' + PROJECT_ID,
               '    Description: test project',
               '    Repository: https://example.com',
-              '    Grace Period: 180 calendar days',
               '    Licensor: Test Licensor [US-CA]',
               '    Retracted: ' + RETRACTED,
               'Total: $0.00'
-            ].join('\n'),
+            ].join('\n') + '\n',
             'none found'
           )
           test.equal(stderr, '', 'no stderr')

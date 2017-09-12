@@ -35,7 +35,7 @@ tape('buy one l0 dep', function (test) {
             version: '1.0.0',
             licensezero: [
               {
-                metadata: {
+                license: {
                   projectID: PROJECT_ID
                 }
               }
