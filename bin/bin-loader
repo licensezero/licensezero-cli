@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+require('update-notifier')({pkg: require('../package.json')})
+  .notify({defer: true})
 var path = require('path')
 var formatError = require('./format-error')
 var script = path.basename(process.argv[1])

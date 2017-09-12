@@ -32,6 +32,7 @@
     "simple-concat": "^1.0.0",
     "stream-buffers": "^3.0.1",
     "tweetnacl": "^1.0.0",
+    "update-notifier": "^2.2.0",
     "xdg-basedir": "^3.0.0"
   },
   "scripts": {
