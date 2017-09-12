@@ -5,6 +5,8 @@ var readPackageTree = require('read-package-tree')
 var readWaivers = require('./read/waivers')
 var runParallel = require('run-parallel')
 
+// TODO: omit projects for which user is licensor
+
 module.exports = function (nickname, cwd, config, callback) {
   readLicensee(config, nickname, function (error, licensee) {
     if (error) return callback(error)
