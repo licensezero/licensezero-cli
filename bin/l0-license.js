@@ -23,7 +23,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   }, function (error, project) {
     if (error) return done(error)
     var readLicensor = require('../read/licensor')
-    readLicensor(config, project.licensorID, function (error, licensor) {
+    readLicensor(config, project.licensor.licensorID, function (error, licensor) {
       /* istanbul ignore next */
       if (error) return done(error)
       request({

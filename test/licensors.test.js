@@ -257,7 +257,7 @@ function mockLicenseRequest (licensorID, projectID) {
     action: 'project',
     handler: function (payload, callback) {
       callback(null, {
-        licensorID: licensorID,
+        licensor: {licensorID: licensorID},
         projectID: projectID
       })
     }
