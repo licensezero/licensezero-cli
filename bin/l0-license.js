@@ -29,7 +29,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       request({
         action: 'public',
         licensorID: licensor.licensorID,
-        password: licensor.password,
+        token: licensor.token,
         projectID: projectID
       }, function (error, response) {
         if (error) return done(error)

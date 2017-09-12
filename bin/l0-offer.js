@@ -47,7 +47,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         request({
           action: 'offer',
           licensorID: licensorID,
-          password: licensor.password,
+          token: licensor.token,
           repository: data.repository,
           pricing: {
             solo: parseInt(options['--solo']),

@@ -1,6 +1,6 @@
 module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   var options = require('./usage')([
-    'Log in as a licensor, saving your password for future use.',
+    'Log in as a licensor, saving your access token for future use.',
     '',
     'Usage:',
     '  l0-create-licensor <UUID>',
@@ -21,12 +21,12 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
 
   var read = require('read')
   read({
-    prompt: 'Password: ',
+    prompt: 'Token: ',
     silent: true,
     replace: '*',
     input: stdin,
     output: stdout
-  }, function (error, password) {
+  }, function (error, token) {
     /* istanbul ignore next */
     if (error) return done(error)
     var request = require('../request')
@@ -36,7 +36,8 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     }, function (error, licensor) {
       /* istanbul ignore next */
       if (error) return done(error)
-      licensor.password = password
+      licensor.licensorID = licensorID
+      licensor.token = token
       var writeLicensor = require('../write/licensor')
       writeLicensor(config, licensor, done)
     })
