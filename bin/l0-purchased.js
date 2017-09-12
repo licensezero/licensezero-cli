@@ -36,15 +36,17 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           var anyError = false
           var runSeries = require('run-series')
           runSeries(parsed.licenses.map(function (license) {
-            importLicense(config, license, function (error, summary) {
-              if (error) {
-                stderr.write(formatError(error))
-                anyError = true
-              } else {
-                stdout.write(summary)
-              }
-              done()
-            })
+            return function (done) {
+              importLicense(config, license, function (error, summary) {
+                if (error) {
+                  stderr.write(formatError(error))
+                  anyError = true
+                } else {
+                  stdout.write(summary + '\n')
+                }
+                done()
+              })
+            }
           }), function () {
             if (anyError) return done('error importing license')
             done()
