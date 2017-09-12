@@ -47,7 +47,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           action: 'offer',
           licensorID: licensor.licensorID,
           token: licensor.token,
-          repository: data.repository.url.replace('git+https', 'https'),
+          repository: sanitizeRepository(data.repository.url),
           pricing: {
             solo: parseInt(options['--solo']),
             team: parseInt(options['--team']),
@@ -68,4 +68,12 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       })
     })
   })
+}
+
+function sanitizeRepository (argument) {
+  var returned = argument.replace('git+https', 'https')
+  if (returned.indexOf('https://github.com') === 0) {
+    returned = returned.replace(/\.git$/, '')
+  }
+  return returned
 }
