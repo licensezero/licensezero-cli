@@ -51,7 +51,6 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           Project: project.projectID,
           Description: project.description,
           Repository: project.repository,
-          'Grace Period': project.grace + ' calendar days',
           Licensor: (
             licensor.name + ' [' + licensor.jurisdiction + ']'
           )
