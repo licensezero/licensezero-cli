@@ -12,7 +12,7 @@ tape('buy one l0 dep', function (test) {
   var PROJECT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
   helper(function (tmp, run, rm) {
     require('../request').mocks.push({
-      action: 'buy',
+      action: 'order',
       handler: function (payload, callback) {
         callback(null, {location: 'https://licensezero.com/buy/TEST'})
       }

@@ -29,7 +29,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     }
     if (unlicensed.length === 0) return done(0)
     request({
-      action: 'buy',
+      action: 'order',
       projects: unlicensed.map(function (metadata) {
         return metadata.projectID
       }),
