@@ -192,8 +192,7 @@ tape('license', function (test) {
           '-s', '1000',
           '-t', '1000',
           '-c', '1000',
-          '-e', '1000',
-          '-g', '180'
+          '-e', '1000'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'offer exit 0')
           var match = /Project ID: (\S+)/.exec(stdout)

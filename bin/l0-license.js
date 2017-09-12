@@ -1,9 +1,9 @@
 module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   var options = require('./usage')([
-    'Apply the License Zero Public License to an npm package. ',
+    'Apply the License Zero Public License to an npm package.',
     '',
     'Usage:',
-    '  l0-license <project> [--quiet]',
+    '  l0-license <UUID> [--quiet]',
     '  l0-license -h | --help',
     '  l0-license -v | --version',
     '',
@@ -14,7 +14,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   ]).apply(null, arguments)
   if (!options) return
 
-  var projectID = options['<project>']
+  var projectID = options['<UUID>']
 
   var request = require('../request')
   request({
