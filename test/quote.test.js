@@ -32,7 +32,7 @@ tape('quote no deps', function (test) {
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
-            stdout, 'No License Zero dependencies found.',
+            stdout, 'No License Zero dependencies found.\n',
             'none found'
           )
           test.equal(stderr, '', 'no stderr')

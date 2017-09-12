@@ -24,7 +24,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     var waived = result.waived
     var unlicensed = result.unlicensed
     if (licensable.length === 0) {
-      stdout.write('No License Zero dependencies found.')
+      stdout.write('No License Zero dependencies found.\n')
       return done(0)
     }
     stdout.write('License Zero Projects: ' + licensable.length + '\n')
