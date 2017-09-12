@@ -4,18 +4,23 @@ var path = require('path')
 
 var bin = path.join(process.cwd(), 'bin')
 
+var existing = fs.readFileSync('package.json', 'utf8')
+var parsed = JSON.parse(existing)
+parsed.bin = {}
+
 fs.readdirSync(bin).forEach(function (entry) {
   if (
     entry.indexOf('l0-') === 0 &&
     entry.indexOf('.js') === entry.length - 3
   ) {
+    var basename = path.basename(entry, '.js')
     try {
-      fs.symlinkSync(
-        'bin-loader',
-        path.join(bin, path.basename(entry, '.js'))
-      )
+      fs.symlinkSync('bin-loader', path.join(bin, basename))
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
     }
+    parsed.bin[basename] = './bin/' + entry
   }
 })
+
+fs.writeFileSync('package.json', JSON.stringify(parsed, null, 2) + '\n')
