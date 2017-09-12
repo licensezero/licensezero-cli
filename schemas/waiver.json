@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "projectID": {
+      "type": "string"
+    },
+    "manifest": {
+      "type": "string"
+    },
+    "document": {
+      "type": "string"
+    },
+    "publicKey": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{128}$"
+    }
+  },
+  "required": [
+    "projectID",
+    "manifest",
+    "document",
+    "publicKey",
+    "signature"
+  ],
+  "additionalProperties": false
+}
