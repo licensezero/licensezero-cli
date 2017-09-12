@@ -70,7 +70,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         lamos.stringify({
           Projects: formattedProjects,
           Total: currency(total)
-        })
+        }) + '\n'
       )
       done(0)
     })
