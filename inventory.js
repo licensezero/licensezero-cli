@@ -31,9 +31,10 @@ module.exports = function (nickname, cwd, config, callback) {
         licensable.forEach(function (license) {
           var projectID = license.projectID
           var haveLicense = existing.licenses.some(function (license) {
+            var manifest = JSON.parse(license.manifest)
             return (
               license.projectID === projectID &&
-              sufficientTier(license.tier, licensee.tier)
+              sufficientTier(manifest.tier, licensee.tier)
             )
           })
           if (haveLicense) return licensed.push(license)
