@@ -6,6 +6,7 @@
   "license": "BSD-2-Clause",
   "repository": "licensezero/licensezero-cli",
   "devDependencies": {
+    "fs-extra": "^4.0.2",
     "husky": "^0.14.3",
     "istanbul": "^0.4.5",
     "licensee": "^4.5.0",

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var fs = require('fs')
+var fs = require('fs-extra')
 var path = require('path')
 
 var bin = path.join(process.cwd(), 'bin')
@@ -15,7 +15,7 @@ fs.readdirSync(bin).forEach(function (entry) {
   ) {
     var basename = path.basename(entry, '.js')
     try {
-      fs.symlinkSync('bin-loader', path.join(bin, basename))
+      fs.copySync(path.join(bin, 'bin-loader'), path.join(bin, basename))
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
     }
