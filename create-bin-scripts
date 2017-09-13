@@ -19,7 +19,7 @@ fs.readdirSync(bin).forEach(function (entry) {
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
     }
-    parsed.bin[basename] = './bin/' + entry
+    parsed.bin[basename] = './bin/' + basename
   }
 })
 
