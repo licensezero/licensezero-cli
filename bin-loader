@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-require('update-notifier')({pkg: require('../package.json')})
+require('update-notifier')({pkg: require('./package.json')})
   .notify({defer: true})
 var path = require('path')
 var formatError = require('./format-error')
 var script = path.basename(process.argv[1])
-require('./' + script + '.js')(
+require('./bin/' + script + '.js')(
   process.argv.slice(2),
   process.cwd(),
   path.join(
     require('xdg-basedir').config,
-    require('../package.json').name
+    require('./package.json').name
   ),
   process.stdin,
   process.stdout,
