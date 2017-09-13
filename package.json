@@ -42,11 +42,30 @@
     "test": "NODE_ENV=test tape test/*.test.js",
     "lint": "standard && standard-markdown",
     "precommit": "lint-staged",
-    "licenses": "licensee --errors-only",
-    "prepublish": "./create-bin-scripts"
+    "licenses": "licensee --errors-only"
   },
   "lint-staged": {
     "*.js": "standard",
     "*.md": "standard-markdown"
+  },
+  "bin": {
+    "l0-buy": "./bin/bin-loader",
+    "l0-create-licensee": "./bin/bin-loader",
+    "l0-create-licensor": "./bin/bin-loader",
+    "l0-import-license": "./bin/bin-loader",
+    "l0-import-waiver": "./bin/bin-loader",
+    "l0-license": "./bin/bin-loader",
+    "l0-list-licensees": "./bin/bin-loader",
+    "l0-list-licensors": "./bin/bin-loader",
+    "l0-offer": "./bin/bin-loader",
+    "l0-purchased": "./bin/bin-loader",
+    "l0-quote": "./bin/bin-loader",
+    "l0-register-licensor": "./bin/bin-loader",
+    "l0-remove-licensee": "./bin/bin-loader",
+    "l0-remove-licensor": "./bin/bin-loader",
+    "l0-reset-token": "./bin/bin-loader",
+    "l0-retract": "./bin/bin-loader",
+    "l0-show-licensee": "./bin/bin-loader",
+    "l0-waive": "./bin/bin-loader"
   }
 }
