@@ -2,7 +2,7 @@
 require('update-notifier')({pkg: require('./package.json')})
   .notify({defer: true})
 var path = require('path')
-var formatError = require('./format-error')
+var formatError = require('./bin/format-error')
 var script = path.basename(process.argv[1])
 require('./bin/' + script + '.js')(
   process.argv.slice(2),
