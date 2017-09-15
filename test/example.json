@@ -1,0 +1,20 @@
+{
+  "name": "example-licensezero-package",
+  "version": "1.0.0",
+  "description": "a License Zero test package",
+  "author": "Kyle E. Mitchell <kyle@artlessdevices.com>",
+  "repository": "licensezero/example-licensezero-package",
+  "license": "SEE LICENSE IN LICENSE",
+  "licensezero": [
+    {
+      "license": {
+        "jurisdiction": "US-CA",
+        "name": "Kyle E. Mitchell",
+        "projectID": "e91fcaa8-1d80-4d3f-97aa-5b58b93e4662",
+        "publicKey": "0374a100b11660b7acb294e9db0cc1c33e5261a537079dd17b4dacbf80cff3c4"
+      },
+      "licensorSignature": "6989b6bde35ff60579d1b7b91f898de47b26e259648e804389091d84adc5a0ef86af7a16d67069f532e81d7d77fcbc4eca94bc5054820df0dba468b5abf4f504",
+      "agentSignature": "f873bf87a90e6eb9796cb3889961d76f0e4a6f585c99f5f9248d41e9ad14e7fb56a56b457de93ee1a303dc27f34bda7c080d28bcf036ab9be536666d5df56a01"
+    }
+  ]
+}

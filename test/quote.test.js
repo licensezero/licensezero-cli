@@ -1,3 +1,4 @@
+var EXAMPLE = require('./example')
 var fs = require('fs')
 var helpFlags = require('./help-flags')
 var helper = require('./helper')
@@ -125,17 +126,7 @@ tape('quote one l0 dep', function (test) {
         var file = path.join(tmp, 'node_modules', 'x', 'package.json')
         runSeries([
           mkdirp.bind(null, path.dirname(file)),
-          fs.writeFile.bind(null, file, JSON.stringify({
-            name: 'x',
-            version: '1.0.0',
-            licensezero: [
-              {
-                license: {
-                  projectID: PROJECT_ID
-                }
-              }
-            ]
-          }))
+          fs.writeFile.bind(null, file, JSON.stringify(EXAMPLE))
         ], done)
       },
       function (done) {
@@ -150,6 +141,7 @@ tape('quote one l0 dep', function (test) {
               'Licensed: 0',
               'Waived: 0',
               'Unlicensed: 1',
+              'Invalid: 0',
               'Projects:',
               '  - Project: ' + PROJECT_ID,
               '    Description: test project',
@@ -172,11 +164,6 @@ tape('quote one l0 dep', function (test) {
 
 tape('quote one duplicate l0 dep', function (test) {
   var PROJECT_ID = '76809c77-9bb3-4316-a7fd-29bdadb0c475'
-  var xPackageData = {
-    name: 'x',
-    version: '1.0.0',
-    licensezero: [{license: {projectID: PROJECT_ID}}]
-  }
   helper(function (tmp, run, rm) {
     require('../request').mocks.push({
       action: 'quote',
@@ -215,27 +202,14 @@ tape('quote one duplicate l0 dep', function (test) {
         var file = path.join(tmp, 'node_modules', 'x', 'package.json')
         runSeries([
           mkdirp.bind(null, path.dirname(file)),
-          fs.writeFile.bind(null, file, JSON.stringify(xPackageData))
+          fs.writeFile.bind(null, file, JSON.stringify(EXAMPLE))
         ], done)
       },
       function (done) {
         var file = path.join(tmp, 'node_modules', 'y', 'package.json')
         runSeries([
           mkdirp.bind(null, path.dirname(file)),
-          fs.writeFile.bind(null, file, JSON.stringify({
-            name: 'y',
-            version: '1.0.0',
-            licensezero: [{license: {projectID: PROJECT_ID}}]
-          }))
-        ], done)
-      },
-      function (done) {
-        var file = path.join(
-          tmp, 'node_modules', 'y', 'node_modules', 'x', 'package.json'
-        )
-        runSeries([
-          mkdirp.bind(null, path.dirname(file)),
-          fs.writeFile.bind(null, file, JSON.stringify({xPackageData}))
+          fs.writeFile.bind(null, file, JSON.stringify(EXAMPLE))
         ], done)
       },
       function (done) {
@@ -250,6 +224,7 @@ tape('quote one duplicate l0 dep', function (test) {
               'Licensed: 0',
               'Waived: 0',
               'Unlicensed: 1',
+              'Invalid: 0',
               'Projects:',
               '  - Project: ' + PROJECT_ID,
               '    Description: test project',
@@ -312,11 +287,7 @@ tape('quote one retracted l0 dep', function (test) {
         var file = path.join(tmp, 'node_modules', 'x', 'package.json')
         runSeries([
           mkdirp.bind(null, path.dirname(file)),
-          fs.writeFile.bind(null, file, JSON.stringify({
-            name: 'x',
-            version: '1.0.0',
-            licensezero: [{license: {projectID: PROJECT_ID}}]
-          }))
+          fs.writeFile.bind(null, file, JSON.stringify(EXAMPLE))
         ], done)
       },
       function (done) {
@@ -331,6 +302,7 @@ tape('quote one retracted l0 dep', function (test) {
               'Licensed: 0',
               'Waived: 0',
               'Unlicensed: 1',
+              'Invalid: 0',
               'Projects:',
               '  - Project: ' + PROJECT_ID,
               '    Description: test project',
