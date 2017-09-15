@@ -52,9 +52,13 @@ module.exports = function (metadata, callback) {
 }
 
 function validSignature (message, signature, key) {
-  return nacl.sign.detached.verify(
-    Buffer.from(message, 'utf8'),
-    Buffer.from(signature, 'hex'),
-    Buffer.from(key, 'hex')
-  )
+  try {
+    return nacl.sign.detached.verify(
+      Buffer.from(message, 'utf8'),
+      Buffer.from(signature, 'hex'),
+      Buffer.from(key, 'hex')
+    )
+  } catch (error) {
+    return false
+  }
 }
