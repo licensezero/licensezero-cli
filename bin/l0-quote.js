@@ -23,6 +23,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     var licensed = result.licensed
     var waived = result.waived
     var unlicensed = result.unlicensed
+    var invalid = result.invalid
     if (licensable.length === 0) {
       stdout.write('No License Zero dependencies found.\n')
       return done(0)
@@ -31,6 +32,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     stdout.write('Licensed: ' + licensed.length + '\n')
     stdout.write('Waived: ' + waived.length + '\n')
     stdout.write('Unlicensed: ' + unlicensed.length + '\n')
+    stdout.write('Invalid: ' + invalid.length + '\n')
     if (unlicensed.length === 0) return done(0)
     var request = require('../request')
     request({

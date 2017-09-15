@@ -4,9 +4,7 @@ var readLicenses = require('./read/licenses')
 var readPackageTree = require('read-package-tree')
 var readWaivers = require('./read/waivers')
 var runParallel = require('run-parallel')
-
-// TODO: validate agent signature
-// TODO: validate licensor signature
+var validateMetadata = require('./validate/metadata')
 
 module.exports = function (nickname, cwd, config, callback) {
   readLicensee(config, nickname, function (error, licensee) {
@@ -20,11 +18,11 @@ module.exports = function (nickname, cwd, config, callback) {
         if (error) return callback(error)
         var licensable = []
         recurseTree(tree, function (node) {
-          licenseRecords(node.package).forEach(function (license) {
+          licenseRecords(node.package).forEach(function (record) {
             if (!licensable.some(function (existing) {
-              return existing.projectID === license.projectID
+              return existing.projectID === record.license.projectID
             })) {
-              licensable.push(license)
+              licensable.push(record)
             }
           })
         })
@@ -32,33 +30,60 @@ module.exports = function (nickname, cwd, config, callback) {
         var licensed = []
         var waived = []
         var own = []
-        licensable.forEach(function (license) {
-          var projectID = license.projectID
-          var haveLicense = existing.licenses.some(function (license) {
-            var manifest = JSON.parse(license.manifest)
-            return (
-              license.projectID === projectID &&
-              sufficientTier(manifest.tier, licensee.tier)
-            )
+        var invalid = []
+        runParallel(licensable.map(function (record) {
+          return function (done) {
+            validateMetadata(record, function (error, valid) {
+              if (error) return done(error)
+              if (!valid) {
+                invalid.push(record.license)
+                done()
+              }
+              var projectID = record.license.projectID
+              // Licensed?
+              var haveLicense = existing.licenses.some(function (license) {
+                var manifest = JSON.parse(license.manifest)
+                return (
+                  license.projectID === projectID &&
+                  sufficientTier(manifest.tier, licensee.tier)
+                )
+              })
+              if (haveLicense) {
+                licensed.push(record.license)
+                done()
+              }
+              // Waived?
+              var haveWaiver = existing.waivers.some(function (waiver) {
+                return waiver.projectID === projectID
+              })
+              if (haveWaiver) {
+                waived.push(record.license)
+                done()
+              }
+              // Our own project?
+              var ownProject = (
+                record.license.name === licensee.name &&
+                record.license.jurisdiction === licensee.jurisdiction
+              )
+              if (ownProject) {
+                own.push(record.license)
+                done()
+              }
+              // Otherwise, it's unlicensed.
+              unlicensed.push(record.license)
+              done()
+            })
+          }
+        }), function (error) {
+          if (error) return callback(error)
+          callback(null, {
+            licensee: licensee,
+            licensable: licensable,
+            licensed: licensed,
+            waived: waived,
+            unlicensed: unlicensed,
+            invalid: invalid
           })
-          if (haveLicense) return licensed.push(license)
-          var haveWaiver = existing.waivers.some(function (waiver) {
-            return waiver.projectID === projectID
-          })
-          if (haveWaiver) return waived.push(license)
-          var ownProject = (
-            license.name === licensee.name &&
-            license.jurisdiction === licensee.jurisdiction
-          )
-          if (ownProject) return own.push(license)
-          unlicensed.push(license)
-        })
-        return callback(null, {
-          licensee: licensee,
-          licensable: licensable,
-          licensed: licensed,
-          waived: waived,
-          unlicensed: unlicensed
         })
       })
     })
@@ -78,18 +103,20 @@ function licenseRecords (packageData) {
   if (!Array.isArray(packageData.licensezero)) return []
   var returned = []
   packageData.licensezero.forEach(function (element) {
-    if (
+    var hasProjectID = (
       isObject(element.license) &&
       typeof element.license.projectID === 'string'
-    ) {
-      returned.push(element.license)
-    }
+    )
+    if (hasProjectID) returned.push(element)
   })
   return returned
 }
 
 function isObject (argument) {
-  return typeof argument === 'object' && argument !== null
+  return (
+    typeof argument === 'object' &&
+    argument !== null
+  )
 }
 
 function sufficientTier (have, need) {
