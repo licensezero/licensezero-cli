@@ -322,3 +322,48 @@ tape('quote one retracted l0 dep', function (test) {
     })
   })
 })
+
+tape('quote one invalid metadata', function (test) {
+  helper(function (tmp, run, rm) {
+    runSeries([
+      function (done) {
+        run(createLicensee, [
+          'test', 'Test Licensee', 'US-CA', 'team'
+        ], function (status, stdout, stderr) {
+          test.equal(status, 0, 'exit 0')
+          done()
+        })
+      },
+      function (done) {
+        var file = path.join(tmp, 'node_modules', 'x', 'package.json')
+        var malformed = JSON.parse(JSON.stringify(EXAMPLE))
+        malformed.licensezero[0].licensorSignature = 'a'.repeat(128)
+        runSeries([
+          mkdirp.bind(null, path.dirname(file)),
+          fs.writeFile.bind(null, file, JSON.stringify(malformed))
+        ], done)
+      },
+      function (done) {
+        run(quote, [
+          'test'
+        ], function (status, stdout, stderr) {
+          test.equal(status, 0, 'exit 0')
+          test.equal(
+            stdout,
+            [
+              'License Zero Projects: 1',
+              'Licensed: 0',
+              'Waived: 0',
+              'Unlicensed: 0',
+              'Invalid: 1'
+            ].join('\n') + '\n'
+          )
+          test.equal(stderr, '', 'no stderr')
+          done()
+        })
+      }
+    ], function () {
+      rm(test)
+    })
+  })
+})
