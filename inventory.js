@@ -20,7 +20,7 @@ module.exports = function (nickname, cwd, config, callback) {
         recurseTree(tree, function (node) {
           licenseRecords(node.package).forEach(function (record) {
             if (!licensable.some(function (existing) {
-              return existing.projectID === record.license.projectID
+              return existing.license.projectID === record.license.projectID
             })) {
               licensable.push(record)
             }
