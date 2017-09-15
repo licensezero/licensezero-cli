@@ -21,6 +21,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     action: 'project',
     projectID: projectID
   }, function (error, project) {
+    /* istanbul ignore if */
     if (error) return done(error)
     var readLicensor = require('../read/licensor')
     readLicensor(config, project.licensor.licensorID, function (error, licensor) {
@@ -32,6 +33,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         token: licensor.token,
         projectID: projectID
       }, function (error, response) {
+        /* istanbul ignore if */
         if (error) return done(error)
         var fs = require('fs')
         var path = require('path')
@@ -80,6 +82,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
             })
           }
         ], function (error) {
+          /* istanbul ignore if */
           if (error) return done(error)
           done()
         })

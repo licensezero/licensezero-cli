@@ -29,6 +29,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
 
   var readLicensees = require('../read/licensees')
   readLicensees(config, function (error, licensees) {
+    /* istanbul ignore if */
     if (error) return done(error)
     var existing = licensees.some(function (licensee) {
       return licensee.nickname === newLicensee.nickname

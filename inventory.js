@@ -8,13 +8,16 @@ var validateMetadata = require('./validate/metadata')
 
 module.exports = function (nickname, cwd, config, callback) {
   readLicensee(config, nickname, function (error, licensee) {
+    /* istanbul ignore if */
     if (error) return callback(error)
     runParallel({
       licenses: readLicenses.bind(null, config, nickname),
       waivers: readWaivers.bind(null, config, nickname)
     }, function (error, existing) {
+      /* istanbul ignore if */
       if (error) return callback(error)
       readPackageTree(cwd, function (error, tree) {
+        /* istanbul ignore if */
         if (error) return callback(error)
         var licensable = []
         recurseTree(tree, function (node) {
@@ -34,6 +37,7 @@ module.exports = function (nickname, cwd, config, callback) {
         runParallel(licensable.map(function (record) {
           return function (done) {
             validateMetadata(record, function (error, valid) {
+              /* istanbul ignore if */
               if (error) return done(error)
               if (!valid) {
                 invalid.push(record.license)
@@ -75,6 +79,7 @@ module.exports = function (nickname, cwd, config, callback) {
             })
           }
         }), function (error) {
+          /* istanbul ignore if */
           if (error) return callback(error)
           callback(null, {
             licensee: licensee,

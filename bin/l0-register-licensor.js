@@ -28,6 +28,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
 
   var agreeToTerms = require('../agree-to-terms')
   agreeToTerms(stdin, stdout, false, function (error, accepted) {
+    /* istanbul ignore if */
     if (error) return done(error)
     if (!accepted) return done('must accept terms')
     var request = require('../request')
@@ -41,6 +42,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         'https://licensezero.com/terms/service.'
       )
     }, function (error, response) {
+      /* istanbul ignore if */
       if (error) return done(error)
       stdout.write('Follow the Stripe authorization link sent by e-mail.\n')
       done()

@@ -17,6 +17,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
 
   var inventory = require('../inventory')
   inventory(nickname, cwd, config, function (error, result) {
+    /* istanbul ignore if */
     if (error) return done(error)
     var licensee = result.licensee
     var licensable = result.licensable
@@ -41,6 +42,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         return metadata.projectID
       })
     }, function (error, response) {
+      /* istanbul ignore if */
       if (error) return done(error)
       var lamos = require('lamos')
       var projects = response.projects

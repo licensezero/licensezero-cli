@@ -18,6 +18,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
 
   var inventory = require('../inventory')
   inventory(nickname, cwd, config, function (error, result) {
+    /* istanbul ignore if */
     if (error) return done(error)
     var unlicensed = result.unlicensed
     var licensable = result.licensable
@@ -37,6 +38,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       jurisdiction: licensee.jurisdiction,
       tier: licensee.tier
     }, function (error, response) {
+      /* istanbul ignore if */
       if (error) return done(error)
       var url = 'https://licensezero.com' + response.location
       stdout.write(url + '\n')

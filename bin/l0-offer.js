@@ -43,6 +43,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       if (error) return done(error)
       var agreeToTerms = require('../agree-to-terms')
       agreeToTerms(stdin, stdout, true, function (error, accepted) {
+        /* istanbul ignore if */
         if (error) return done(error)
         if (!accepted) return done('must accept terms')
         var request = require('../request')
@@ -64,6 +65,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           )
         }
         request(payload, function (error, response) {
+          /* istanbul ignore if */
           if (error) return done(error)
           stdout.write('Project ID: ' + response.projectID + '\n')
           done()
