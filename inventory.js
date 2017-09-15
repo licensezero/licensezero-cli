@@ -5,7 +5,6 @@ var readPackageTree = require('read-package-tree')
 var readWaivers = require('./read/waivers')
 var runParallel = require('run-parallel')
 
-// TODO: omit projects for which user is licensor
 // TODO: validate agent signature
 // TODO: validate licensor signature
 
@@ -32,6 +31,7 @@ module.exports = function (nickname, cwd, config, callback) {
         var unlicensed = []
         var licensed = []
         var waived = []
+        var own = []
         licensable.forEach(function (license) {
           var projectID = license.projectID
           var haveLicense = existing.licenses.some(function (license) {
@@ -46,6 +46,11 @@ module.exports = function (nickname, cwd, config, callback) {
             return waiver.projectID === projectID
           })
           if (haveWaiver) return waived.push(license)
+          var ownProject = (
+            license.name === licensee.name &&
+            license.jurisdiction === licensee.jurisdiction
+          )
+          if (ownProject) return own.push(license)
           unlicensed.push(license)
         })
         return callback(null, {
