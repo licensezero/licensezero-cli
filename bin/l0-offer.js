@@ -27,8 +27,11 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
   readJSONFile(path.join(cwd, 'package.json'), function (error, data) {
     /* istanbul ignore next */
     if (error) return done(error)
-    var normalizePackageData = require('normalize-package-data')
-    normalizePackageData(data)
+    if (typeof data.repository !== 'string') {
+      return done(new Error('package.json missing repository property'))
+    }
+    var hostedGitInfo = require('hosted-git-info')
+    var repository = hostedGitInfo.fromUrl(data.repository).browse()
     var licensorID = options['--licensor']
     var readLicensor = require('../read/licensor')
     var readOnlyLicensor = require('../read/only-licensor')
@@ -47,7 +50,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
           action: 'offer',
           licensorID: licensor.licensorID,
           token: licensor.token,
-          repository: sanitizeRepository(data.repository.url),
+          repository: repository,
           pricing: {
             solo: parseInt(options['--solo']),
             team: parseInt(options['--team']),
@@ -68,12 +71,4 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       })
     })
   })
-}
-
-function sanitizeRepository (argument) {
-  var returned = argument.replace('git+https', 'https')
-  if (returned.indexOf('https://github.com') === 0) {
-    returned = returned.replace(/\.git$/, '')
-  }
-  return returned
 }
