@@ -1,4 +1,4 @@
-command-line interface for [License Zero](https://licensezero.com) maintainers and customers
+command-line interface for [License Zero](https://licensezero.com) customers and maintainers
 
 ```shell
 npm i -g licensezero
@@ -10,7 +10,7 @@ The package installs a number of shell commands, all of which begin with `l0-`.
 
 To generate quotes and buy licenses you will need to create a local profile for yourself, your company, or your client.
 
-Provide a short nickname for your profile, an exact legal name, a [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) code for your tax jurisdiction, and a license tier: `solo` for solo licenses, `team` for licenses covering up to 10 people, `company` for licenses covering up to 100, and `enterprise` for unlimited licenses.
+Provide a short nickname for your profile, an exact legal name, an [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) code for your tax jurisdiction, and a license tier: `solo` for solo licenses, `team` for licenses covering up to 10 people, `company` for licenses covering up to 100, and `enterprise` for unlimited licenses.
 
 ```shell
 l0-create-licensee mycompany "Something, Inc." US-CA company
@@ -29,20 +29,20 @@ cd node-project
 l0-quote mycompany
 ```
 
-To buy licenses that you are missing for a project:
+To buy missing licenses for dependencies of a project:
 
 ```shell
 cd node-project
 l0-buy mycompany
 ```
 
-`l0-buy` will open a webpage in your browser listing the licenses to buy and taking credit card payment.  On successful purchase, [licensezero.com](https://licensezero.com) will provide a link to import all of the licenses you've just purchased with a single command:
+`l0-buy` will open a webpage in your browser listing the licenses to buy and taking credit card payment.  On successful purchase, [licensezero.com](https://licensezero.com) will provide the address of a purchase bundle that you can use to import all of the licenses you've just purchased at once:
 
 ```shell
-l0-purchase https://licensezero.com/purchases/{unique purchase code}
+l0-purchase https://licensezero.com/purchases/{code}
 ```
 
-To import a waiver from the licensor of a project, copy the waiver JSON file to disk and import it:
+To import a waiver:
 
 ```shell
 l0-import-waiver waiver.json
@@ -52,22 +52,21 @@ l0-import-waiver waiver.json
 
 To offer private licenses for sale via [licensezero.com](https://licensezero.com), you need to register as a licensor and connect a standard [Stripe](https://stripe.com) account.
 
-Provide your e-mail address, your exact legal name, and a [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) code for your tax jurisdiction:
+Provide your e-mail address, your exact legal name, and an [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) code for your tax jurisdiction:
 
 ```shell
 l0-register-licensor "dev@example.com" "John Smith" US-CA
 ```
 
-`l0-register-licensor` will open a page in your browser where you can log into Stripe, or create an account, and connect it.  Once you've connected a stripe account, [licensezero.com](https://licensezero.com) will provide you a licensor identifier and an access token that you can use to create a licensor profile:
+`l0-register-licensor` will open a page in your browser where you can log into Stripe, or create an account and connect it.  Once you've connected a Stripe account, [licensezero.com](https://licensezero.com) will provide you a licensor identifier and an access token that you can use to create a licensor profile:
 
 ```shell
-PROJECT_ID=15db0c8e-b57c-4e9c-91bf-d0aaa62a5e20
-l0-create-licensor $PRODUCT_ID
+l0-create-licensor $LICENSOR_ID
 ```
 
 `l0-create-licensor` will then prompt for your access token.
 
-To offer private licenses for a project for sale:
+To offer private licenses for a project:
 
 ```shell
 cd node-project
