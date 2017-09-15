@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'test') {
   module.exports = function (payload, callback) {
     var action = payload.action
     /* istanbul ignore else */
-    if (mocks[0].action === action) {
+    if (mocks.length && mocks[0].action === action) {
       var mock = mocks.shift()
       mock.handler(payload, callback)
     } else {
