@@ -3,13 +3,21 @@ var request = require('../request')
 var runParallel = require('run-parallel')
 var stringify = require('json-stable-stringify')
 
+var AGENT_PUBLIC_KEY = null
+
 module.exports = function (metadata, callback) {
   runParallel({
     agent: function (done) {
+      if (AGENT_PUBLIC_KEY) {
+        return setImmediate(function () {
+          done(null, AGENT_PUBLIC_KEY)
+        })
+      }
       request({
         action: 'key'
       }, function (error, response) {
         if (error) return done(error)
+        AGENT_PUBLIC_KEY = response.key
         done(null, response.key)
       })
     },
