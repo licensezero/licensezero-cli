@@ -24,14 +24,14 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
 
   var readJSONFile = require('../read/json-file')
   var path = require('path')
-  readJSONFile(path.join(cwd, 'package.json'), function (error, data) {
+  readJSONFile(path.join(cwd, 'package.json'), function (error, packageData) {
     /* istanbul ignore next */
     if (error) return done(error)
-    if (typeof data.repository !== 'string') {
+    if (typeof packageData.repository !== 'string') {
       return done(new Error('package.json missing repository property'))
     }
     var hostedGitInfo = require('hosted-git-info')
-    var repository = hostedGitInfo.fromUrl(data.repository).browse()
+    var repository = hostedGitInfo.fromUrl(packageData.repository).browse()
     var licensorID = options['--licensor']
     var readLicensor = require('../read/licensor')
     var readOnlyLicensor = require('../read/only-licensor')
@@ -58,7 +58,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
             company: parseInt(options['--company']),
             enterprise: parseInt(options['--enterprise'])
           },
-          description: data.description,
+          description: packageData.description,
           terms: (
             'I agree to the agency terms at ' +
             'https://licensezero.com/terms/agency.'
