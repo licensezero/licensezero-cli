@@ -51,6 +51,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       projects.forEach(function (project) {
         var licensor = project.licensor
         var price = project.pricing[licensee.tier]
+        // TODO: list noncommercial or reciprocal in inventory
         var formatted = {
           Project: project.projectID,
           Description: project.description,
