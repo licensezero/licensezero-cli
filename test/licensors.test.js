@@ -205,7 +205,8 @@ tape('license', function (test) {
       },
       function runLicense (done) {
         run(license, [
-          projectID
+          projectID,
+          '--noncommercial'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'license exit 0')
           done()
