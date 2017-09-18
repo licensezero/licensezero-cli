@@ -3,18 +3,21 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     'Apply the License Zero Public License to an npm package.',
     '',
     'Usage:',
-    '  l0-license <UUID> [--quiet]',
+    '  l0-license <UUID> (--noncommercial | --reciprocal) [--quiet]',
     '  l0-license -h | --help',
     '  l0-license -v | --version',
     '',
     'Options:',
-    '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.',
-    '  -q, --quiet    Suppress output.'
+    '  -h, --help           Print this screen to standard output.',
+    '  -v, --version        Print version to standard output.',
+    '  -q, --quiet          Suppress output.',
+    '  -n, --noncommercial  Apply the Noncommercial Public License.',
+    '  -r, --reciprocal     Apply the Reciprocal Public License.'
   ]).apply(null, arguments)
   if (!options) return
 
   var projectID = options['<UUID>']
+  var noncommercial = options['--noncommercial']
 
   var request = require('../request')
   request({
@@ -31,7 +34,8 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         action: 'public',
         licensorID: licensor.licensorID,
         token: licensor.token,
-        projectID: projectID
+        projectID: projectID,
+        terms: noncommercial ? 'noncommercial' : 'reciprocal'
       }, function (error, response) {
         /* istanbul ignore if */
         if (error) return done(error)
