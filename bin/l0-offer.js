@@ -3,7 +3,7 @@ var USAGE = [
   'Offer paid licenses through licensezero.com.',
   '',
   'Usage:',
-  '  l0-offer -s CENTS -t CENTS -c CENTS -e CENTS [-l UUID]',
+  '  l0-offer -s CENTS -t CENTS -c CENTS -e CENTS [-r CENTS] [-l UUID]',
   '  l0-offer -h | --help',
   '  l0-offer -v | --version',
   '',
@@ -14,7 +14,8 @@ var USAGE = [
   '  -s CENTS, --solo CENTS        Price for solo licenses, in cents.',
   '  -t CENTS, --team CENTS        Price for team licenses, in cents.',
   '  -c CENTS, --company CENTS     Price for company licenses, in cents.',
-  '  -e CENTS, --enterprise CENTS  Price for enterprise licenses, in cents.'
+  '  -e CENTS, --enterprise CENTS  Price for enterprise licenses, in cents.',
+  '  -r CENTS, --relicense CENTS   Price for relicensing, in cents.'
 ]
 /* eslint-enable max-len */
 
@@ -47,17 +48,21 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
         if (error) return done(error)
         if (!accepted) return done('must accept terms')
         var request = require('../request')
+        var pricing = {
+          solo: parseInt(options['--solo']),
+          team: parseInt(options['--team']),
+          company: parseInt(options['--company']),
+          enterprise: parseInt(options['--enterprise'])
+        }
+        if (options['--relicense']) {
+          pricing.relicense = parseInt(options['--relicense'])
+        }
         var payload = {
           action: 'offer',
           licensorID: licensor.licensorID,
           token: licensor.token,
           repository: repository,
-          pricing: {
-            solo: parseInt(options['--solo']),
-            team: parseInt(options['--team']),
-            company: parseInt(options['--company']),
-            enterprise: parseInt(options['--enterprise'])
-          },
+          pricing: pricing,
           description: packageData.description,
           terms: (
             'I agree to the agency terms at ' +
