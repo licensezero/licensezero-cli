@@ -50,6 +50,8 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
             modifyJSONFile(packageJSON, function (data) {
               data.set('license', metadata.license)
               var existing = data.get('licensezero')
+              // TODO: prompt before stacking metadata
+              // TODO: concatenate LICENSE texts when stacking
               // TODO: replace existing if same projectID
               if (Array.isArray(existing)) {
                 existing.push(metadata.licensezero)
