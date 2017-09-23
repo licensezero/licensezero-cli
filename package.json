@@ -51,6 +51,7 @@
     "*.md": "standard-markdown"
   },
   "bin": {
+    "licensezero": "./bin-loader",
     "l0-buy": "./bin-loader",
     "l0-create-licensee": "./bin-loader",
     "l0-create-licensor": "./bin-loader",
