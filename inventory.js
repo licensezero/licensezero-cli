@@ -6,6 +6,8 @@ var readWaivers = require('./read/waivers')
 var runParallel = require('run-parallel')
 var validateMetadata = require('./validate/metadata')
 
+// TODO: commercial, closed-source, or both
+
 module.exports = function (nickname, cwd, config, callback) {
   readLicensee(config, nickname, function (error, licensee) {
     /* istanbul ignore if */
