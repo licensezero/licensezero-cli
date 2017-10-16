@@ -24,6 +24,7 @@
     "json-preserve-indent": "^1.1.3",
     "json-stable-stringify": "^1.0.1",
     "lamos": "^3.0.3",
+    "licensezero-jurisdictions": "^1.0.0",
     "mkdirp": "^0.5.1",
     "opener": "^1.4.3",
     "read": "^1.0.7",
