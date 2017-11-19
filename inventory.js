@@ -6,9 +6,9 @@ var readWaivers = require('./read/waivers')
 var runParallel = require('run-parallel')
 var validateMetadata = require('./validate/metadata')
 
-// TODO: commercial, closed-source, or both
-
-module.exports = function (nickname, cwd, config, callback) {
+module.exports = function (nickname, cwd, config, options, callback) {
+  var noNoncommercial = options['--no-noncommercial']
+  var noReciprocal = options['--no-reciprocal']
   readLicensee(config, nickname, function (error, licensee) {
     /* istanbul ignore if */
     if (error) return callback(error)
@@ -33,6 +33,7 @@ module.exports = function (nickname, cwd, config, callback) {
         })
         var unlicensed = []
         var licensed = []
+        var ignored = []
         var waived = []
         var own = []
         var invalid = []
@@ -75,8 +76,15 @@ module.exports = function (nickname, cwd, config, callback) {
                 own.push(record.license)
                 done()
               }
-              // Otherwise, it's unlicensed.
-              unlicensed.push(record.license)
+              var terms = record.license.terms
+              if (terms === 'noncommercial' && noNoncommercial) {
+                ignored.push(record.license)
+              } else if (terms === 'reciprocal' && noReciprocal) {
+                ignored.push(record.license)
+              } else {
+                // Otherwise, it's unlicensed.
+                unlicensed.push(record.license)
+              }
               done()
             })
           }
@@ -89,6 +97,7 @@ module.exports = function (nickname, cwd, config, callback) {
             licensed: licensed,
             waived: waived,
             unlicensed: unlicensed,
+            ignored: ignored,
             invalid: invalid
           })
         })

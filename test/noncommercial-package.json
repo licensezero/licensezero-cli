@@ -1,0 +1,23 @@
+{
+  "name": "example-l0-nc-package",
+  "version": "1.0.0",
+  "description": "a test package licensed under the License Zero Noncommercial Public License",
+  "author": "Kyle E. Mitchell <kyle@artlessdevices.com>",
+  "repository": "licensezero/example-l0-nc-package",
+  "license": "SEE LICENSE IN LICENSE",
+  "licensezero": [
+    {
+      "license": {
+        "jurisdiction": "US-CA",
+        "name": "Kyle E. Mitchell",
+        "projectID": "daf5a8b1-23e0-4a9f-a6c1-69c40c71816b",
+        "publicKey": "0374a100b11660b7acb294e9db0cc1c33e5261a537079dd17b4dacbf80cff3c4",
+        "terms": "noncommercial",
+        "version": "2.0.1",
+        "repository": "https://github.com/licensezero/example-l0-nc-package"
+      },
+      "licensorSignature": "36a0708ae8958af0e67a3042dd26c3514f128026e917211ece809c526dda9fd7c1e5b8c43ca21b5e437bf1db8a4dd9c761716803211de13929222f60f0faa100",
+      "agentSignature": "fb87a001408052b09dc607bcf4a0ba0353658972b16057535b425722910665ef37fa63cac90b46d584ac6f2d7fe83a6c4e227b82adaf39c09bdc2cbb00c69e01"
+    }
+  ]
+}

@@ -8,16 +8,18 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     '  l0-buy -v | --version',
     '',
     'Options:',
-    '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.',
-    '  -n, --no-open  Do not open the buy page in a browser.'
+    '  -h, --help          Print this screen to standard output.',
+    '  -v, --version       Print version to standard output.',
+    '  -n, --no-open       Do not open the buy page in a browser.',
+    '  --no-noncommercial  Omit L0-NC projects.',
+    '  --no-reciprocal     Omit L0-NC projects.'
   ]).apply(null, arguments)
   if (!options) return
 
   var nickname = options['<nickname>']
 
   var inventory = require('../inventory')
-  inventory(nickname, cwd, config, function (error, result) {
+  inventory(nickname, cwd, config, options, function (error, result) {
     /* istanbul ignore if */
     if (error) return done(error)
     var unlicensed = result.unlicensed

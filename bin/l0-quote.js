@@ -3,20 +3,22 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     'Identify and price unlicensed License Zero JavaScript packages.',
     '',
     'Usage:',
-    '  l0-quote <nickname>',
+    '  l0-quote <nickname> [--no-noncommercial] [--no-reciprocal]',
     '  l0-quote -h | --help',
     '  l0-quote -v | --version',
     '',
     'Options:',
-    '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.'
+    '  -h, --help          Print this screen to standard output.',
+    '  -v, --version       Print version to standard output.',
+    '  --no-noncommercial  Omit L0-NC projects.',
+    '  --no-reciprocal     Omit L0-NC projects.'
   ]).apply(null, arguments)
   if (!options) return
 
   var nickname = options['<nickname>']
 
   var inventory = require('../inventory')
-  inventory(nickname, cwd, config, function (error, result) {
+  inventory(nickname, cwd, config, options, function (error, result) {
     /* istanbul ignore if */
     if (error) return done(error)
     var licensee = result.licensee
@@ -24,6 +26,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     var licensed = result.licensed
     var waived = result.waived
     var unlicensed = result.unlicensed
+    var ignored = result.ignored
     var invalid = result.invalid
     if (licensable.length === 0) {
       stdout.write('No License Zero dependencies found.\n')
@@ -32,6 +35,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     stdout.write('License Zero Projects: ' + licensable.length + '\n')
     stdout.write('Licensed: ' + licensed.length + '\n')
     stdout.write('Waived: ' + waived.length + '\n')
+    stdout.write('Ignored: ' + ignored.length + '\n')
     stdout.write('Unlicensed: ' + unlicensed.length + '\n')
     stdout.write('Invalid: ' + invalid.length + '\n')
     if (unlicensed.length === 0) return done(0)
@@ -51,11 +55,15 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
       projects.forEach(function (project) {
         var licensor = project.licensor
         var price = project.pricing[licensee.tier]
-        // TODO: list noncommercial or reciprocal in inventory
         var formatted = {
           Project: project.projectID,
           Description: project.description,
           Repository: project.repository,
+          Terms: unlicensed
+            .find(function (metadata) {
+              return metadata.projectID === project.projectID
+            })
+            .terms,
           Licensor: (
             licensor.name + ' [' + licensor.jurisdiction + ']'
           )
