@@ -3,7 +3,7 @@
   "version": "1.0.0-pre-14",
   "description": "License Zero command-line interface",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
-  "license": "BSD-2-Clause",
+  "license": "SEE LICENSE IN LICENSE",
   "repository": "licensezero/licensezero-cli",
   "devDependencies": {
     "fs-extra": "^4.0.2",
