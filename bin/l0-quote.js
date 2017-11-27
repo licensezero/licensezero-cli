@@ -11,7 +11,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     '  -h, --help          Print this screen to standard output.',
     '  -v, --version       Print version to standard output.',
     '  --no-noncommercial  Omit L0-NC projects.',
-    '  --no-reciprocal     Omit L0-NC projects.'
+    '  --no-reciprocal     Omit L0-R projects.'
   ]).apply(null, arguments)
   if (!options) return
 

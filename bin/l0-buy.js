@@ -12,7 +12,7 @@ module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
     '  -v, --version       Print version to standard output.',
     '  -n, --no-open       Do not open the buy page in a browser.',
     '  --no-noncommercial  Omit L0-NC projects.',
-    '  --no-reciprocal     Omit L0-NC projects.'
+    '  --no-reciprocal     Omit L0-R projects.'
   ]).apply(null, arguments)
   if (!options) return
 
