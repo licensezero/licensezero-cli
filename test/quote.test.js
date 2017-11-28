@@ -1,39 +1,32 @@
 var NONCOMMERCIAL_PACKAGE = require('./noncommercial-package.json')
 var RECIPROCAL_PACKAGE = require('./reciprocal-package.json')
 var fs = require('fs')
-var helpFlags = require('./help-flags')
 var helper = require('./helper')
 var mkdirp = require('mkdirp')
 var noArgumentsUsage = require('./no-arguments-usage')
 var path = require('path')
 var runSeries = require('run-series')
 var tape = require('tape')
-var versionFlags = require('./version-flags')
-
-var createLicensee = require('../bin/l0-create-licensee.js')
-var quote = require('../bin/l0-quote.js')
 
 var RECIPROCAL_PROJECT_ID = RECIPROCAL_PACKAGE
   .licensezero[0].license.projectID
 
-helpFlags('quote', quote)
-noArgumentsUsage('quote', quote)
-versionFlags('quote', quote)
+noArgumentsUsage('quote', 'quote')
 
 tape('quote no deps', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
         })
       },
       function (done) {
-        run(quote, [
-          'test'
+        run([
+          'quote', 'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -54,8 +47,8 @@ tape('quote non-l0 dep', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -72,8 +65,8 @@ tape('quote non-l0 dep', function (test) {
         )
       },
       function (done) {
-        run(quote, [
-          'test'
+        run([
+          'quote', 'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -118,8 +111,8 @@ tape('quote one l0 dep', function (test) {
     })
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -133,8 +126,8 @@ tape('quote one l0 dep', function (test) {
         ], done)
       },
       function (done) {
-        run(quote, [
-          'test'
+        run([
+          'quote', 'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -195,8 +188,8 @@ tape('quote one duplicate l0 dep', function (test) {
     })
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -217,8 +210,8 @@ tape('quote one duplicate l0 dep', function (test) {
         ], done)
       },
       function (done) {
-        run(quote, [
-          'test'
+        run([
+          'quote', 'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -255,8 +248,8 @@ tape('quote --no-reciprocal one L0-R dep', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -270,8 +263,8 @@ tape('quote --no-reciprocal one L0-R dep', function (test) {
         ], done)
       },
       function (done) {
-        run(quote, [
-          'test', '--no-reciprocal'
+        run([
+          'quote', 'test', '--no-reciprocal'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -300,8 +293,8 @@ tape('quote --no-noncommercial one L0-NC dep', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -315,8 +308,8 @@ tape('quote --no-noncommercial one L0-NC dep', function (test) {
         ], done)
       },
       function (done) {
-        run(quote, [
-          'test', '--no-noncommercial'
+        run([
+          'quote', 'test', '--no-noncommercial'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -369,8 +362,8 @@ tape('quote one duplicate l0 dep', function (test) {
     })
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -391,8 +384,8 @@ tape('quote one duplicate l0 dep', function (test) {
         ], done)
       },
       function (done) {
-        run(quote, [
-          'test'
+        run([
+          'quote', 'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -455,8 +448,8 @@ tape('quote one retracted l0 dep', function (test) {
     })
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -470,8 +463,8 @@ tape('quote one retracted l0 dep', function (test) {
         ], done)
       },
       function (done) {
-        run(quote, [
-          'test'
+        run([
+          'quote', 'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -508,8 +501,8 @@ tape('quote one invalid metadata', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -525,8 +518,8 @@ tape('quote one invalid metadata', function (test) {
         ], done)
       },
       function (done) {
-        run(quote, [
-          'test'
+        run([
+          'quote', 'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(

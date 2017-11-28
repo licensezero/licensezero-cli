@@ -1,18 +1,4 @@
-module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
-  var options = require('./usage')([
-    'Create a new licensee identity.',
-    '',
-    'Usage:',
-    '  l0-create-licensee <nickname> <name> <jurisdiction> <tier>',
-    '  l0-create-licensee -h | --help',
-    '  l0-create-licensee -v | --version',
-    '',
-    'Options:',
-    '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.'
-  ]).apply(null, arguments)
-  if (!options) return
-
+module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var validations = {
     nickname: require('../validate/nickname'),
     name: require('../validate/name'),

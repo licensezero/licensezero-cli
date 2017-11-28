@@ -1,5 +1,6 @@
 var PassThrough = require('stream').PassThrough
-var formatError = require('../bin/format-error')
+var bin = require('../bin')
+var formatError = require('../format-error')
 var fs = require('fs')
 var mkdirp = require('mkdirp')
 var path = require('path')
@@ -14,14 +15,15 @@ module.exports = function (callback) {
       if (error) return fail(error)
       callback(
         directory,
-        function run (cli, args, next) {
+        function run (args, next) {
           var stdin = new PassThrough()
           var stdout = new streamBuffers.WritableStreamBuffer()
           // FIXME: Ugly hack to avoid https://github.com/npm/read/issues/23
           stdout.end = function () { }
           var stderr = new streamBuffers.WritableStreamBuffer()
-          cli(
-            args, directory, config, stdin, stdout, stderr,
+          bin(
+            args, directory, config,
+            stdin, stdout, stderr,
             function (error) {
               if (error) stderr.write(formatError(error))
               next(

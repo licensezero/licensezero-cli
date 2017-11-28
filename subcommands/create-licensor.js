@@ -1,18 +1,4 @@
-module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
-  var options = require('./usage')([
-    'Log in as a licensor, saving your access token for future use.',
-    '',
-    'Usage:',
-    '  l0-create-licensor <UUID>',
-    '  l0-create-licensor -h | --help',
-    '  l0-create-licensor -v | --version',
-    '',
-    'Options:',
-    '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.'
-  ]).apply(null, arguments)
-  if (!options) return
-
+module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var licensorID = options['<UUID>']
   var validateUUID = require('../validate/uuid')
   if (!validateUUID(licensorID)) {

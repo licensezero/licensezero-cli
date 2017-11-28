@@ -1,21 +1,15 @@
-var helpFlags = require('./help-flags')
 var helper = require('./helper')
 var noArgumentsUsage = require('./no-arguments-usage')
 var runSeries = require('run-series')
 var tape = require('tape')
-var versionFlags = require('./version-flags')
 
-var createLicensee = require('../bin/l0-create-licensee.js')
-var listLicensees = require('../bin/l0-list-licensees.js')
-var removeLicensee = require('../bin/l0-remove-licensee.js')
-
-noArgumentsUsage('create', createLicensee)
-noArgumentsUsage('remove', removeLicensee)
+noArgumentsUsage('create', 'create-licensee')
+noArgumentsUsage('remove', 'remove-licensee')
 
 tape('create licensee', function (test) {
   helper(function (tmp, run, rm) {
-    run(createLicensee, [
-      'test', 'Test Licensee', 'US-CA', 'team'
+    run([
+      'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
     ], function (status, stdout, stderr) {
       test.equal(status, 0, 'exit 0')
       test.equal(stdout, '', 'no stdout')
@@ -25,18 +19,10 @@ tape('create licensee', function (test) {
   })
 })
 
-helpFlags('create', createLicensee)
-helpFlags('list', listLicensees)
-helpFlags('remove', removeLicensee)
-
-versionFlags('create', createLicensee)
-versionFlags('list', listLicensees)
-versionFlags('remove', removeLicensee)
-
 tape('create w/ invalid nickname', function (test) {
   helper(function (tmp, run, rm) {
-    run(createLicensee, [
-      'has space', 'Test Licensee', 'US-CA', 'team'
+    run([
+      'create-licensee', 'has space', 'Test Licensee', 'US-CA', 'team'
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
@@ -50,16 +36,16 @@ tape('create w/ taken nickname', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'First Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'First Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
         })
       },
       function (done) {
-        run(createLicensee, [
-          'test', 'Second Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Second Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 1, 'exit 1')
           test.equal(stdout, '', 'no stdout')
@@ -79,16 +65,16 @@ tape('create w/ identical details', function (test) {
     var JURISDICTION = 'US-CA'
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'apple', NAME, JURISDICTION, 'team'
+        run([
+          'create-licensee', 'apple', NAME, JURISDICTION, 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
         })
       },
       function (done) {
-        run(createLicensee, [
-          'orange', NAME, JURISDICTION, 'team'
+        run([
+          'create-licensee', 'orange', NAME, JURISDICTION, 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 1, 'exit 1')
           test.equal(stdout, '', 'no stdout')
@@ -104,8 +90,8 @@ tape('create w/ identical details', function (test) {
 
 tape('create w/ invalid name', function (test) {
   helper(function (tmp, run, rm) {
-    run(createLicensee, [
-      'test', '', 'US-CA', 'team'
+    run([
+      'create-licensee', 'test', '', 'US-CA', 'team'
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
@@ -117,8 +103,8 @@ tape('create w/ invalid name', function (test) {
 
 tape('create w/ invalid jurisdiction', function (test) {
   helper(function (tmp, run, rm) {
-    run(createLicensee, [
-      'test', 'Test Licensee', 'US-XX', 'team'
+    run([
+      'create-licensee', 'test', 'Test Licensee', 'US-XX', 'team'
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
@@ -130,8 +116,8 @@ tape('create w/ invalid jurisdiction', function (test) {
 
 tape('create w/ invalid tier', function (test) {
   helper(function (tmp, run, rm) {
-    run(createLicensee, [
-      'test', 'Test Licensee', 'US-CA', 'invalid'
+    run([
+      'create-licensee', 'test', 'Test Licensee', 'US-CA', 'invalid'
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
@@ -143,7 +129,8 @@ tape('create w/ invalid tier', function (test) {
 
 tape('list w/o licensees', function (test) {
   helper(function (tmp, run, rm) {
-    run(listLicensees, [
+    run([
+      'list-licensees'
     ], function (status, stdout, stderr) {
       test.equal(status, 0, 'exit 0')
       rm(test)
@@ -155,15 +142,17 @@ tape('create, list', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
         })
       },
       function (done) {
-        run(listLicensees, [], function (status, stdout, stderr) {
+        run([
+          'list-licensees'
+        ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(stdout, 'test\n', 'lists created')
           test.equal(stderr, '', 'no stderr')
@@ -180,23 +169,24 @@ tape('create, remove, list', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
         })
       },
       function (done) {
-        run(removeLicensee, [
-          'test'
+        run([
+          'remove-licensee', 'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
         })
       },
       function (done) {
-        run(listLicensees, [
+        run([
+          'list-licensees'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(stdout, '', 'lists none')

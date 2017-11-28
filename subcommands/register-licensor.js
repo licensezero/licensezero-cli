@@ -1,18 +1,4 @@
-module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
-  var options = require('./usage')([
-    'Register as a licensor.',
-    '',
-    'Usage:',
-    '  l0-register-licensor <email> <name> <jurisdiction>',
-    '  l0-register-licensor -h | --help',
-    '  l0-register-licensor -v | --version',
-    '',
-    'Options:',
-    '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.'
-  ]).apply(null, arguments)
-  if (!options) return
-
+module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var validations = {
     email: require('../validate/email'),
     name: require('../validate/name'),

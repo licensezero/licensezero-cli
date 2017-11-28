@@ -1,18 +1,4 @@
-module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
-  var options = require('./usage')([
-    'Show information about a licensee licensee.',
-    '',
-    'Usage:',
-    '  l0-show-licensee <nickname>',
-    '  l0-show-licensee -h | --help',
-    '  l0-show-licensee -v | --version',
-    '',
-    'Options:',
-    '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.'
-  ]).apply(null, arguments)
-  if (!options) return
-
+module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var nickname = options['<nickname>']
 
   var readLicensee = require('../read/licensee')

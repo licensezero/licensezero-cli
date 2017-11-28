@@ -1,28 +1,4 @@
-/* eslint-disable max-len */
-var USAGE = [
-  'Offer paid licenses through licensezero.com.',
-  '',
-  'Usage:',
-  '  l0-offer -s CENTS -t CENTS -c CENTS -e CENTS [-r CENTS] [-l UUID]',
-  '  l0-offer -h | --help',
-  '  l0-offer -v | --version',
-  '',
-  'Options:',
-  '  -h, --help                    Print this screen to standard output.',
-  '  -v, --version                 Print version to standard output.',
-  '  -l UUID, --licensor UUID      Licensor offering licenses.',
-  '  -s CENTS, --solo CENTS        Price for solo licenses, in cents.',
-  '  -t CENTS, --team CENTS        Price for team licenses, in cents.',
-  '  -c CENTS, --company CENTS     Price for company licenses, in cents.',
-  '  -e CENTS, --enterprise CENTS  Price for enterprise licenses, in cents.',
-  '  -r CENTS, --relicense CENTS   Price for relicensing, in cents.'
-]
-/* eslint-enable max-len */
-
-module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
-  var options = require('./usage')(USAGE).apply(null, arguments)
-  if (!options) return
-
+module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var readJSONFile = require('../read/json-file')
   var path = require('path')
   readJSONFile(path.join(cwd, 'package.json'), function (error, packageData) {

@@ -1,22 +1,13 @@
 var fs = require('fs')
-var helpFlags = require('./help-flags')
 var helper = require('./helper')
 var noArgumentsUsage = require('./no-arguments-usage')
 var path = require('path')
 var runSeries = require('run-series')
 var tape = require('tape')
 var uuid = require('uuid/v4')
-var versionFlags = require('./version-flags')
 
-var createLicensor = require('../bin/l0-create-licensor.js')
-var license = require('../bin/l0-license.js')
-var listLicensors = require('../bin/l0-list-licensors.js')
-var offer = require('../bin/l0-offer.js')
-var registerLicensor = require('../bin/l0-register-licensor.js')
-var removeLicensor = require('../bin/l0-remove-licensor.js')
-
-noArgumentsUsage('create', createLicensor)
-noArgumentsUsage('remove', removeLicensor)
+noArgumentsUsage('create', 'create-licensor')
+noArgumentsUsage('remove', 'remove-licensor')
 
 tape('register licensor', function (test) {
   require('../request').mocks.push({
@@ -26,8 +17,8 @@ tape('register licensor', function (test) {
     }
   })
   helper(function (tmp, run, rm) {
-    var stdin = run(registerLicensor, [
-      'test@example.com', 'Test Licensor', 'US-CA'
+    var stdin = run([
+      'register-licensor', 'test@example.com', 'Test Licensor', 'US-CA'
     ], function (status, stdout, stderr) {
       test.equal(status, 0, 'exit 0')
       rm(test)
@@ -40,8 +31,8 @@ tape('create licensor', function (test) {
   var licensorID = uuid()
   mockLicensorResponse()
   helper(function (tmp, run, rm) {
-    var stdin = run(createLicensor, [
-      licensorID
+    var stdin = run([
+      'create-licensor', licensorID
     ], function (status, stdout, stderr) {
       test.equal(status, 0, 'exit 0')
       rm(test)
@@ -65,18 +56,10 @@ function mockLicensorResponse () {
   })
 }
 
-helpFlags('create', createLicensor)
-helpFlags('list', listLicensors)
-helpFlags('remove', removeLicensor)
-
-versionFlags('create', createLicensor)
-versionFlags('list', listLicensors)
-versionFlags('remove', removeLicensor)
-
 tape('create w/ invalid id', function (test) {
   helper(function (tmp, run, rm) {
-    run(createLicensor, [
-      'blah'
+    run([
+      'create-licensor', 'blah'
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
@@ -88,7 +71,8 @@ tape('create w/ invalid id', function (test) {
 
 tape('list w/o licensors', function (test) {
   helper(function (tmp, run, rm) {
-    run(listLicensors, [
+    run([
+      'list-licensors'
     ], function (status, stdout, stderr) {
       test.equal(status, 0, 'exit 0')
       rm(test)
@@ -102,8 +86,8 @@ tape('create, list', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        var stdin = run(createLicensor, [
-          licensorID
+        var stdin = run([
+          'create-licensor', licensorID
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -111,7 +95,7 @@ tape('create, list', function (test) {
         stdin.write('test\n')
       },
       function (done) {
-        run(listLicensors, [], function (status, stdout, stderr) {
+        run(['list-licensors'], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(stdout, licensorID + '\n', 'lists created')
           test.equal(stderr, '', 'no stderr')
@@ -130,8 +114,8 @@ tape('create, remove, list', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
-        var stdin = run(createLicensor, [
-          licensorID
+        var stdin = run([
+          'create-licensor', licensorID
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -139,15 +123,16 @@ tape('create, remove, list', function (test) {
         stdin.write('test\n')
       },
       function (done) {
-        run(removeLicensor, [
-          licensorID
+        run([
+          'remove-licensor', licensorID
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
         })
       },
       function (done) {
-        run(listLicensors, [
+        run([
+          'list-licensors'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(stdout, '', 'lists none')
@@ -178,8 +163,8 @@ tape('license', function (test) {
         }), done)
       },
       function runCreateLicensor (done) {
-        var stdin = run(createLicensor, [
-          licensorID
+        var stdin = run([
+          'create-licensor', licensorID
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'create-licensor exit 0')
           done()
@@ -187,12 +172,13 @@ tape('license', function (test) {
         stdin.write('test\n')
       },
       function runOffer (done) {
-        var stdin = run(offer, [
-          '-l', licensorID,
+        var stdin = run([
+          'offer',
           '-s', '1000',
           '-t', '1000',
           '-c', '1000',
-          '-e', '1000'
+          '-e', '1000',
+          '-l', licensorID
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'offer exit 0')
           var match = /Project ID: (\S+)/.exec(stdout)
@@ -204,9 +190,8 @@ tape('license', function (test) {
         stdin.write('Y\n')
       },
       function runLicense (done) {
-        run(license, [
-          projectID,
-          '--noncommercial'
+        run([
+          'license', projectID, '--noncommercial'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'license exit 0')
           done()

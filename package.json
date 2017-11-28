@@ -50,25 +50,5 @@
     "*.js": "standard",
     "*.md": "standard-markdown"
   },
-  "bin": {
-    "licensezero": "./bin-loader",
-    "l0-buy": "./bin-loader",
-    "l0-create-licensee": "./bin-loader",
-    "l0-create-licensor": "./bin-loader",
-    "l0-import-license": "./bin-loader",
-    "l0-import-waiver": "./bin-loader",
-    "l0-license": "./bin-loader",
-    "l0-list-licensees": "./bin-loader",
-    "l0-list-licensors": "./bin-loader",
-    "l0-offer": "./bin-loader",
-    "l0-purchased": "./bin-loader",
-    "l0-quote": "./bin-loader",
-    "l0-register-licensor": "./bin-loader",
-    "l0-remove-licensee": "./bin-loader",
-    "l0-remove-licensor": "./bin-loader",
-    "l0-reset-token": "./bin-loader",
-    "l0-retract": "./bin-loader",
-    "l0-show-licensee": "./bin-loader",
-    "l0-waive": "./bin-loader"
-  }
+  "bin": "./bin.js"
 }

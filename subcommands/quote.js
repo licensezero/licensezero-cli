@@ -1,20 +1,4 @@
-module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
-  var options = require('./usage')([
-    'Identify and price unlicensed License Zero JavaScript packages.',
-    '',
-    'Usage:',
-    '  l0-quote <nickname> [--no-noncommercial] [--no-reciprocal]',
-    '  l0-quote -h | --help',
-    '  l0-quote -v | --version',
-    '',
-    'Options:',
-    '  -h, --help          Print this screen to standard output.',
-    '  -v, --version       Print version to standard output.',
-    '  --no-noncommercial  Omit L0-NC projects.',
-    '  --no-reciprocal     Omit L0-R projects.'
-  ]).apply(null, arguments)
-  if (!options) return
-
+module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var nickname = options['<nickname>']
 
   var inventory = require('../inventory')

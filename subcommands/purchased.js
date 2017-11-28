@@ -1,18 +1,4 @@
-module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
-  var options = require('./usage')([
-    'Download and import a bundle of License Zero private licenses.',
-    '',
-    'Usage:',
-    '  l0-purchased <URL>',
-    '  l0-purchased -h | --help',
-    '  l0-purchased -v | --version',
-    '',
-    'Options:',
-    '  -h, --help     Print this screen to standard output.',
-    '  -v, --version  Print version to standard output.'
-  ]).apply(null, arguments)
-  if (!options) return
-
+module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var url = options['<URL>']
 
   var https = require('https')

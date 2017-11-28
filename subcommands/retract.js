@@ -1,23 +1,4 @@
-/* eslint-disable max-len */
-var USAGE = [
-  'Retract your offer of paid licenses through licensezero.com.',
-  '',
-  'Usage:',
-  '  l0-retract [-l UUID]',
-  '  l0-retract -h | --help',
-  '  l0-retract -v | --version',
-  '',
-  'Options:',
-  '  -h, --help                    Print this screen to standard output.',
-  '  -v, --version                 Print version to standard output.',
-  '  -l UUID, --licensor UUID      Licensor offering licenses.'
-]
-/* eslint-enable max-len */
-
-module.exports = function (argv, cwd, config, stdin, stdout, stderr, done) {
-  var options = require('./usage')(USAGE).apply(null, arguments)
-  if (!options) return
-
+module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var readJSONFile = require('../read/json-file')
   var path = require('path')
   readJSONFile(path.join(cwd, 'package.json'), function (error, data) {

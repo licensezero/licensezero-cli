@@ -5,9 +5,6 @@ var path = require('path')
 var runSeries = require('run-series')
 var tape = require('tape')
 
-var createLicensee = require('../bin/l0-create-licensee.js')
-var buy = require('../bin/l0-buy.js')
-
 tape('buy one l0 dep', function (test) {
   helper(function (tmp, run, rm) {
     require('../request').mocks.push({
@@ -18,8 +15,8 @@ tape('buy one l0 dep', function (test) {
     })
     runSeries([
       function (done) {
-        run(createLicensee, [
-          'test', 'Test Licensee', 'US-CA', 'team'
+        run([
+          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -40,8 +37,8 @@ tape('buy one l0 dep', function (test) {
           )
           done()
         })
-        run(buy, [
-          'test'
+        run([
+          'buy', 'test'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
