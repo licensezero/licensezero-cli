@@ -50,5 +50,8 @@
     "*.js": "standard",
     "*.md": "standard-markdown"
   },
-  "bin": "./bin.js"
+  "bin": {
+    "licensezero": "./bin.js",
+    "l0": "./bin.js"
+  }
 }
