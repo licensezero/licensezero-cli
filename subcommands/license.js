@@ -36,6 +36,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
               // TODO: prompt before stacking metadata
               // TODO: concatenate LICENSE texts when stacking
               // TODO: replace existing if same projectID
+              // TODO: --stack
               if (Array.isArray(existing)) {
                 existing.push(metadata.licensezero)
               } else {
@@ -45,7 +46,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
             }, function (error) {
               /* istanbul ignore next */
               if (error) return done(error)
-              log('Modified ' + packageJSON + '.')
+              stdout.write('Modified ' + packageJSON + '.' + '\n')
               done()
             })
           },
@@ -66,7 +67,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
             fs.writeFile(licenseFile, content, function (error) {
               /* istanbul ignore next */
               if (error) return done(error)
-              log('Wrote ' + licenseFile + '.')
+              stdout.write('Wrote ' + licenseFile + '.' + '\n')
               done()
             })
           }
@@ -78,10 +79,6 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
       })
     })
   })
-
-  function log (message) {
-    if (!options['--quiet']) stdout.write(message + '\n')
-  }
 }
 
 function signatureLines (signature) {

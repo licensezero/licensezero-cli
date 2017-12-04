@@ -12,7 +12,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
     var licensorID = options['--licensor']
     var readLicensor = require('../read/licensor')
     var readOnlyLicensor = require('../read/only-licensor')
-    var licensorFunction = options['--licensor']
+    var licensorFunction = licensorID
       ? readLicensor.bind(null, config, licensorID)
       : readOnlyLicensor.bind(null, config)
     licensorFunction(function (error, licensor) {

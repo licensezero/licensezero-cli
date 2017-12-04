@@ -1,6 +1,5 @@
 module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var file = options['<file>']
-  var quiet = options['--quiet']
 
   var readJSONFile = require('../read/json-file')
   readJSONFile(file, function (error, license) {
@@ -8,7 +7,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
     var importLicense = require('../import-license')
     importLicense(config, license, function (error, summary) {
       if (error) return done(error)
-      stdout.write(quiet ? '' : (summary + '\n'))
+      stdout.write(summary + '\n')
       done()
     })
   })
