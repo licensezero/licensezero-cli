@@ -7,14 +7,14 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
 
   var readLicensor = require('../read/licensor')
   var readOnlyLicensor = require('../read/only-licensor')
-  var licensorFunction = options['--licensor']
+  var licensorFunction = licensorID
     ? readLicensor.bind(null, config, licensorID)
     : readOnlyLicensor.bind(null, config)
   licensorFunction(function (error, licensor) {
     /* istanbul ignore next */
     if (error) return done(error)
     var request = require('../request')
-    var payload = {
+    request({
       action: 'waiver',
       licensorID: licensor.licensorID,
       projectID: projectID,
@@ -22,8 +22,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
       beneficiary: beneficiary,
       jurisdiction: jurisdiction,
       term: days.toLowerCase() === 'forever' ? 'forever' : parseInt(days)
-    }
-    request(payload, function (error, response) {
+    }, function (error, response) {
       if (error) return done(error)
       stdout.write(JSON.stringify(response, null, 2) + '\n')
       done()
