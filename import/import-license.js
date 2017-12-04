@@ -1,8 +1,8 @@
-var readLicensees = require('./read/licensees')
-var request = require('./request')
-var validLicense = require('./validate/license')
-var validSignature = require('./validate/signature')
-var writeLicense = require('./write/license')
+var readLicensees = require('../read/licensees')
+var request = require('../request')
+var validLicense = require('../validate/license')
+var validSignature = require('../validate/signature')
+var writeLicense = require('../write/license')
 
 module.exports = function (config, license, done) {
   if (!validLicense(license)) return done('invalid license')

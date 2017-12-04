@@ -1,8 +1,8 @@
-var readLicensees = require('./read/licensees')
-var request = require('./request')
-var validWaiver = require('./validate/waiver')
-var validSignature = require('./validate/signature')
-var writeWaiver = require('./write/waiver')
+var readLicensees = require('../read/licensees')
+var request = require('../request')
+var validWaiver = require('../validate/waiver')
+var validSignature = require('../validate/signature')
+var writeWaiver = require('../write/waiver')
 
 module.exports = function (config, waiver, done) {
   if (!validWaiver(waiver)) return done('invalid waiver')

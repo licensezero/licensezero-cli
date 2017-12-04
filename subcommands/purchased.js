@@ -17,7 +17,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
           if (!Array.isArray(parsed.licenses)) {
             return done('invalid licenses bundle')
           }
-          var importLicense = require('../import-license')
+          var importLicense = require('../import/license')
           var formatError = require('./format-error')
           var anyError = false
           var runSeries = require('run-series')
