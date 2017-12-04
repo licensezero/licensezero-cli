@@ -23,7 +23,7 @@ var subcommands = {
   'remove-licensee': '<nickname>',
   'remove-licensor': '<UUID>',
   'reset-token': '<UUID> <email>',
-  'retract': '',
+  'retract': '<UUID>',
   'show-licensee': '<nickname>',
   'sponsor': '<nickname> <UUID> [--do-not-open]',
   'waive': '<UUID> -b NAME -j CODE -d DAYS [-l UUID]'
