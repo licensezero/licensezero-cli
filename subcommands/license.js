@@ -1,6 +1,7 @@
 module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var projectID = options['<UUID>']
   var noncommercial = options['--noncommercial']
+  var stacking = options['--stack']
 
   var request = require('../request')
   request({
@@ -29,14 +30,28 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
           function modifyPackageJSON (done) {
             var metadata = response.metadata
             var packageJSON = path.join(cwd, 'package.json')
+            var alreadyHasValues = (
+              packageJSON.hasOwnProperty('licensezero') &&
+              Array.isArray(packageJSON.licensezero) &&
+              packageJSON.licensezero.length !== 0
+            )
+            if (alreadyHasValues && !stacking) {
+              return done(
+                'package.json already has License Zero metadata. ' +
+                'Use --stack to stack metadata.'
+              )
+            }
+            if (stacking && !alreadyHasValues) {
+              return done(
+                'Cannot stack License Zero metadata. ' +
+                'There is no preexisting metadata.'
+              )
+            }
             var modifyJSONFile = require('../modify/json-file')
             modifyJSONFile(packageJSON, function (data) {
               data.set('license', metadata.license)
               var existing = data.get('licensezero')
-              // TODO: prompt before stacking metadata
-              // TODO: concatenate LICENSE texts when stacking
               // TODO: replace existing if same projectID
-              // TODO: --stack
               if (Array.isArray(existing)) {
                 existing.push(metadata.licensezero)
               } else {
@@ -64,11 +79,20 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
               'Agent Signature (Ed25519):\n\n' +
               signatureLines(license.agentSignature) + '\n'
             )
-            fs.writeFile(licenseFile, content, function (error) {
-              /* istanbul ignore next */
-              if (error) return done(error)
-              stdout.write('Wrote ' + licenseFile + '.' + '\n')
-              done()
+            fs.readFile(licenseFile, function (error) {
+              var appending = false
+              if (error) {
+                if (error.code === 'ENOENT') appending = true
+                else return done(error)
+              }
+              var options = {flag: appending ? 'a' : 'w'}
+              if (appending) content = '\n\n' + content
+              fs.writeFile(licenseFile, content, options, function (error) {
+                /* istanbul ignore next */
+                if (error) return done(error)
+                stdout.write('Wrote ' + licenseFile + '.' + '\n')
+                done()
+              })
             })
           }
         ], function (error) {

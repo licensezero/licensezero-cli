@@ -63,6 +63,7 @@ Options:
   -p CENTS, --relicense CENTS   Price for relicensing, in cents.
   -r, --reciprocal              Apply the Reciprocal Public License.
   -s CENTS, --solo CENTS        Price for solo licenses, in cents.
+  --stack                       Stack License Zero metadata.
   -t CENTS, --team CENTS        Price for team licenses, in cents.
 `
 /* eslint-enable max-len */
