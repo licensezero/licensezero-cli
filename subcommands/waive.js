@@ -1,8 +1,8 @@
 module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var projectID = options['<UUID>']
-  var name = options['--name']
+  var beneficiary = options['--beneficiary']
   var jurisdiction = options['--jurisdiction']
-  var term = options['--term']
+  var days = options['--days']
   var licensorID = options['--licensor']
 
   var readLicensor = require('../read/licensor')
@@ -19,9 +19,9 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
       licensorID: licensor.licensorID,
       projectID: projectID,
       token: licensor.token,
-      beneficiary: name,
+      beneficiary: beneficiary,
       jurisdiction: jurisdiction,
-      term: term.toLowerCase() === 'forever' ? 'forever' : parseInt(term)
+      term: days.toLowerCase() === 'forever' ? 'forever' : parseInt(days)
     }
     request(payload, function (error, response) {
       if (error) return done(error)
