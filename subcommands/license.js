@@ -81,6 +81,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
             fs.readFile(licenseFile, function (error) {
               var appending = false
               if (error) {
+                /* istanbul ignore else */
                 if (error.code === 'ENOENT') appending = true
                 else return done(error)
               }

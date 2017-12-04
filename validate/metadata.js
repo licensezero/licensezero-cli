@@ -16,6 +16,7 @@ module.exports = function (metadata, callback) {
       request({
         action: 'key'
       }, function (error, response) {
+        /* istanbul ignore if */
         if (error) return done(error)
         AGENT_PUBLIC_KEY = response.key
         done(null, response.key)
@@ -26,11 +27,13 @@ module.exports = function (metadata, callback) {
         action: 'project',
         projectID: metadata.license.projectID
       }, function (error, response) {
+        /* istanbul ignore if */
         if (error) return done(error)
         done(null, response.licensor.publicKey)
       })
     }
   }, function (error, results) {
+    /* istanbul ignore if */
     if (error) return callback(error)
     var validLicensorSignature = validSignature(
       stringify(metadata.license),

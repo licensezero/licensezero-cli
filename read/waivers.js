@@ -10,6 +10,7 @@ module.exports = function (config, nickname, callback) {
     runParallel(entries.map(function (projectID) {
       return readWaiver.bind(null, config, nickname, projectID)
     }), function (error, waivers) {
+      /* istanbul ignore if */
       if (error) return callback(error)
       callback(null, waivers.filter(function (waiver) {
         return !expired(waiver)
