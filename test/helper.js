@@ -18,7 +18,7 @@ module.exports = function (callback) {
         function run (args, next) {
           var stdin = new PassThrough()
           var stdout = new streamBuffers.WritableStreamBuffer()
-          // FIXME: Ugly hack to avoid https://github.com/npm/read/issues/23
+          // Ugly hack to avoid https://github.com/npm/read/issues/23
           stdout.end = function () { }
           var stderr = new streamBuffers.WritableStreamBuffer()
           bin(
