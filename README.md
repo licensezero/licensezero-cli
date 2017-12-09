@@ -14,10 +14,10 @@ Provide a short nickname for your profile, an exact legal name, an [ISO 3166-2](
 l0 create-licensee mycompany "Something, Inc." US-CA company
 ```
 
-You can create as many licensor profiles as you like.  For example, one for yourself, one for your side business, one for each of your consulting clients.  To list them all:
+You can create as many licensee profiles as you like.  For example, one for yourself, one for your side business, one for each of your consulting clients.  To list them all:
 
 ```shell
-l0 list-licensors
+l0 list-licensees
 ```
 
 Using the profile nickname, you can generate quotes for License Zero software within the `node_modules` directories of your projects:
