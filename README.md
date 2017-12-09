@@ -74,7 +74,7 @@ l0 offer --solo 300 --team 400 --company 500 --enterprise 600
 `l0 offer` will provide a new project identifier that you can use to create `package.json` metadata and `LICENSE`:
 
 ```shell
-l0 license $PRODUCT_ID
+l0 license $PRODUCT_ID --reciprocal
 git add package.json LICENSE
 git commit -m "License Zero"
 git push
