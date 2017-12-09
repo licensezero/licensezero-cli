@@ -29,7 +29,7 @@
     "opener": "^1.4.3",
     "read": "^1.0.7",
     "read-package-tree": "^5.1.6",
-    "rimraf": "^2.6.1",
+    "rimraf": "^2.6.2",
     "run-parallel": "^1.1.6",
     "run-series": "^1.1.4",
     "simple-concat": "^1.0.0",
