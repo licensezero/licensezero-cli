@@ -17,7 +17,7 @@
     "uuid": "^3.1.0"
   },
   "dependencies": {
-    "ajv": "^5.2.2",
+    "ajv": "^5.5.1",
     "docopt": "^0.6.2",
     "hosted-git-info": "^2.5.0",
     "json-parse-errback": "^2.0.1",
