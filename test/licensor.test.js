@@ -62,7 +62,7 @@ tape('license', function (test) {
           name: 'l0-test',
           description: 'test package',
           version: '1.0.0',
-          repository: 'https://github.com/licensezero/test'
+          homepage: 'https://github.com/licensezero/test'
         }), done)
       },
       function runIdentify (done) {

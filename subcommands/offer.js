@@ -4,11 +4,14 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   readJSONFile(path.join(cwd, 'package.json'), function (error, packageData) {
     /* istanbul ignore next */
     if (error) return done(error)
-    if (typeof packageData.repository !== 'string') {
-      return done(new Error('package.json missing repository property'))
+    if (typeof packageData.homepage !== 'string') {
+      return done(new Error('package.json missing homepage property'))
     }
-    var hostedGitInfo = require('hosted-git-info')
-    var repository = hostedGitInfo.fromUrl(packageData.repository).browse()
+    var homepage = packageData.homepage
+    if (!homepage && packageData.repository) {
+      var hostedGitInfo = require('hosted-git-info')
+      homepage = hostedGitInfo.fromUrl(packageData.repository).browse()
+    }
     var readLicensor = require('../read/licensor')
     readLicensor(config, function (error, licensor) {
       /* istanbul ignore next */
@@ -27,7 +30,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
           action: 'offer',
           licensorID: licensor.licensorID,
           token: licensor.token,
-          repository: repository,
+          homepage: homepage,
           pricing: pricing,
           description: packageData.description,
           terms: (

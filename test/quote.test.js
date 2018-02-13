@@ -90,7 +90,7 @@ tape('quote one l0 dep', function (test) {
             {
               projectID: RECIPROCAL_PROJECT_ID,
               description: 'test project',
-              repository: 'https://example.com',
+              homepage: 'https://example.com',
               licensor: {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'
@@ -164,7 +164,7 @@ tape('quote one duplicate l0 dep', function (test) {
             {
               projectID: RECIPROCAL_PROJECT_ID,
               description: 'test project',
-              repository: 'https://example.com',
+              homepage: 'https://example.com',
               licensor: {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'
@@ -333,7 +333,7 @@ tape('quote one duplicate l0 dep', function (test) {
             {
               projectID: RECIPROCAL_PROJECT_ID,
               description: 'test project',
-              repository: 'https://example.com',
+              homepage: 'https://example.com',
               licensor: {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'
@@ -414,7 +414,7 @@ tape('quote one retracted l0 dep', function (test) {
               projectID: RECIPROCAL_PROJECT_ID,
               retracted: RETRACTED,
               description: 'test project',
-              repository: 'https://example.com',
+              homepage: 'https://example.com',
               licensor: {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'

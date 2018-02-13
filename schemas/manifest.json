@@ -11,7 +11,7 @@
         "projectID": {
           "type": "string"
         },
-        "repository": {
+        "homepage": {
           "type": "string",
           "format": "uri"
         },
@@ -21,7 +21,7 @@
       },
       "required": [
         "projectID",
-        "repository",
+        "homepage",
         "description"
       ]
     },

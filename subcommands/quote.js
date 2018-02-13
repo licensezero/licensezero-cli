@@ -39,7 +39,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
         var formatted = {
           Project: project.projectID,
           Description: project.description,
-          Repository: project.repository,
+          Repository: project.homepage,
           Terms: unlicensed
             .find(function (metadata) {
               return metadata.projectID === project.projectID
