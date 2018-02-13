@@ -84,7 +84,7 @@ tape('license', function (test) {
       },
       function runOffer (done) {
         var stdin = run([
-          'offer', '-p', '1000'
+          'offer', '1000'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'offer exit 0')
           var match = /Project ID: (\S+)/.exec(stdout)

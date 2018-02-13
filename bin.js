@@ -13,7 +13,7 @@ var subcommands = {
   'import-license': '<file>',
   'import-waiver': '<file>',
   'license': '<UUID> (--noncommercial | --reciprocal)',
-  'offer': '-p CENTS [--relicense CENTS]',
+  'offer': '<PRICE> [--relicense CENTS]',
   'purchased': '<URL>',
   'quote': '[--no-noncommercial] [--no-reciprocal]',
   'register': '',

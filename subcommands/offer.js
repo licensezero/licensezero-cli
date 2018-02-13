@@ -19,7 +19,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
         if (error) return done(error)
         if (!accepted) return done('must accept terms')
         var request = require('../request')
-        var pricing = {private: parseInt(options['--private'])}
+        var pricing = {private: parseInt(options['<PRICE>'])}
         if (options['--relicense']) {
           pricing.relicense = parseInt(options['--relicense'])
         }
