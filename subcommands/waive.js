@@ -1,5 +1,5 @@
 module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
-  var projectID = options['<Project ID>']
+  var projectID = options['<project id>']
   var beneficiary = options['--beneficiary']
   var jurisdiction = options['--jurisdiction']
   var days = options['--days']

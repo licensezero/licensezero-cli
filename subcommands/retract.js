@@ -1,5 +1,5 @@
 module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
-  var projectID = options['<Project ID>']
+  var projectID = options['<project id>']
 
   var readLicensor = require('../read/licensor')
   readLicensor(config, function (error, licensor) {
