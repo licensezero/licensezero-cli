@@ -1,5 +1,5 @@
 module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
-  var projectID = options['<UUID>']
+  var projectID = options['<Project ID>']
 
   var readIdentity = require('../read/identity')
   readIdentity(config, function (error, identity) {

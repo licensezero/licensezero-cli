@@ -1,5 +1,5 @@
 module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
-  var licensorID = options['<UUID>']
+  var licensorID = options['<Licensor ID>']
   var validUUID = require('../validate/uuid')
   if (!validUUID(licensorID)) return done('invalid licensor id')
 

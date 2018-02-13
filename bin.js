@@ -12,16 +12,16 @@ var subcommands = {
   'identify': '<name> <jurisdiction> <email>',
   'import-license': '<file>',
   'import-waiver': '<file>',
-  'license': '<UUID> (--noncommercial | --reciprocal)',
+  'license': '<Project ID> (--noncommercial | --reciprocal)',
   'offer': '<PRICE> [--relicense CENTS]',
   'purchased': '<URL>',
   'quote': '[--no-noncommercial] [--no-reciprocal]',
   'register': '',
   'reset-token': '',
-  'retract': '<UUID>',
-  'set-licensor-id': '<UUID>',
-  'sponsor': '<UUID> [--do-not-open]',
-  'waive': '<UUID> -b NAME -j CODE -d DAYS [-l UUID]',
+  'retract': '<Project ID>',
+  'set-licensor-id': '<Licensor ID>',
+  'sponsor': '<Project ID> [--do-not-open]',
+  'waive': '<Project ID> -b NAME -j CODE -d DAYS',
   'whoami': ''
 }
 var subcommandNames = Object.keys(subcommands)
