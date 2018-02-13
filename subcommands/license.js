@@ -83,10 +83,10 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
               signatureLines(license.agentSignature) + '\n'
             )
             fs.readFile(licenseFile, function (error) {
-              var appending = false
+              var appending = true
               if (error) {
                 /* istanbul ignore else */
-                if (error.code === 'ENOENT') appending = true
+                if (error.code === 'ENOENT') appending = false
                 else return done(error)
               }
               var options = {flag: appending ? 'a' : 'w'}
