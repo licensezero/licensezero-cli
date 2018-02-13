@@ -1,11 +1,8 @@
 module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
-  var nickname = options['<nickname>']
-
   var inventory = require('../inventory')
-  inventory(nickname, cwd, config, options, function (error, result) {
+  inventory(cwd, config, options, function (error, result) {
     /* istanbul ignore if */
     if (error) return done(error)
-    var licensee = result.licensee
     var licensable = result.licensable
     var licensed = result.licensed
     var waived = result.waived
@@ -38,7 +35,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
       var total = 0
       projects.forEach(function (project) {
         var licensor = project.licensor
-        var price = project.pricing[licensee.tier]
+        var price = project.pricing.private
         var formatted = {
           Project: project.projectID,
           Description: project.description,
@@ -56,10 +53,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
           formatted.Retracted = project.retracted
         } else {
           total += price
-          formatted.Price = (
-            currency(price) +
-            ' (' + capitalize(licensee.tier) + ' License)'
-          )
+          formatted.Price = currency(price)
         }
         formattedProjects.push(formatted)
       })
@@ -80,8 +74,4 @@ function currency (cents) {
       ? '0.' + (cents < 10 ? '0' + cents : cents)
       : cents.toString().replace(/(\d\d)$/, '.$1')
   )
-}
-
-function capitalize (string) {
-  return string[0].toUpperCase() + string.slice(1)
 }

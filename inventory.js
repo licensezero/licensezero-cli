@@ -1,20 +1,19 @@
-var TIERS = require('./tiers')
-var readLicensee = require('./read/licensee')
+var readIdentities = require('./read/identities')
 var readLicenses = require('./read/licenses')
 var readPackageTree = require('read-package-tree')
 var readWaivers = require('./read/waivers')
 var runParallel = require('run-parallel')
 var validateMetadata = require('./validate/metadata')
 
-module.exports = function (nickname, cwd, config, options, callback) {
+module.exports = function (cwd, config, options, callback) {
   var noNoncommercial = options['--no-noncommercial']
   var noReciprocal = options['--no-reciprocal']
-  readLicensee(config, nickname, function (error, licensee) {
+  readIdentities(config, function (error, identities) {
     /* istanbul ignore if */
     if (error) return callback(error)
     runParallel({
-      licenses: readLicenses.bind(null, config, nickname),
-      waivers: readWaivers.bind(null, config, nickname)
+      licenses: readLicenses.bind(null, config),
+      waivers: readWaivers.bind(null, config)
     }, function (error, existing) {
       /* istanbul ignore if */
       if (error) return callback(error)
@@ -49,11 +48,7 @@ module.exports = function (nickname, cwd, config, options, callback) {
               var projectID = record.license.projectID
               // Licensed?
               var haveLicense = existing.licenses.some(function (license) {
-                var manifest = JSON.parse(license.manifest)
-                return (
-                  license.projectID === projectID &&
-                  sufficientTier(manifest.tier, licensee.tier)
-                )
+                return license.projectID === projectID
               })
               if (haveLicense) {
                 licensed.push(record.license)
@@ -68,10 +63,13 @@ module.exports = function (nickname, cwd, config, options, callback) {
                 done()
               }
               // Our own project?
-              var ownProject = (
-                record.license.name === licensee.name &&
-                record.license.jurisdiction === licensee.jurisdiction
-              )
+              var ownProject = identities.some(function (identity) {
+                return (
+                  record.license.name === identity.name &&
+                  record.license.jurisdiction === identity.jurisdiction &&
+                  record.license.email === identity.email
+                )
+              })
               if (ownProject) {
                 own.push(record.license)
                 done()
@@ -92,7 +90,7 @@ module.exports = function (nickname, cwd, config, options, callback) {
           /* istanbul ignore if */
           if (error) return callback(error)
           callback(null, {
-            licensee: licensee,
+            identities: identities,
             licensable: licensable,
             licensed: licensed,
             waived: waived,
@@ -133,11 +131,4 @@ function isObject (argument) {
     typeof argument === 'object' &&
     argument !== null
   )
-}
-
-function sufficientTier (have, need) {
-  if (have === need) return true
-  var haveIndex = TIERS.indexOf(have)
-  var needIndex = TIERS.indexOf(need)
-  return haveIndex > needIndex
 }

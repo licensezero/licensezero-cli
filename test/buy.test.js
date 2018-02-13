@@ -16,7 +16,7 @@ tape('buy one l0 dep', function (test) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -38,7 +38,7 @@ tape('buy one l0 dep', function (test) {
           done()
         })
         run([
-          'buy', 'test'
+          'buy'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(

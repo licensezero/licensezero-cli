@@ -11,9 +11,13 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
     /* istanbul ignore if */
     if (error) return done(error)
     var readLicensor = require('../read/licensor')
-    readLicensor(config, project.licensor.licensorID, function (error, licensor) {
+    readLicensor(config, function (error, licensor) {
       /* istanbul ignore next */
       if (error) return done(error)
+      var matchingLicensor = licensor.licensorID === project.licensor.licensorID
+      if (!matchingLicensor) {
+        return done('You are not the licensor of this project.')
+      }
       request({
         action: 'public',
         licensorID: licensor.licensorID,

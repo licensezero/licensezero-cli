@@ -8,25 +8,21 @@ var path = require('path')
 // of subcommands in memory to check later, to route to the right
 // subcommand handler.
 var subcommands = {
-  'buy': '<nickname> [--do-not-open]',
-  'create-licensee': '<nickname> <name> <jurisdiction> <tier>',
-  'create-licensor': '<UUID>',
+  'buy': '[--do-not-open]',
+  'identify': '<name> <jurisdiction> <email>',
   'import-license': '<file>',
   'import-waiver': '<file>',
   'license': '<UUID> (--noncommercial | --reciprocal)',
-  'list-licensees': '',
-  'list-licensors': '',
-  'offer': '-s CENTS -t CENTS -c CENTS -e CENTS [-p CENTS] [-l UUID]',
+  'offer': '-p CENTS [--relicense CENTS]',
   'purchased': '<URL>',
-  'quote': '<nickname> [--no-noncommercial] [--no-reciprocal]',
-  'register-licensor': '<email> <name> <jurisdiction>',
-  'remove-licensee': '<nickname>',
-  'remove-licensor': '<UUID>',
-  'reset-token': '<UUID> <email>',
+  'quote': '[--no-noncommercial] [--no-reciprocal]',
+  'register': '',
+  'reset-token': '',
   'retract': '<UUID>',
-  'show-licensee': '<nickname>',
-  'sponsor': '<nickname> <UUID> [--do-not-open]',
-  'waive': '<UUID> -b NAME -j CODE -d DAYS [-l UUID]'
+  'set-licensor-id': '<UUID>',
+  'sponsor': '<UUID> [--do-not-open]',
+  'waive': '<UUID> -b NAME -j CODE -d DAYS [-l UUID]',
+  'whoami': ''
 }
 var subcommandNames = Object.keys(subcommands)
 
@@ -53,18 +49,14 @@ Options:
   --do-not-open                 Do not open the payment page in a browser.
   --no-noncommercial            Omit L0-NC projects from quotes and orders.
   --no-reciprocal               Omit L0-R projects from quotes and orders.
-  -c CENTS, --company CENTS     Price for company licenses, in cents.
   -d DAYS, --days DAYS          Term in days or "forever".
-  -e CENTS, --enterprise CENTS  Price for enterprise licenses, in cents.
   -j CODE, --jurisdiction CODE  Beneficiary jurisdiction (ISO 3166-2).
-  -l UUID, --licensor UUID      Licensor offering licenses.
   -b NAME, --beneficiary NAME   Beneficiary name.
   -n, --noncommercial           Apply the Noncommercial Public License.
-  -p CENTS, --relicense CENTS   Price for relicensing, in cents.
   -r, --reciprocal              Apply the Reciprocal Public License.
-  -s CENTS, --solo CENTS        Price for solo licenses, in cents.
+  --relicense CENTS             Price for relicensing, in cents.
+  -p CENTS, --private CENTS     Price for private licenses, in cents.
   --stack                       Stack License Zero metadata.
-  -t CENTS, --team CENTS        Price for team licenses, in cents.
 `
 /* eslint-enable max-len */
 

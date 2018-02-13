@@ -1,17 +1,17 @@
 module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
-  var nickname = options['<nickname>']
   var projectID = options['<UUID>']
 
-  var readLicensee = require('../read/licensee')
-  readLicensee(config, nickname, function (error, licensee) {
+  var readIdentity = require('../read/identity')
+  readIdentity(config, function (error, identity) {
     /* istanbul ignore if */
     if (error) return done(error)
     var request = require('../request')
     request({
       action: 'sponsor',
       projectID: projectID,
-      sponsor: licensee.name,
-      jurisdiction: licensee.jurisdiction
+      sponsor: identity.name,
+      jurisdiction: identity.jurisdiction,
+      email: identity.email
     }, function (error, response) {
       /* istanbul ignore if */
       if (error) return done(error)

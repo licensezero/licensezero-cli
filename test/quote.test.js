@@ -3,7 +3,6 @@ var RECIPROCAL_PACKAGE = require('./reciprocal-package.json')
 var fs = require('fs')
 var helper = require('./helper')
 var mkdirp = require('mkdirp')
-var noArgumentsUsage = require('./no-arguments-usage')
 var path = require('path')
 var runSeries = require('run-series')
 var tape = require('tape')
@@ -11,22 +10,20 @@ var tape = require('tape')
 var RECIPROCAL_PROJECT_ID = RECIPROCAL_PACKAGE
   .licensezero[0].license.projectID
 
-noArgumentsUsage('quote', 'quote')
-
 tape('quote no deps', function (test) {
   helper(function (tmp, run, rm) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
-          test.equal(status, 0, 'exit 0')
+          test.equal(status, 0, 'identify exit 0')
           done()
         })
       },
       function (done) {
         run([
-          'quote', 'test'
+          'quote'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -48,7 +45,7 @@ tape('quote non-l0 dep', function (test) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -66,7 +63,7 @@ tape('quote non-l0 dep', function (test) {
       },
       function (done) {
         run([
-          'quote', 'test'
+          'quote'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -99,10 +96,7 @@ tape('quote one l0 dep', function (test) {
                 jurisdiction: 'US-CA'
               },
               pricing: {
-                solo: 1000,
-                team: 1500,
-                company: 2000,
-                enterprise: 3000
+                private: 1500
               }
             }
           ]
@@ -112,7 +106,7 @@ tape('quote one l0 dep', function (test) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -127,7 +121,7 @@ tape('quote one l0 dep', function (test) {
       },
       function (done) {
         run([
-          'quote', 'test'
+          'quote'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -145,7 +139,7 @@ tape('quote one l0 dep', function (test) {
               '    Repository: https://example.com',
               '    Terms: reciprocal',
               '    Licensor: Test Licensor [US-CA]',
-              '    Price: $15.00 (Team License)',
+              '    Price: $15.00',
               'Total: $15.00'
             ].join('\n') + '\n',
             'none found'
@@ -175,12 +169,7 @@ tape('quote one duplicate l0 dep', function (test) {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'
               },
-              pricing: {
-                solo: 1000,
-                team: 1500,
-                company: 2000,
-                enterprise: 3000
-              }
+              pricing: {private: 1500}
             }
           ]
         })
@@ -189,7 +178,7 @@ tape('quote one duplicate l0 dep', function (test) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -211,7 +200,7 @@ tape('quote one duplicate l0 dep', function (test) {
       },
       function (done) {
         run([
-          'quote', 'test'
+          'quote'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -229,7 +218,7 @@ tape('quote one duplicate l0 dep', function (test) {
               '    Repository: https://example.com',
               '    Terms: reciprocal',
               '    Licensor: Test Licensor [US-CA]',
-              '    Price: $15.00 (Team License)',
+              '    Price: $15.00',
               'Total: $15.00'
             ].join('\n') + '\n',
             'one found'
@@ -249,7 +238,7 @@ tape('quote --no-reciprocal one L0-R dep', function (test) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -264,7 +253,7 @@ tape('quote --no-reciprocal one L0-R dep', function (test) {
       },
       function (done) {
         run([
-          'quote', 'test', '--no-reciprocal'
+          'quote', '--no-reciprocal'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -294,7 +283,7 @@ tape('quote --no-noncommercial one L0-NC dep', function (test) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -309,7 +298,7 @@ tape('quote --no-noncommercial one L0-NC dep', function (test) {
       },
       function (done) {
         run([
-          'quote', 'test', '--no-noncommercial'
+          'quote', '--no-noncommercial'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -349,12 +338,7 @@ tape('quote one duplicate l0 dep', function (test) {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'
               },
-              pricing: {
-                solo: 1000,
-                team: 1500,
-                company: 2000,
-                enterprise: 3000
-              }
+              pricing: {private: 1500}
             }
           ]
         })
@@ -363,7 +347,7 @@ tape('quote one duplicate l0 dep', function (test) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -385,7 +369,7 @@ tape('quote one duplicate l0 dep', function (test) {
       },
       function (done) {
         run([
-          'quote', 'test'
+          'quote'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -403,7 +387,7 @@ tape('quote one duplicate l0 dep', function (test) {
               '    Repository: https://example.com',
               '    Terms: reciprocal',
               '    Licensor: Test Licensor [US-CA]',
-              '    Price: $15.00 (Team License)',
+              '    Price: $15.00',
               'Total: $15.00'
             ].join('\n') + '\n',
             'one found'
@@ -435,12 +419,7 @@ tape('quote one retracted l0 dep', function (test) {
                 name: 'Test Licensor',
                 jurisdiction: 'US-CA'
               },
-              pricing: {
-                solo: 1000,
-                team: 1500,
-                company: 2000,
-                enterprise: 3000
-              }
+              pricing: {private: 1500}
             }
           ]
         })
@@ -449,7 +428,7 @@ tape('quote one retracted l0 dep', function (test) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -464,7 +443,7 @@ tape('quote one retracted l0 dep', function (test) {
       },
       function (done) {
         run([
-          'quote', 'test'
+          'quote'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(
@@ -502,7 +481,7 @@ tape('quote one invalid metadata', function (test) {
     runSeries([
       function (done) {
         run([
-          'create-licensee', 'test', 'Test Licensee', 'US-CA', 'team'
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           done()
@@ -519,7 +498,7 @@ tape('quote one invalid metadata', function (test) {
       },
       function (done) {
         run([
-          'quote', 'test'
+          'quote'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'exit 0')
           test.equal(

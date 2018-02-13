@@ -1,7 +1,7 @@
-var readLicensees = require('../read/licensees')
+var readIdentities = require('../read/identities')
 var request = require('../request')
-var validWaiver = require('../validate/waiver')
 var validSignature = require('../validate/signature')
+var validWaiver = require('../validate/waiver')
 var writeWaiver = require('../write/waiver')
 
 module.exports = function (config, waiver, done) {
@@ -22,22 +22,23 @@ module.exports = function (config, waiver, done) {
   var name = beneficiary.name
   var jurisdiction = beneficiary.jurisdiction
   log('Jurisdiction: ' + beneficiary.jurisdiction)
-  readLicensees(config, function (error, licensees) {
+  var email = beneficiary.email
+  log('email: ' + beneficiary.email)
+  readIdentities(config, function (error, identities) {
     if (error) return done(error)
-    var matchingLicensee = licensees.find(function (licensee) {
+    var matchingIdentity = identities.find(function (identity) {
       return (
-        licensee.name === name &&
-        licensee.jurisdiction === jurisdiction
+        identity.name === name &&
+        identity.jurisdiction === jurisdiction &&
+        identity.email === email
       )
     })
-    if (!matchingLicensee) {
+    if (!matchingIdentity) {
       return done(
         'license for ' + name + ' [' + jurisdiction + '] ' +
         'does not match any existing licensee'
       )
     }
-    var nickname = matchingLicensee.nickname
-    log('Matches Licensee: ' + nickname)
     if (!validSignature(waiver)) {
       return done('invalid cryptographic signature')
     }
@@ -52,7 +53,7 @@ module.exports = function (config, waiver, done) {
         return done('public key does not match')
       }
       log('licensezero.com Public Key: matches')
-      writeWaiver(config, nickname, waiver, function (error) {
+      writeWaiver(config, waiver, function (error) {
         if (error) return done(error)
         log('Imported waiver.')
         done(null, summary.join('\n'))

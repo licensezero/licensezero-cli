@@ -1,13 +1,9 @@
 var fs = require('fs')
 var helper = require('./helper')
-var noArgumentsUsage = require('./no-arguments-usage')
 var path = require('path')
 var runSeries = require('run-series')
 var tape = require('tape')
 var uuid = require('uuid/v4')
-
-noArgumentsUsage('create', 'create-licensor')
-noArgumentsUsage('remove', 'remove-licensor')
 
 tape('register licensor', function (test) {
   require('../request').mocks.push({
@@ -17,49 +13,34 @@ tape('register licensor', function (test) {
     }
   })
   helper(function (tmp, run, rm) {
-    var stdin = run([
-      'register-licensor', 'test@example.com', 'Test Licensor', 'US-CA'
-    ], function (status, stdout, stderr) {
-      test.equal(status, 0, 'exit 0')
+    runSeries([
+      function (done) {
+        run([
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
+        ], function (status, stdout, stderr) {
+          test.equal(status, 0, 'exit 0')
+          done()
+        })
+      },
+      function (done) {
+        var stdin = run([
+          'register'
+        ], function (status, stdout, stderr) {
+          test.equal(status, 0, 'exit 0')
+          done()
+        })
+        stdin.write('yes\n')
+      }
+    ], function () {
       rm(test)
     })
-    stdin.write('yes\n')
   })
 })
 
-tape('create licensor', function (test) {
-  var licensorID = uuid()
-  mockLicensorResponse()
-  helper(function (tmp, run, rm) {
-    var stdin = run([
-      'create-licensor', licensorID
-    ], function (status, stdout, stderr) {
-      test.equal(status, 0, 'exit 0')
-      rm(test)
-    })
-    stdin.write('test\n')
-  })
-})
-
-function mockLicensorResponse () {
-  require('../request').mocks.push({
-    action: 'licensor',
-    handler: function (payload, callback) {
-      callback(null, {
-        licensorID: payload.licensorID,
-        name: 'Test Licensor',
-        jurisdiction: 'US-CA',
-        publicKey: '',
-        projects: []
-      })
-    }
-  })
-}
-
-tape('create w/ invalid id', function (test) {
+tape('register w/ invalid id', function (test) {
   helper(function (tmp, run, rm) {
     run([
-      'create-licensor', 'blah'
+      'set-licensor-id', 'blah'
     ], function (status, stdout, stderr) {
       test.equal(status, 1, 'exit 1')
       test.equal(stdout, '', 'no stdout')
@@ -69,86 +50,8 @@ tape('create w/ invalid id', function (test) {
   })
 })
 
-tape('list w/o licensors', function (test) {
-  helper(function (tmp, run, rm) {
-    run([
-      'list-licensors'
-    ], function (status, stdout, stderr) {
-      test.equal(status, 0, 'exit 0')
-      rm(test)
-    })
-  })
-})
-
-tape('create, list', function (test) {
-  var licensorID = uuid()
-  mockLicensorResponse()
-  helper(function (tmp, run, rm) {
-    runSeries([
-      function (done) {
-        var stdin = run([
-          'create-licensor', licensorID
-        ], function (status, stdout, stderr) {
-          test.equal(status, 0, 'exit 0')
-          done()
-        })
-        stdin.write('test\n')
-      },
-      function (done) {
-        run(['list-licensors'], function (status, stdout, stderr) {
-          test.equal(status, 0, 'exit 0')
-          test.equal(stdout, licensorID + '\n', 'lists created')
-          test.equal(stderr, '', 'no stderr')
-          done()
-        })
-      }
-    ], function () {
-      rm(test)
-    })
-  })
-})
-
-tape('create, remove, list', function (test) {
-  var licensorID = uuid()
-  mockLicensorResponse()
-  helper(function (tmp, run, rm) {
-    runSeries([
-      function (done) {
-        var stdin = run([
-          'create-licensor', licensorID
-        ], function (status, stdout, stderr) {
-          test.equal(status, 0, 'exit 0')
-          done()
-        })
-        stdin.write('test\n')
-      },
-      function (done) {
-        run([
-          'remove-licensor', licensorID
-        ], function (status, stdout, stderr) {
-          test.equal(status, 0, 'exit 0')
-          done()
-        })
-      },
-      function (done) {
-        run([
-          'list-licensors'
-        ], function (status, stdout, stderr) {
-          test.equal(status, 0, 'exit 0')
-          test.equal(stdout, '', 'lists none')
-          test.equal(stderr, '', 'no stderr')
-          done()
-        })
-      }
-    ], function () {
-      rm(test)
-    })
-  })
-})
-
 tape('license', function (test) {
   var licensorID = uuid()
-  mockLicensorResponse()
   mockOfferAcceptance()
   helper(function (tmp, run, rm) {
     var packageJSON = path.join(tmp, 'package.json')
@@ -162,23 +65,26 @@ tape('license', function (test) {
           repository: 'https://github.com/licensezero/test'
         }), done)
       },
-      function runCreateLicensor (done) {
-        var stdin = run([
-          'create-licensor', licensorID
+      function runIdentify (done) {
+        run([
+          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
         ], function (status, stdout, stderr) {
-          test.equal(status, 0, 'create-licensor exit 0')
+          test.equal(status, 0, 'identify exit 0')
+          done()
+        })
+      },
+      function runSetLicensorID (done) {
+        var stdin = run([
+          'set-licensor-id', licensorID
+        ], function (status, stdout, stderr) {
+          test.equal(status, 0, 'set-licensor-id exit 0')
           done()
         })
         stdin.write('test\n')
       },
       function runOffer (done) {
         var stdin = run([
-          'offer',
-          '-s', '1000',
-          '-t', '1000',
-          '-c', '1000',
-          '-e', '1000',
-          '-l', licensorID
+          'offer', '-p', '1000'
         ], function (status, stdout, stderr) {
           test.equal(status, 0, 'offer exit 0')
           var match = /Project ID: (\S+)/.exec(stdout)

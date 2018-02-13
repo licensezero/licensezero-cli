@@ -1,6 +1,6 @@
 var licensorPath = require('../paths/licensor')
-var readJSONFile = require('./json-file')
+var readJSONFile = require('../read/json-file')
 
-module.exports = function (config, licensorID, callback) {
-  readJSONFile(licensorPath(config, licensorID), callback)
+module.exports = function (config, callback) {
+  readJSONFile(licensorPath(config), callback)
 }

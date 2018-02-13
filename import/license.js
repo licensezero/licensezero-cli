@@ -1,4 +1,4 @@
-var readLicensees = require('../read/licensees')
+var readIdentities = require('../read/identities')
 var request = require('../request')
 var validLicense = require('../validate/license')
 var validSignature = require('../validate/signature')
@@ -22,31 +22,23 @@ module.exports = function (config, license, done) {
   var name = licensee.name
   var jurisdiction = licensee.jurisdiction
   log('Jurisdiction: ' + licensee.jurisdiction)
-  readLicensees(config, function (error, licensees) {
+  var email = licensee.email
+  log('email: ' + licensee.email)
+  readIdentities(config, function (error, identities) {
     if (error) return done(error)
-    var matchingLicensee = licensees.find(function (licensee) {
+    var matchingIdentity = identities.find(function (identity) {
       return (
-        licensee.name === name &&
-        licensee.jurisdiction === jurisdiction
+        identity.name === name &&
+        identity.jurisdiction === jurisdiction &&
+        identity.email === email
       )
     })
-    if (!matchingLicensee) {
+    if (!matchingIdentity) {
       return done(
         'license for ' + name + ' [' + jurisdiction + '] ' +
         'does not match any existing licensee'
       )
     }
-    var nickname = matchingLicensee.nickname
-    log('Matches Licensee: ' + nickname)
-    var tier = manifest.tier
-    if (matchingLicensee.tier !== tier) {
-      return done(
-        'Warning: ' + nickname + ' is configured for ' +
-        matchingLicensee.tier + '-tier licenses.\n' +
-        '         This is a ' + license.tier + '-tier license.'
-      )
-    }
-    log('Tier: ' + tier)
     if (!validSignature(license)) {
       return done('invalid cryptographic signature')
     }
@@ -61,7 +53,7 @@ module.exports = function (config, license, done) {
         return done('public key does not match')
       }
       log('licensezero.com Public Key: matches')
-      writeLicense(config, nickname, license, function (error) {
+      writeLicense(config, license, function (error) {
         if (error) return done(error)
         log('Imported license.')
         done(null, summary.join('\n'))
