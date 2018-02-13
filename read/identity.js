@@ -2,6 +2,7 @@ var readIdentities = require('./identities')
 
 module.exports = function (config, callback) {
   readIdentities(config, function (error, identities) {
+    /* istanbul ignore if */
     if (error) return callback(error)
     var identity = identities[0]
     if (!identity) {

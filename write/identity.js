@@ -11,6 +11,7 @@ module.exports = function (config, identity, callback) {
     mkdirp.bind(null, path.dirname(file)),
     function (done) {
       readIdentities(config, function (error, identities) {
+        /* istanbul ignore if */
         if (error) return done(error)
         identities.unshift(identity)
         writeJSONFile(file, identities, done)
