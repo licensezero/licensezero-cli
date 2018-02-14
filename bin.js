@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-require('update-notifier')({pkg: require('./package.json')})
-  .notify({defer: true})
+require('update-notifier')({ pkg: require('./package.json') }).notify({
+  defer: true
+})
 
 var path = require('path')
 
@@ -8,21 +9,21 @@ var path = require('path')
 // of subcommands in memory to check later, to route to the right
 // subcommand handler.
 var subcommands = {
-  'buy': '[--do-not-open]',
-  'identify': '<name> <jurisdiction> <email>',
+  buy: '[--do-not-open]',
+  identify: '<name> <jurisdiction> <email>',
   'import-license': '<file>',
   'import-waiver': '<file>',
-  'license': '<project id> (--noncommercial | --reciprocal)',
-  'offer': '<PRICE> [--relicense CENTS]',
-  'purchased': '<URL>',
-  'quote': '[--no-noncommercial] [--no-reciprocal]',
-  'register': '',
+  license: '<project id> (--noncommercial | --reciprocal)',
+  offer: '<PRICE> [--relicense CENTS]',
+  purchased: '<URL>',
+  quote: '[--no-noncommercial] [--no-reciprocal]',
+  register: '',
   'reset-token': '',
-  'retract': '<project id>',
+  retract: '<project id>',
   'set-licensor-id': '<licensor ID>',
-  'sponsor': '<project id> [--do-not-open]',
-  'waive': '<project id> -b NAME -j CODE -d DAYS',
-  'whoami': ''
+  sponsor: '<project id> [--do-not-open]',
+  waive: '<project id> -b NAME -j CODE -d DAYS',
+  whoami: ''
 }
 var subcommandNames = Object.keys(subcommands)
 
@@ -31,8 +32,7 @@ var usage = `Manage License Zero software projects.
 
 Usage:
   licensezero (--help | --version)
-${
-  subcommandNames
+${subcommandNames
     .map(function (name) {
       if (subcommands[name]) {
         return '  licensezero ' + name + ' ' + subcommands[name]
@@ -40,8 +40,7 @@ ${
         return '  licensezero ' + name
       }
     })
-    .join('\n')
-}
+    .join('\n')}
 
 Options:
   -h, --help                    Print this screen to standard output.
@@ -85,7 +84,13 @@ function execute (argv, cwd, config, stdin, stdout, stderr, done) {
     var name = subcommandNames[index]
     if (options[name]) {
       return require('./subcommands/' + name)(
-        options, cwd, config, stdin, stdout, stderr, done
+        options,
+        cwd,
+        config,
+        stdin,
+        stdout,
+        stderr,
+        done
       )
     }
   }
@@ -98,10 +103,7 @@ if (module.parent) {
   execute(
     process.argv.slice(2),
     process.cwd(),
-    path.join(
-      require('xdg-basedir').config,
-      require('./package.json').name
-    ),
+    path.join(require('xdg-basedir').config, require('./package.json').name),
     process.stdin,
     process.stdout,
     process.stderr,

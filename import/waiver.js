@@ -35,8 +35,12 @@ module.exports = function (config, waiver, done) {
     })
     if (!matchingIdentity) {
       return done(
-        'license for ' + name + ' [' + jurisdiction + '] ' +
-        'does not match any existing licensee'
+        'license for ' +
+          name +
+          ' [' +
+          jurisdiction +
+          '] ' +
+          'does not match any existing licensee'
       )
     }
     if (!validSignature(waiver)) {
@@ -44,20 +48,23 @@ module.exports = function (config, waiver, done) {
     }
     log('Signature: valid')
     log('Public Key: ' + waiver.publicKey.slice(0, 32) + '...')
-    request({
-      action: 'project',
-      projectID: projectID
-    }, function (error, response) {
-      if (error) return done(error)
-      if (waiver.publicKey !== response.licensor.publicKey) {
-        return done('public key does not match')
-      }
-      log('licensezero.com Public Key: matches')
-      writeWaiver(config, waiver, function (error) {
+    request(
+      {
+        action: 'project',
+        projectID: projectID
+      },
+      function (error, response) {
         if (error) return done(error)
-        log('Imported waiver.')
-        done(null, summary.join('\n'))
-      })
-    })
+        if (waiver.publicKey !== response.licensor.publicKey) {
+          return done('public key does not match')
+        }
+        log('licensezero.com Public Key: matches')
+        writeWaiver(config, waiver, function (error) {
+          if (error) return done(error)
+          log('Imported waiver.')
+          done(null, summary.join('\n'))
+        })
+      }
+    )
   })
 }

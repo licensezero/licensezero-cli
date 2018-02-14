@@ -21,12 +21,13 @@ if (process.env.NODE_ENV === 'test') {
 
 /* istanbul ignore next */
 function request (payload, callback) {
-  https.request({
-    method: 'POST',
-    host: 'licensezero.com',
-    path: '/api/v0',
-    headers: {'Content-Type': 'application/json'}
-  })
+  https
+    .request({
+      method: 'POST',
+      host: 'licensezero.com',
+      path: '/api/v0',
+      headers: { 'Content-Type': 'application/json' }
+    })
     .once('error', callback)
     .once('response', function (response) {
       var status = response.statusCode

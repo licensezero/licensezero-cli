@@ -8,7 +8,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var newIdentity = {}
   for (var index = 0; index < keys.length; index++) {
     var key = keys[index]
-    var value = newIdentity[key] = options['<' + key + '>']
+    var value = (newIdentity[key] = options['<' + key + '>'])
     if (!validations[key](value)) return done('invalid ' + key)
   }
 

@@ -10,8 +10,7 @@
     "istanbul": "^0.4.5",
     "licensee": "^4.5.0",
     "lint-staged": "^6.0.0",
-    "standard": "^10.0.3",
-    "standard-markdown": "^4.0.2",
+    "prettier-standard": "^8.0.0",
     "tape": "^4.8.0",
     "uuid": "^3.1.0"
   },
@@ -42,13 +41,15 @@
     "coverage": "NODE_ENV=test istanbul cover -- tape test/*.test.js",
     "postcoverage": "istanbul check --statements 100 --functions 100 --branches 100 --lines 100",
     "test": "NODE_ENV=test tape test/*.test.js",
-    "lint": "standard && standard-markdown",
+    "format": "prettier-standard $(git ls-files | grep '\\.js$')",
     "precommit": "lint-staged",
     "licenses": "licensee --errors-only"
   },
   "lint-staged": {
-    "*.js": "standard",
-    "*.md": "standard-markdown"
+    "*.js": [
+      "prettier-standard",
+      "git add"
+    ]
   },
   "bin": {
     "licensezero": "./bin.js",

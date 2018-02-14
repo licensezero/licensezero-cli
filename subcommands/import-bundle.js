@@ -2,7 +2,8 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   var url = options['<URL>']
 
   var https = require('https')
-  https.request(url)
+  https
+    .request(url)
     .once('error', done)
     .once('response', function (response) {
       if (response.statusCode !== 200) {
@@ -21,22 +22,25 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
           var formatError = require('./format-error')
           var anyError = false
           var runSeries = require('run-series')
-          runSeries(parsed.licenses.map(function (license) {
-            return function (done) {
-              importLicense(config, license, function (error, summary) {
-                if (error) {
-                  stderr.write(formatError(error))
-                  anyError = true
-                } else {
-                  stdout.write(summary + '\n')
-                }
-                done()
-              })
+          runSeries(
+            parsed.licenses.map(function (license) {
+              return function (done) {
+                importLicense(config, license, function (error, summary) {
+                  if (error) {
+                    stderr.write(formatError(error))
+                    anyError = true
+                  } else {
+                    stdout.write(summary + '\n')
+                  }
+                  done()
+                })
+              }
+            }),
+            function () {
+              if (anyError) return done('error importing license')
+              done()
             }
-          }), function () {
-            if (anyError) return done('error importing license')
-            done()
-          })
+          )
         })
       })
     })

@@ -35,8 +35,12 @@ module.exports = function (config, license, done) {
     })
     if (!matchingIdentity) {
       return done(
-        'license for ' + name + ' [' + jurisdiction + '] ' +
-        'does not match any existing licensee'
+        'license for ' +
+          name +
+          ' [' +
+          jurisdiction +
+          '] ' +
+          'does not match any existing licensee'
       )
     }
     if (!validSignature(license)) {
@@ -44,20 +48,23 @@ module.exports = function (config, license, done) {
     }
     log('Signature: valid')
     log('Public Key: ' + license.publicKey.slice(0, 32) + '...')
-    request({
-      action: 'project',
-      projectID: projectID
-    }, function (error, response) {
-      if (error) return done(error)
-      if (license.publicKey !== response.licensor.publicKey) {
-        return done('public key does not match')
-      }
-      log('licensezero.com Public Key: matches')
-      writeLicense(config, license, function (error) {
+    request(
+      {
+        action: 'project',
+        projectID: projectID
+      },
+      function (error, response) {
         if (error) return done(error)
-        log('Imported license.')
-        done(null, summary.join('\n'))
-      })
-    })
+        if (license.publicKey !== response.licensor.publicKey) {
+          return done('public key does not match')
+        }
+        log('licensezero.com Public Key: matches')
+        writeLicense(config, license, function (error) {
+          if (error) return done(error)
+          log('Imported license.')
+          done(null, summary.join('\n'))
+        })
+      }
+    )
   })
 }

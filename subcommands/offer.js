@@ -22,7 +22,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
         if (error) return done(error)
         if (!accepted) return done('must accept terms')
         var request = require('../request')
-        var pricing = {private: parseInt(options['<PRICE>'])}
+        var pricing = { private: parseInt(options['<PRICE>']) }
         if (options['--relicense']) {
           pricing.relicense = parseInt(options['--relicense'])
         }
@@ -33,10 +33,9 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
           homepage: homepage,
           pricing: pricing,
           description: packageData.description,
-          terms: (
+          terms:
             'I agree to the agency terms at ' +
             'https://licensezero.com/terms/agency.'
-          )
         }
         request(payload, function (error, response) {
           /* istanbul ignore if */

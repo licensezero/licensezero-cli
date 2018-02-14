@@ -15,25 +15,28 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
       return done(0)
     }
     if (unlicensed.length === 0) return done(0)
-    request({
-      action: 'order',
-      projects: unlicensed.map(function (metadata) {
-        return metadata.projectID
-      }),
-      licensee: identity.name,
-      jurisdiction: identity.jurisdiction,
-      email: identity.email,
-      person: 'I am a person, not a legal entity.'
-    }, function (error, response) {
-      /* istanbul ignore if */
-      if (error) return done(error)
-      var url = 'https://licensezero.com' + response.location
-      stdout.write(url + '\n')
-      if (!options['--do-not-open']) {
-        var openWebpage = require('../open-webpage')
-        openWebpage(url)
+    request(
+      {
+        action: 'order',
+        projects: unlicensed.map(function (metadata) {
+          return metadata.projectID
+        }),
+        licensee: identity.name,
+        jurisdiction: identity.jurisdiction,
+        email: identity.email,
+        person: 'I am a person, not a legal entity.'
+      },
+      function (error, response) {
+        /* istanbul ignore if */
+        if (error) return done(error)
+        var url = 'https://licensezero.com' + response.location
+        stdout.write(url + '\n')
+        if (!options['--do-not-open']) {
+          var openWebpage = require('../open-webpage')
+          openWebpage(url)
+        }
+        done(0)
       }
-      done(0)
-    })
+    )
   })
 }

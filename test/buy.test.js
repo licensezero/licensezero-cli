@@ -10,46 +10,53 @@ tape('buy one l0 dep', function (test) {
     require('../request').mocks.push({
       action: 'order',
       handler: function (payload, callback) {
-        callback(null, {location: '/buy/TEST'})
+        callback(null, { location: '/buy/TEST' })
       }
     })
-    runSeries([
-      function (done) {
-        run([
-          'identify', 'Test Licensee', 'US-CA', 'test@example.com'
-        ], function (status, stdout, stderr) {
-          test.equal(status, 0, 'exit 0')
-          done()
-        })
-      },
-      function (done) {
-        var file = path.join(tmp, 'node_modules', 'x', 'package.json')
-        runSeries([
-          mkdirp.bind(null, path.dirname(file)),
-          fs.writeFile.bind(null, file, JSON.stringify(require('./example')))
-        ], done)
-      },
-      function (done) {
-        require('../open-webpage').events.once('open', function (url) {
-          test.equal(
-            url, 'https://licensezero.com/buy/TEST',
-            'opens location'
+    runSeries(
+      [
+        function (done) {
+          run(
+            ['identify', 'Test Licensee', 'US-CA', 'test@example.com'],
+            function (status, stdout, stderr) {
+              test.equal(status, 0, 'exit 0')
+              done()
+            }
           )
-          done()
-        })
-        run([
-          'buy'
-        ], function (status, stdout, stderr) {
-          test.equal(status, 0, 'exit 0')
-          test.equal(
-            stdout, 'https://licensezero.com/buy/TEST\n',
-            'location'
+        },
+        function (done) {
+          var file = path.join(tmp, 'node_modules', 'x', 'package.json')
+          runSeries(
+            [
+              mkdirp.bind(null, path.dirname(file)),
+              fs.writeFile.bind(
+                null,
+                file,
+                JSON.stringify(require('./example'))
+              )
+            ],
+            done
           )
-          test.equal(stderr, '', 'no stderr')
-        })
+        },
+        function (done) {
+          require('../open-webpage').events.once('open', function (url) {
+            test.equal(
+              url,
+              'https://licensezero.com/buy/TEST',
+              'opens location'
+            )
+            done()
+          })
+          run(['buy'], function (status, stdout, stderr) {
+            test.equal(status, 0, 'exit 0')
+            test.equal(stdout, 'https://licensezero.com/buy/TEST\n', 'location')
+            test.equal(stderr, '', 'no stderr')
+          })
+        }
+      ],
+      function () {
+        rm(test)
       }
-    ], function () {
-      rm(test)
-    })
+    )
   })
 })

@@ -19,20 +19,16 @@ module.exports = function (callback) {
           var stdin = new PassThrough()
           var stdout = new streamBuffers.WritableStreamBuffer()
           // Ugly hack to avoid https://github.com/npm/read/issues/23
-          stdout.end = function () { }
+          stdout.end = function () {}
           var stderr = new streamBuffers.WritableStreamBuffer()
-          bin(
-            args, directory, config,
-            stdin, stdout, stderr,
-            function (error) {
-              if (error) stderr.write(formatError(error))
-              next(
-                error ? 1 : 0,
-                stdout.getContentsAsString('utf8') || '',
-                stderr.getContentsAsString('utf8') || ''
-              )
-            }
-          )
+          bin(args, directory, config, stdin, stdout, stderr, function (error) {
+            if (error) stderr.write(formatError(error))
+            next(
+              error ? 1 : 0,
+              stdout.getContentsAsString('utf8') || '',
+              stderr.getContentsAsString('utf8') || ''
+            )
+          })
           return stdin
         },
         function rm (test) {

@@ -8,21 +8,23 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
       if (error) return done(error)
       if (!accepted) return done('must accept terms')
       var request = require('../request')
-      request({
-        action: 'register',
-        name: identity.name,
-        email: identity.email,
-        jurisdiction: identity.jurisdiction,
-        terms: (
-          'I agree to the terms of service at ' +
-          'https://licensezero.com/terms/service.'
-        )
-      }, function (error, response) {
-        /* istanbul ignore if */
-        if (error) return done(error)
-        stdout.write('Follow the Stripe authorization link sent by e-mail.\n')
-        done()
-      })
+      request(
+        {
+          action: 'register',
+          name: identity.name,
+          email: identity.email,
+          jurisdiction: identity.jurisdiction,
+          terms:
+            'I agree to the terms of service at ' +
+            'https://licensezero.com/terms/service.'
+        },
+        function (error, response) {
+          /* istanbul ignore if */
+          if (error) return done(error)
+          stdout.write('Follow the Stripe authorization link sent by e-mail.\n')
+          done()
+        }
+      )
     })
   })
 }

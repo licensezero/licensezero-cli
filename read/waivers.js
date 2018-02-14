@@ -6,17 +6,26 @@ var runParallel = require('run-parallel')
 
 module.exports = function (config, callback) {
   var directory = path.join(config, 'waivers')
-  fs.readdir(directory, eea(callback, function (entries) {
-    runParallel(entries.map(function (projectID) {
-      return readWaiver.bind(null, config, projectID)
-    }), function (error, waivers) {
-      /* istanbul ignore if */
-      if (error) return callback(error)
-      callback(null, waivers.filter(function (waiver) {
-        return !expired(waiver)
-      }))
+  fs.readdir(
+    directory,
+    eea(callback, function (entries) {
+      runParallel(
+        entries.map(function (projectID) {
+          return readWaiver.bind(null, config, projectID)
+        }),
+        function (error, waivers) {
+          /* istanbul ignore if */
+          if (error) return callback(error)
+          callback(
+            null,
+            waivers.filter(function (waiver) {
+              return !expired(waiver)
+            })
+          )
+        }
+      )
     })
-  }))
+  )
 }
 
 var ONE_DAY = 24 * 60 * 60 * 1000
@@ -34,5 +43,5 @@ function expired (waiver) {
   var term = parseInt(manifest.term)
   var date = new Date(manifest.date)
   if (isNaN(date)) return true
-  return (TODAY - date) < (term * ONE_DAY)
+  return TODAY - date < term * ONE_DAY
 }
