@@ -13,6 +13,7 @@ var subcommands = {
   'import-license': '<file>',
   'import-waiver': '<file>',
   'license': '<project id> (--noncommercial | --reciprocal)',
+  'lock': '<project id> <date>',
   'offer': '<PRICE> [--relicense CENTS]',
   'purchased': '<URL>',
   'quote': '[--no-noncommercial] [--no-reciprocal]',
