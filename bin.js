@@ -15,6 +15,7 @@ var subcommands = {
   'license': '<project id> (--noncommercial | --reciprocal)',
   'lock': '<project id> <date>',
   'offer': '<PRICE> [--relicense CENTS]',
+  'reprice': '<PRICE> [--relicense CENTS]',
   'purchased': '<URL>',
   'quote': '[--no-noncommercial] [--no-reciprocal]',
   'register': '',
