@@ -13,7 +13,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
       projectID: projectID
     }, function (error, response) {
       if (error) return done(error)
-      stdout.write('Project ID ' + response.projectID + ' retracted from sale.\n')
+      stdout.write('Project ID ' + projectID + ' retracted from sale.\n')
       done()
     })
   })
