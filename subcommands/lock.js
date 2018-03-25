@@ -18,7 +18,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
     }, function (error, response) {
       if (error) return done(error)
       stdout.write(
-        'Project ID ' + response.projectID +
+        'Project ID ' + projectID +
         ' locked until ' + unlockDateString + '.'
       )
       done()
