@@ -1,8 +1,10 @@
-var read = require('read')
+var confirm = require('./confirm')
 
 module.exports = function (stdin, stdout, agency, callback) {
-  read({
-    prompt: agency
+  confirm(
+    stdin,
+    stdout,
+    agency
       ? (
         'Do you agree to the agency terms at ' +
         'https://licensezero.com/terms/agency? [Y/N]'
@@ -11,16 +13,6 @@ module.exports = function (stdin, stdout, agency, callback) {
         'Do you agree to the terms of service at ' +
         'https://licensezero.com/terms/service? [Y/N]'
       ),
-    default: 'N',
-    input: stdin,
-    output: stdout
-  }, function (error, accepted) {
-    /* istanbul ignore next */
-    if (error) return callback(error)
-    accepted = (
-      accepted.toLowerCase() === 'yes' ||
-      accepted.toLowerCase() === 'y'
-    )
-    callback(null, accepted)
-  })
+    callback
+  )
 }

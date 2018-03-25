@@ -4,24 +4,10 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
   readJSONFile(path.join(cwd, 'package.json'), function (error, packageData) {
     /* istanbul ignore next */
     if (error) return done(error)
-    if (
-      !packageData.hasOwnProperty('licensezero') ||
-      !Array.isArray(packageData.licensezero)
-    ) {
+    var readProjectID = require('../read/project-id')
+    var projectID = readProjectID(packageData)
+    if (!projectID) {
       return done(new Error('no project metadata in package.json'))
-    }
-    var projectID
-    for (var index = 0; index < packageData.licensezero.length; index++) {
-      var element = packageData.licensezero[index]
-      if (
-        typeof element === 'object' &&
-        element.hasOwnProperty('license') &&
-        typeof element.license === 'object' &&
-        element.license.hasOwnProperty('projectID')
-      ) {
-        projectID = element.license.projectID
-        break
-      }
     }
     var homepage = packageData.homepage
     if (!homepage && packageData.repository) {
