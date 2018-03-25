@@ -5,7 +5,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
     /* istanbul ignore next */
     if (error) return done(error)
     if (
-      packageData.hasOwnProperty('licensezero') ||
+      !packageData.hasOwnProperty('licensezero') ||
       !Array.isArray(packageData.licensezero)
     ) {
       return done(new Error('no project metadata in package.json'))
