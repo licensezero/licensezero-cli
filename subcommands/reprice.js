@@ -47,7 +47,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
       request(payload, function (error, response) {
         /* istanbul ignore if */
         if (error) return done(error)
-        stdout.write('Project ID ' + response.projectID + ' pricing updated.\n')
+        stdout.write('Project ID ' + projectID + ' pricing updated.\n')
         done()
       })
     })
