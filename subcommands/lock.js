@@ -8,7 +8,7 @@ module.exports = function (options, cwd, config, stdin, stdout, stderr, done) {
     var validateDate = require('../validate/date')
     if (!validateDate(options['<date>'])) return done('invalid unlock date')
     var request = require('../request')
-    var unlockDateString = new Date(options['<date>'])
+    var unlockDateString = new Date(options['<date>']).toISOString()
     request({
       action: 'lock',
       licensorID: licensor.licensorID,
