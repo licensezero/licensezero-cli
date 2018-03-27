@@ -18,6 +18,7 @@ var subcommands = {
   'reprice': '<PRICE> [--relicense CENTS]',
   'purchased': '<URL>',
   'quote': '[--no-noncommercial] [--no-reciprocal]',
+  'readme': '',
   'register': '',
   'reset-token': '',
   'retract': '<project id>',
